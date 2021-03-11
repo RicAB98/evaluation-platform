@@ -15,7 +15,7 @@ import FixedPlugin from "../components/FixedPlugin/FixedPlugin.js";
 
 import routes from "../routes.js";
 import styles from "../assets/jss/material-dashboard-react/layouts/adminStyle.js";
-import bgImage from "../assets/img/sidebar-2.jpg";
+import bgImage from "../assets/img/new/bg.png";
 import logo from "../assets/img/logo.png";
 
 let ps;
@@ -96,7 +96,6 @@ export default function Admin({ ...rest }) {
     <div className={classes.wrapper}>
       <Sidebar
         routes={routes}
-        logoText={"Creative Tim"}
         logo={logo}
         image={image}
         handleDrawerToggle={handleDrawerToggle}
@@ -118,7 +117,6 @@ export default function Admin({ ...rest }) {
         ) : (
           <div className={classes.map}>{switchRoutes}</div>
         )}
-        {getRoute() ? <Footer /> : null}
         <FixedPlugin
           handleImageClick={handleImageClick}
           handleColorClick={handleColorClick}
@@ -131,3 +129,4 @@ export default function Admin({ ...rest }) {
     </div>
   );
 }
+//{getRoute() ? <Footer /> : null}

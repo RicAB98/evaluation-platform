@@ -124,7 +124,6 @@ const sidebarStyle = theme => ({
       height: "100%",
       content: '""',
       display: "block",
-      background: blackColor,
       opacity: ".8"
     }
   },

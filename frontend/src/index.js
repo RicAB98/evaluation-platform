@@ -6,15 +6,13 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
+import App from './App'
 
 const hist = createBrowserHistory();
 
 ReactDOM.render(
   <Router history={hist}>
-    <Switch>
-      <Route path="/admin" component={Admin} />
-      <Redirect from="/" to="/admin/dashboard" />
-    </Switch>
+    <App />
   </Router>,
   document.getElementById("root")
 );
@@ -23,4 +21,7 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
- 
+//<Switch>
+//      <Route path="/admin" component={Admin} />
+//      <Redirect from="/" to="/admin/dashboard" />
+//    </Switch>  
