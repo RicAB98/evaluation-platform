@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { createBrowserHistory } from "history";
+import Admin from "./layouts/Admin.js";
+
+// template css, keep this
+import "./assets/css/material-dashboard-react.css";
+import Dashboard from "./views/Dashboard/Dashboard.js";
+
+const hist = createBrowserHistory();
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router history={hist}>
+      <Switch>
+        <Route path="/admin" render={() => { 
+          if(localStorage.getItem('userType') === '') return <Redirect to="/dashboard"/>; 
+          else return <Admin/>; 
+        }}/>
+        <Route path="/dashboard" component={Dashboard} />
+        {/* <Route path="/login" component={Login} /> */}
+        <Redirect from="/" to="/dashboard" />
+      </Switch>
+    </Router>
   );
 }
 
