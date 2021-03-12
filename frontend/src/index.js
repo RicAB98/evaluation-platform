@@ -12,7 +12,10 @@ const hist = createBrowserHistory();
 
 ReactDOM.render(
   <Router history={hist}>
-    <App />
+    <Switch>
+      <Route path="/admin" component={Admin} />
+      <Redirect from="/" to="/admin/dashboard" />
+    </Switch>
   </Router>,
   document.getElementById("root")
 );
@@ -21,7 +24,3 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-//<Switch>
-//      <Route path="/admin" component={Admin} />
-//      <Redirect from="/" to="/admin/dashboard" />
-//    </Switch>  

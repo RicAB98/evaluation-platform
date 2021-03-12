@@ -1,13 +1,65 @@
-import React from "react";
+import React, {Component} from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
+import Button from "@material-ui/core/Button";
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
 import Table from "../../components/Table/Table.js";
 import Card from "../../components/Card/Card.js";
 import CardHeader from "../../components/Card/CardHeader.js";
 import CardBody from "../../components/Card/CardBody.js";
+import { getTestAPI } from "../../requests/requests.js";
+
+class Result extends Component {
+  state = {
+      counters: [
+         {id: 1, value: 4},
+         {id: 2, value: 0},
+         {id: 3, value: 0},
+         {id: 4, value: 0},
+      ],
+      apiResponse: " wait"
+    }
+
+  componentDidMount()
+  {
+    //this.testAPI()
+  }
+
+  testAPI = () => {
+    getTestAPI()
+      .then(res => res.text())
+      .then(res => this.setState({ apiResponse: res }));
+  }
+
+  render() { 
+      return (
+        <div>
+          <Button
+                  fullWidth
+                  color="secondary"
+                  //onClick={() => testAPI()}
+                >
+                  {this.state.apiResponse}
+                </Button>
+          <Table tableData = {this.state.counters} buttonName = {this.state.apiResponse} />
+        </div>
+      )
+      /*return (<div>
+          {this.state.counters.map(counter => 
+          <Counter onDelete={this.handleDelete} key = {counter.id} id = {counter.id} value={counter.value}>
+          </Counter>
+          )}
+      </div>);*/
+  }
+
+  handleDelete = (counterId) => {
+      console.log(counterId)
+      const counters = this.state.counters.filter(c => c.id !== counterId);
+      this.setState({counters})
+  }
+}
 
 const styles = {
   cardCategoryWhite: {
@@ -41,7 +93,11 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function TableList() {
+
+
+export default Result;
+
+/*export default function TableList() {
   const classes = useStyles();
   return (
     <GridContainer>
@@ -70,3 +126,4 @@ export default function TableList() {
     </GridContainer>
   );
 }
+*/
