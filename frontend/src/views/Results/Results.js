@@ -19,31 +19,39 @@ class Result extends Component {
          {id: 3, value: 0},
          {id: 4, value: 0},
       ],
-      apiResponse: " wait"
+      apiResponse: [
+        ["Dakota Rice", "Niger", "Oud-Turnhout", "$36,738"],
+        ["Mason Porter", "Chile", "Gloucester", "$78,615"]
+      ]
     }
 
   componentDidMount()
   {
+    console.log(this.state.apiResponse)
     //this.testAPI()
   }
 
   testAPI = () => {
     getTestAPI()
-      .then(res => res.text())
+      .then(res => res.json())
       .then(res => this.setState({ apiResponse: res }));
+      
   }
 
   render() { 
       return (
         <div>
           <Button
-                  fullWidth
                   color="secondary"
-                  //onClick={() => testAPI()}
+                  onClick={() => this.testAPI()}
                 >
-                  {this.state.apiResponse}
+                  GET from API
                 </Button>
-          <Table tableData = {this.state.counters} buttonName = {this.state.apiResponse} />
+          <Table 
+          tableHeaderColor="primary"
+          tableHead={["Name", "Country", "City", "Salary"]}
+          tableData={this.state.apiResponse}
+             />
         </div>
       )
       /*return (<div>
@@ -54,11 +62,6 @@ class Result extends Component {
       </div>);*/
   }
 
-  handleDelete = (counterId) => {
-      console.log(counterId)
-      const counters = this.state.counters.filter(c => c.id !== counterId);
-      this.setState({counters})
-  }
 }
 
 const styles = {

@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -10,19 +9,12 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 // core components
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
-import { getTestAPI } from "../../requests/requests.js";
 
 const useStyles = makeStyles(styles);
 
 export default function CustomTable(props) {
   const classes = useStyles();
   const { tableHead, tableData, tableHeaderColor } = props;
-
-  const testAPI = () => {
-    getTestAPI()
-      .then(res => res.text())
-      .then(res => this.setState({ apiResponse: res }));
-  }
 
   return (
     <div className={classes.tableResponsive}>
@@ -45,8 +37,8 @@ export default function CustomTable(props) {
           </TableHead>
         ) : null}
         <TableBody>
-          {/*tableData.map((prop, key) => {
-          /*  return (
+          {tableData.map((prop, key) => {
+            return (
               <TableRow key={key} className={classes.tableBodyRow}>
                 {prop.map((prop, key) => {
                   return (
@@ -57,7 +49,7 @@ export default function CustomTable(props) {
                 })}
               </TableRow>
             );
-          })*/}
+          })}
         </TableBody>
       </Table>
     </div>
