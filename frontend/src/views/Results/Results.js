@@ -20,14 +20,13 @@ class Result extends Component {
          {id: 4, value: 0},
       ],
       apiResponse: [
-        ["Dakota Rice", "Niger", "Oud-Turnhout", "$36,738"],
-        ["Mason Porter", "Chile", "Gloucester", "$78,615"]
+        ["Dakota Rice", "Niger"],
+        ["Mason Porter", "Chile"]
       ]
     }
 
   componentDidMount()
   {
-    console.log(this.state.apiResponse)
     //this.testAPI()
   }
 
@@ -49,7 +48,7 @@ class Result extends Component {
                 </Button>
           <Table 
           tableHeaderColor="primary"
-          tableHead={["Name", "Country", "City", "Salary"]}
+          tableHead={["Query", "Percentage"]}
           tableData={this.state.apiResponse}
              />
         </div>
