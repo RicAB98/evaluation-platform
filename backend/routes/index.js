@@ -7,4 +7,9 @@ router.post('/upload', function(req, res, next) {
   res.send("Received file");
 });
 
+router.post('/loadeval', function(req, res, next) {
+  console.log(req.body)
+  res.send("Loading eval");
+});
+
 module.exports = router;
