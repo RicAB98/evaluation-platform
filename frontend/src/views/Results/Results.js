@@ -25,16 +25,10 @@ class Result extends Component {
       ]
     }
 
-  componentDidMount()
-  {
-    //this.testAPI()
-  }
-
   testAPI = () => {
     getTestAPI()
       .then(res => res.json())
       .then(res => this.setState({ apiResponse: res }));
-      
   }
 
   render() { 
