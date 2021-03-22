@@ -3,15 +3,9 @@ import React, {Component} from "react";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 // core components
-import FormControl from "../../components/Dropdown/Dropdown.js";
+import Dropdown from "../../components/Dropdown/Dropdown.js";
 
-import { bugs, website, server } from "../../variables/general.js";
-
-import {
-  dailySalesChart,
-  emailsSubscriptionChart,
-  completedTasksChart
-} from "../../variables/charts.js";
+import { getEvaluations } from "../../requests/requests.js";
 
 import styles from "../../assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
@@ -26,8 +20,16 @@ class Dashboard extends Component {
     ]
   }
 
+  componentDidMount()
+  {
+    getEvaluations()
+    .then(res => res.json())
+    .then(res => this.setState({ evaluations: res }))
+  }
+
   render() {
-    return (<FormControl
+    console.log(this.state.evaluations)
+    return (<Dropdown
               evaluationList={this.state.evaluations}
             />)
   }

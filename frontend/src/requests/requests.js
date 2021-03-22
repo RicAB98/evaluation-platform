@@ -35,3 +35,13 @@ export function loadEvaluation (id){
         })
     });
 }
+
+export function getEvaluations (){
+    return fetch(apiHost + "/geteval", {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json;charset=utf-8',
+            'Access-Control-Allow-Origin': '*' 
+        }
+    });
+}
