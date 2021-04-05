@@ -32,26 +32,26 @@ const tableStyle = theme => ({
     color: grayColor[0]
   },
   table: {
-    marginBottom: "0",
-    width: "100%",
+    width: "75%",
     maxWidth: "100%",
-    backgroundColor: "transparent",
-    borderSpacing: "0",
-    borderCollapse: "collapse"
+    border: "1px solid black",
+    margin: "auto"
   },
   tableHeadCell: {
     color: "inherit",
     ...defaultFont,
     "&, &$tableCell": {
-      fontSize: "1em"
-    }
+      fontSize: "1.3em"
+    },
+    borderBottom: "1px solid black"
   },
   tableCell: {
     ...defaultFont,
     lineHeight: "1.42857143",
     padding: "12px 8px",
     verticalAlign: "middle",
-    fontSize: "0.8125rem"
+    fontSize: "0.8125rem",
+    borderBottom: "1px solid #9e9e9e"
   },
   tableResponsive: {
     width: "100%",
