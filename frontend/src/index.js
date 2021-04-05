@@ -1,4 +1,6 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
+
 import ReactDOM from 'react-dom';
 import './index.css';
 import Admin from "./layouts/Admin.js";
@@ -6,18 +8,24 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
-import App from './App'
+import favicon from './assets/img/favicon.ico';
 
 const hist = createBrowserHistory();
 
 ReactDOM.render(
+  <div>
+  <Helmet>
+        <title>Evaluation platform</title>
+  </Helmet>
   <Router history={hist}>
     <Switch>
       <Route path="/admin" component={Admin} />
-      <Redirect from="/" to="/admin/neweval" />
+      <Redirect from="/" to="/admin/run" />
     </Switch>
-  </Router>,
-  document.getElementById("root")
+  </Router>
+  </div>,
+    document.getElementById("root")
+
 );
 
 // If you want to start measuring performance in your app, pass a function

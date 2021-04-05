@@ -9,7 +9,6 @@ import { makeStyles } from "@material-ui/core/styles";
 
 // core components
 import Sidebar from "../components/Sidebar/Sidebar.js";
-import Footer from "../components/Footer/Footer.js";
 import Navbar from "../components/Navbars/Navbar.js";
 import FixedPlugin from "../components/FixedPlugin/FixedPlugin.js";
 
@@ -34,7 +33,7 @@ const switchRoutes = (
       }
       return null;
     })}
-    <Redirect from="/" to="/admin/neweval" />
+    <Redirect from="/" to="/admin/run" />
   </Switch>
 );
 

@@ -3,38 +3,39 @@ import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOut
 import TableChartOutlinedIcon from '@material-ui/icons/TableChartOutlined';
 import PublishOutlinedIcon from '@material-ui/icons/PublishOutlined';
 import CompareArrowsOutlinedIcon from '@material-ui/icons/CompareArrowsOutlined';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
 // core components/views for Admin layout
 //import MasterDataPage from "views/MasterData/MasterData.js";
 //import OrderList from "views/OrderList/OrderList.js";
-import DashboardPage from "./views/Dashboard/Dashboard.js";
+import RunPage from "./views/Run/Run.js";
+import LoadPage from "./views/Load/Load.js";
 import ResultsPage from "./views/Results/Results.js";
 
 const dashboardRoutes = [
 
   {
-    path: "/neweval",
-    name: "New Evaluation",
+    path: "/run",
+    name: "Run Evaluation",
     icon: AddCircleOutlineOutlinedIcon,
-    component: DashboardPage,
+    component: RunPage,
     layout: "/admin"
   },
 
   {
-    path: "/results",
-    name: "Results",
-    icon: TableChartOutlinedIcon,
-    component: ResultsPage,
-    layout: "/admin"
-  },
-
-  {
-    path: "/loadeval",
+    path: "/load",
     name: "Load Evaluation",
     icon: PublishOutlinedIcon,
-    component: ResultsPage,
+    component: LoadPage,
     layout: "/admin"
   },
 
+  {
+    path: "/last",
+    name: "Last Evaluation",
+    icon: AccessTimeIcon,
+    component: ResultsPage,
+    layout: "/admin"
+  },
   {
     path: "/compare",
     name: "Compare",

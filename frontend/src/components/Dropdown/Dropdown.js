@@ -18,14 +18,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dropdown(props) {
   const classes = useStyles();
-  const { evaluationList } = props;
+  const { list, name, onChange } = props;
   const [selectedEvaluation, setEvalution] = useState();
 
-  const handleChange = (event) => {
-    setEvalution(event.target.value);  
-  };
-
-  const submitEvaluation = () => {
+  /*const submitEvaluation = () => {
         const formData = new FormData();
 
         console.log(selectedEvaluation)
@@ -33,29 +29,26 @@ export default function Dropdown(props) {
         loadEvaluation(selectedEvaluation)
         .then(res => res.text())
         .then(res => console.log(res))
-    };
+    };*/
 
   return (
     <div>
       <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="age-native-simple">Evaluations</InputLabel>
+        <InputLabel htmlFor="age-native-simple">{name}</InputLabel>
         <Select
           native
           value={selectedEvaluation}
-          onChange={handleChange}
+          onChange={onChange}
           inputProps={{
             name: 'evaluations',
             id: 'age-native-simple',
           }}
         >
             <option aria-label="None" value="" />
-            {evaluationList.map((item) =>
+            {list.map((item) =>
              <option value={item[0]}> {item[1]} </option>)}
         </Select>
       </FormControl>
-        <div>
-                <button onClick={submitEvaluation}>Submit</button>
-        </div>
-      </div>
+    </div>
   )
 }
