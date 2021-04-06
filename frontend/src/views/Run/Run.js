@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
+import Button from "../../components/Button/Button.js";
 
 class Run extends Component {
   state = {
@@ -49,9 +50,12 @@ class Run extends Component {
         name="Period"
         onChange={this.changePeriod}
       />
-      <div>
-        <button onClick={() => this.submitEvaluation()}>Submit</button>
-      </div>
+      <Button
+        color="custom"
+        onClick={() => this.submitEvaluation()}
+      >
+        Run
+      </Button>
     </div>)
   }
 }

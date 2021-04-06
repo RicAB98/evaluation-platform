@@ -21,16 +21,6 @@ export default function Dropdown(props) {
   const { list, name, onChange } = props;
   const [selectedEvaluation, setEvalution] = useState();
 
-  /*const submitEvaluation = () => {
-        const formData = new FormData();
-
-        console.log(selectedEvaluation)
-
-        loadEvaluation(selectedEvaluation)
-        .then(res => res.text())
-        .then(res => console.log(res))
-    };*/
-
   return (
     <div>
       <FormControl className={classes.formControl}>

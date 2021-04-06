@@ -29,7 +29,8 @@ const buttonStyle = {
     borderRadius: "3px",
     position: "relative",
     padding: "12px 30px",
-    margin: ".3125rem 1px",
+    marginTop:"30px",
+    marginLeft: "8px",
     fontSize: "12px",
     fontWeight: "400",
     textTransform: "uppercase",
@@ -226,6 +227,28 @@ const buttonStyle = {
         ", 0.2)"
     }
   },
+  custom: {
+    backgroundColor: "#2c3e50",
+    boxShadow:
+      "0 2px 2px 0 rgba(" +
+      hexToRgb("#2c3e50") +
+      ", 0.14), 0 3px 1px -2px rgba(" +
+      hexToRgb("#2c3e50") +
+      ", 0.2), 0 1px 5px 0 rgba(" +
+      hexToRgb("#2c3e50") +
+      ", 0.12)",
+    "&:hover,&:focus": {
+      backgroundColor: "#2c3e50",
+      boxShadow:
+        "0 14px 26px -12px rgba(" +
+        hexToRgb("#2c3e50") +
+        ", 0.42), 0 4px 23px 0px rgba(" +
+        hexToRgb("#2c3e50") +
+        ", 0.12), 0 8px 10px -5px rgba(" +
+        hexToRgb("#2c3e50") +
+        ", 0.2)"
+    }
+  },
   simple: {
     "&,&:focus,&:hover": {
       color: whiteColor,
@@ -270,6 +293,7 @@ const buttonStyle = {
       boxShadow: "none"
     }
   },
+
   disabled: {
     opacity: "0.65",
     pointerEvents: "none"

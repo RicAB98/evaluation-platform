@@ -1,5 +1,7 @@
 import React, {Component} from "react";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
+import Button from "../../components/Button/Button.js";
+
 import { getEvaluations } from "../../requests/requests.js";
 
 class Load extends Component {
@@ -41,9 +43,12 @@ class Load extends Component {
         name="Evaluations"
         onChange={this.changeEvaluation}
       />
-        <div>
-          <button onClick={() => this.loadEvaluation()}>Submit</button>
-        </div>
+        <Button
+        color="custom"
+        onClick={() => this.loadEvaluation()}
+      >
+        Load
+      </Button>
       </div>)
   }
 }
