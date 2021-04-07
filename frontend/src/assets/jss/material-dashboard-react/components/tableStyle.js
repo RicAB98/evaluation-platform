@@ -38,7 +38,8 @@ const tableStyle = theme => ({
     margin: "auto"
   },
   tableHeadCell: {
-    color: "inherit",
+    backgroundColor: "#2c3e50",
+    color: "white",
     ...defaultFont,
     "&, &$tableCell": {
       fontSize: "1.3em"

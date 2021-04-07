@@ -10,6 +10,7 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import RunPage from "./views/Run/Run.js";
 import LoadPage from "./views/Load/Load.js";
 import ResultsPage from "./views/Results/Results.js";
+import ComparePage from "./views/Compare/Compare.js";
 
 const dashboardRoutes = [
 
@@ -40,7 +41,7 @@ const dashboardRoutes = [
     path: "/compare",
     name: "Compare",
     icon: CompareArrowsOutlinedIcon,
-    component: ResultsPage,
+    component: ComparePage,
     layout: "/admin"
   }
 ];
