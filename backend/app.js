@@ -4,12 +4,34 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require("cors");
+var mysql = require("mysql");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var testAPIRouter = require("./routes/testAPI");
 
 var app = express();
+
+
+var connection = mysql.createConnection({
+  host: '144.91.116.216',
+  //port: '3306',
+  user: 'sczzpt_admin', 
+  password: ',b-D66s&{K2a',
+  database: 'sczzpt_database'
+})
+
+connection.connect()
+
+connection.query('select * from test', function (err, rows, fields) {
+  if (err) throw err
+
+  console.log('The solution is: ', rows)
+})
+
+connection.end()
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
