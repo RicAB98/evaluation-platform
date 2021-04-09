@@ -14,9 +14,17 @@ router.post('/runeval', function(req, res, next) {
   res.send("Loading eval");
 });
 
-router.post('/loadeval', function(req, res, next) {
-  console.log(req.body)
-  res.send("Loading eval");
+router.get('/loadeval/:id', function(req, res, next) {
+  let id = req.params.id
+
+  res.send([
+    [id, "Niger"],
+    [id, "Curaçao"],
+    [id, "Netherlands"],
+    [id, "Korea, South"],
+    [id, "Malawi"],
+    [id, "Chile"]
+  ]);
 });
 
 router.get('/geteval', function(req, res, next) {

@@ -1,17 +1,20 @@
 import React, {Component} from "react";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Button from "../../components/Button/Button.js";
+import Table from "../../components/Table/Table.js";
 
-import { getEvaluations } from "../../requests/requests.js";
+import { loadEvaluation, getEvaluations } from "../../requests/requests.js";
 
 class Load extends Component {
   state = {
     evaluations: [
-      [1, "First"],
-      [2, "Second"],
-      [3, "Third"]
+      [1, "Loading evaluations..."]
     ],
-    selectedEvaluation: null
+    selectedEvaluation: null,
+    loaded: false,
+    loadedEvaluation: [
+      ["Loading..", "Loading.."]
+    ]
   }
 
   componentDidMount()
@@ -28,11 +31,11 @@ class Load extends Component {
   loadEvaluation = () => {
     const formData = new FormData();
 
-    console.log(this.state.selectedEvaluation)
-
-    /*loadEvaluation(selectedEvaluation)
-    .then(res => res.text())
-    .then(res => console.log(res))*/
+    loadEvaluation(this.state.selectedEvaluation)
+    .then(res => res.json())
+    .then(res => 
+      this.setState({ loadedEvaluation: res }), 
+      this.setState({ loaded: true }))
   };
 
   render() {
@@ -46,9 +49,16 @@ class Load extends Component {
         <Button
         color="custom"
         onClick={() => this.loadEvaluation()}
-      >
-        Load
-      </Button>
+        >
+          Load
+        </Button>
+        {this.state.loaded == true ? 
+          <Table 
+          tableHeaderColor="warning"
+          tableHead={["Query", "Percentage"]}
+          tableData={this.state.loadedEvaluation}
+            />
+        : null}
       </div>)
   }
 }

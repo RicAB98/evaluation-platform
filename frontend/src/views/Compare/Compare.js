@@ -3,14 +3,14 @@ import React, {Component} from "react";
 import Button from "../../components/Button/Button.js";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
 import StickyHeadTable from "../../components/StickyHeadTable/StickyHeadTable.js"
-import { getTestAPI } from "../../requests/requests.js";
+
+import { getEvaluations } from "../../requests/requests.js";
 
 class Compare extends Component {
-  state = {
-      evaluationTypes: [
-        [1, "Least successful"],
-        [2, "Most searched"],
-        [3, "Overall"]
+    state = 
+    {
+      evaluations: [
+        [1, "Loading evaluations..."]
       ],
       apiResponse: [
         ["Dakota Rice", "Niger"],
@@ -18,37 +18,38 @@ class Compare extends Component {
       ]
     }
 
-  testAPI = () => {
-    getTestAPI()
+    componentDidMount()
+    {
+      getEvaluations()
       .then(res => res.json())
-      .then(res => this.setState({ apiResponse: res }));
-  }
+      .then(res => this.setState({ evaluations: res }))
+    }
 
   render() { 
-      return (
-        <div>
-          <Dropdown 
-            list={this.state.evaluationTypes} 
-            name="Evaluation"
-            onChange={this.changeEvaluation}
-          />
-          <Dropdown 
-            list={this.state.evaluationTypes} 
-            name="Evaluation"
-            onChange={this.changeEvaluation}
-          />
-          <Button
-            color="custom"
-            onClick={() => this.submitEvaluation()}
-            style={{ marginBottom: 50}}
-          >
-            Run
-          </Button>
-          <StickyHeadTable
+    return (
+      <div>
+        <Dropdown 
+          list={this.state.evaluations} 
+          name="Evaluation"
+          onChange={this.changeEvaluation}
+        />
+        <Dropdown 
+          list={this.state.evaluations} 
+          name="Evaluation"
+          onChange={this.changeEvaluation}
+        />
+        <Button
+          color="custom"
+          onClick={() => this.submitEvaluation()}
+          style={{ marginBottom: 50}}
+        >
+          Run
+        </Button>
+        <StickyHeadTable
             
-          />
-        </div>
-      )
+        />
+      </div>
+    )
   }
 
 }

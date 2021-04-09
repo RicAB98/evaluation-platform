@@ -40,15 +40,12 @@ export function runEvaluation (name, type, period){
 
 
 export function loadEvaluation (id){
-    return fetch(apiHost + "/loadeval", {
-        method: 'POST',
+    return fetch(apiHost + "/loadeval/" + id, {
+        method: 'GET',
         headers: { 
             'Content-Type': 'application/json;charset=utf-8',
             'Access-Control-Allow-Origin': '*' 
-        },
-        body: JSON.stringify({
-            "id": id,
-        })
+        }
     });
 }
 

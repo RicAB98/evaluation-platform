@@ -216,7 +216,7 @@ export default function StickyHeadTable() {
                         align={column.align}
                         style={{ borderRight: column.border, backgroundColor: column.delta === true ? value < 0 ? "red" : value > 0 ? "green" : "yellow" : null }}
                       >
-                        {column.metric == null ? value : value}
+                        {value}
                       </TableCell>
                     );
                   })}
