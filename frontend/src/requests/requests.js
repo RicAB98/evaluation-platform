@@ -23,6 +23,22 @@ export function postFile (file){
     });
 }
 
+export function runEvaluation (name, type, period){
+    return fetch(apiHost + "/runeval", {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json;charset=utf-8',
+            'Access-Control-Allow-Origin': '*' 
+        },
+        body: JSON.stringify({
+            "name": name,
+            "type": type,
+            "period": period
+        })
+    });
+}
+
+
 export function loadEvaluation (id){
     return fetch(apiHost + "/loadeval", {
         method: 'POST',

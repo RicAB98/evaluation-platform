@@ -2,6 +2,8 @@ import React, {Component} from "react";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Button from "../../components/Button/Button.js";
 
+import { runEvaluation } from "../../requests/requests.js";
+
 class Run extends Component {
   state = {
     evaluationTypes: [
@@ -34,12 +36,13 @@ class Run extends Component {
   submitEvaluation = () => {
     const formData = new FormData();
 
-    console.log(this.state.selectedEvaluation)
-    console.log(this.state.selectedPeriod)
+    let evaluationType = this.state.evaluationTypes[this.state.selectedEvaluation - 1]
+    let period = this.state.periodTypes[this.state.selectedPeriod - 1]
+    let name = this.state.name
 
-    /*loadEvaluation(selectedEvaluation)
+    runEvaluation(name, evaluationType, period)
     .then(res => res.text())
-    .then(res => console.log(res))*/
+    .then(res => console.log(res))
   };
 
   render() {

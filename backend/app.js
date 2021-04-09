@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require("cors");
-var mysql = require("mysql");
+const db = require('./database/db.js');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -12,32 +12,34 @@ var testAPIRouter = require("./routes/testAPI");
 
 var app = express();
 
-var connection = mysql.createConnection({
+/*var connection = mysql.createConnection({
   host: '144.91.116.216',
   user: 'sczzpt_admin', 
   password: ',b-D66s&{K2a',
   database: 'sczzpt_database'
 })
 
-connection.connect()
 
-let name = 'third'
-let type = 'POPULAR'
-let period = 'DAY'
-let date = null
+connection.connect()*/
+/*db.getConnection((err, conn) => {
+  conn.query('select * from Evaluation', (error, results, fields) => {
+    if (err) throw err
 
-let insert = `INSERT INTO Evaluation (name, type, period, date) VALUES ('${name}', '${type}', '${period}', '${date}')`
+    console.log('The solution is: ', results)
+    conn.release();
+  });
+});*/
 
-console.log(insert)
+//let insert = `INSERT INTO Evaluation (name, type, period, date) VALUES ('${name}', '${type}', '${period}', '${date}')`
 
-connection.query(insert, (err, results, fields) => {
+/*connection.query(insert, (err, results, fields) => {
   if (err) {
     return console.error(err.message);
   }
   // get inserted id
   console.log('Todo Id:' + results.insertId);
 });
-
+*/
 
 /*connection.query('select * from test', function (err, rows, fields) {
   if (err) throw err
@@ -45,7 +47,7 @@ connection.query(insert, (err, results, fields) => {
   console.log('The solution is: ', rows)
 })*/
 
-connection.end()
+//connection.end()
 
 
 
@@ -80,4 +82,5 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+module.exports = app
+
