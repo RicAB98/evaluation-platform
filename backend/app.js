@@ -12,10 +12,8 @@ var testAPIRouter = require("./routes/testAPI");
 
 var app = express();
 
-
 var connection = mysql.createConnection({
   host: '144.91.116.216',
-  //port: '3306',
   user: 'sczzpt_admin', 
   password: ',b-D66s&{K2a',
   database: 'sczzpt_database'
@@ -23,11 +21,29 @@ var connection = mysql.createConnection({
 
 connection.connect()
 
-connection.query('select * from test', function (err, rows, fields) {
+let name = 'third'
+let type = 'POPULAR'
+let period = 'DAY'
+let date = null
+
+let insert = `INSERT INTO Evaluation (name, type, period, date) VALUES ('${name}', '${type}', '${period}', '${date}')`
+
+console.log(insert)
+
+connection.query(insert, (err, results, fields) => {
+  if (err) {
+    return console.error(err.message);
+  }
+  // get inserted id
+  console.log('Todo Id:' + results.insertId);
+});
+
+
+/*connection.query('select * from test', function (err, rows, fields) {
   if (err) throw err
 
   console.log('The solution is: ', rows)
-})
+})*/
 
 connection.end()
 

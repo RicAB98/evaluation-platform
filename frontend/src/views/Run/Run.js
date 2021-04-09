@@ -14,9 +14,14 @@ class Run extends Component {
       [2, "Last week"],
       [3, "Last month"]
     ],
+    name: '',
     selectedEvaluation: null,
-    selectedPeriod: null
+    selectedPeriod: null,
   }
+
+  changeValue = (event) => {
+    this.setState({ name: event.target.value});
+  };
 
   changeEvaluation = (event) => {
     this.setState({ selectedEvaluation: event.target.value});
@@ -40,6 +45,16 @@ class Run extends Component {
   render() {
     return (
     <div>
+      <label style={{ marginLeft: 8 }}>
+        Name:
+        <input 
+          defaultValue="Default"
+          value={this.state.name} 
+          onChange={this.changeValue}
+          type="text"
+          style={{ marginLeft: 8 }}
+        />
+      </label>
       <Dropdown 
         list={this.state.evaluationTypes} 
         name="Type"

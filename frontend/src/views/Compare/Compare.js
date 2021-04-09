@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 // core components
-import Button from "@material-ui/core/Button";
+import Button from "../../components/Button/Button.js";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
 import StickyHeadTable from "../../components/StickyHeadTable/StickyHeadTable.js"
 import { getTestAPI } from "../../requests/requests.js";
@@ -37,8 +37,15 @@ class Compare extends Component {
             name="Evaluation"
             onChange={this.changeEvaluation}
           />
+          <Button
+            color="custom"
+            onClick={() => this.submitEvaluation()}
+            style={{ marginBottom: 50}}
+          >
+            Run
+          </Button>
           <StickyHeadTable
-            style={{ marginTop: 50}}
+            
           />
         </div>
       )
