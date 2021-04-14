@@ -32,10 +32,9 @@ const tableStyle = theme => ({
     color: grayColor[0]
   },
   table: {
-    width: "75%",
+    width: "35%",
     maxWidth: "100%",
     border: "1px solid black",
-    margin: "auto"
   },
   tableHeadCell: {
     backgroundColor: "#2c3e50",
@@ -44,15 +43,18 @@ const tableStyle = theme => ({
     "&, &$tableCell": {
       fontSize: "1.3em"
     },
-    borderBottom: "1px solid black"
+    borderBottom: "1px solid black",
+    textAlign: "center"
   },
+
   tableCell: {
     ...defaultFont,
     lineHeight: "1.42857143",
     padding: "12px 8px",
     verticalAlign: "middle",
     fontSize: "0.8125rem",
-    borderBottom: "1px solid #9e9e9e"
+    borderBottom: "1px solid #9e9e9e",
+    textAlign: "center"
   },
   tableResponsive: {
     width: "100%",
@@ -64,7 +66,7 @@ const tableStyle = theme => ({
     color: "inherit",
     display: "table-row",
     outline: "none",
-    verticalAlign: "middle"
+    verticalAlign: "middle",
   },
   tableBodyRow: {
     height: "48px",

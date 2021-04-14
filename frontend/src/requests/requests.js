@@ -59,8 +59,14 @@ export function getEvaluations (){
     });
 }
 
-export function topQueries (){
-    return fetch(apiHost + "/topqueries", {
+export function topQueries (startDate, endDate){
+
+    let query = apiHost + "/topqueries?startDate=" + startDate
+
+    if(endDate != null)
+        query = query + "&endDate=" + endDate
+
+    return fetch(query, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json;charset=utf-8',

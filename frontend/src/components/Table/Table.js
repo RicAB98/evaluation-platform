@@ -18,6 +18,7 @@ export default function CustomTable(props) {
 
   return (
     <div className={classes.tableResponsive}>
+      <h5> Popular queries </h5>  
       <Table width="25%" className={classes.table} >
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
@@ -37,13 +38,12 @@ export default function CustomTable(props) {
         ) : null}
         <TableBody>
           {tableData.map((prop, key) => {
-            console.log(prop + " " + key)
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
                 <TableCell className={classes.tableCell} key={key}>
                   {prop["search_string"]}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell} key={key} style = {{ textAlign: "center" }}>
                   {prop["n"]}
                 </TableCell>
               </TableRow>

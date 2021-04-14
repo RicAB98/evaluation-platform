@@ -53,18 +53,28 @@ router.get('/geteval', function(req, res, next) {
 });
 
 router.get('/topqueries', function(req, res, next) {
-  //let day = req.query.day
-  let day = '2021-01-29'
 
-  db.getConnection((err, conn) => {
-    conn.query(`select search_string, count(*) as n from fourdays where date = '${day}' group by search_string having count(*) > 200 order by count(*) DESC`
-    , (error, results, fields) => {
-      if (err) throw err
+  let startDate = new Date(req.query.startDate)
+  let query = `select search_string, count(*) as n from fourdays where 
+                 date = '${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}' 
+                 group by search_string order by count(*) DESC LIMIT 10`
   
-      console.log(results)
 
-      /*for (r of results)
-       evaluations.push([r["id"], r["name"]])*/
+  if(req.query.endDate != null)
+  {
+    startDate.setDate(startDate.getDate() - 1)
+    endDate = new Date(req.query.endDate )
+    endDate.setDate(endDate.getDate() + 1)
+
+    query = `select search_string, count(*) as n from fourdays where 
+              date > '${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}' and
+              date < '${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}' 
+              group by search_string order by count(*) DESC LIMIT 10`
+  }
+  
+  db.getConnection((err, conn) => {
+    conn.query(query, (error, results, fields) => {
+      if (err) throw err
 
       res.send(results);
       conn.release();

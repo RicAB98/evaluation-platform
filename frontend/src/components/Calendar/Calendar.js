@@ -11,7 +11,7 @@ import {
 export default function Calendar(props) {
   // The first commit of Material-UI
   //const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
-  const {selectedDate, onChange} = props;
+  const {selectedDate, label, onChange} = props;
 
   /*const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -25,7 +25,7 @@ export default function Calendar(props) {
         format="MM/dd/yyyy"
         margin="normal"
         id="date-picker-inline"
-        label="Date picker inline"
+        label={label}
         value={selectedDate}
         onChange={onChange}
         KeyboardButtonProps={{
