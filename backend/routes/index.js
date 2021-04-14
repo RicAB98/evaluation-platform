@@ -2,7 +2,6 @@ var express = require('express');
 const db = require('../database/db.js');
 var router = express.Router();
 
-
 router.post('/runeval', function(req, res, next) {
   db.getConnection((err, conn) => {
 
@@ -51,8 +50,27 @@ router.get('/geteval', function(req, res, next) {
       conn.release();
     });
   });
-
 });
 
+router.get('/topqueries', function(req, res, next) {
+  //let day = req.query.day
+  let day = '2021-01-29'
+
+  db.getConnection((err, conn) => {
+    conn.query(`select search_string, count(*) as n from fourdays where date = '${day}' group by search_string having count(*) > 200 order by count(*) DESC`
+    , (error, results, fields) => {
+      if (err) throw err
+  
+      console.log(results)
+
+      /*for (r of results)
+       evaluations.push([r["id"], r["name"]])*/
+
+      res.send(results);
+      conn.release();
+    });
+  })
+
+});
 
 module.exports = router;

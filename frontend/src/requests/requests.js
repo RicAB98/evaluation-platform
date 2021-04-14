@@ -58,3 +58,13 @@ export function getEvaluations (){
         }
     });
 }
+
+export function topQueries (){
+    return fetch(apiHost + "/topqueries", {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json;charset=utf-8',
+            'Access-Control-Allow-Origin': '*' 
+        }
+    });
+}
