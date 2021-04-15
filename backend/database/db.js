@@ -14,8 +14,6 @@ const pool = mysql.createPool({
   database: 'zerozero'
 });
 
-//console.log(pool)
-
 module.exports = {
   getConnection: (callback) => {
     return pool.getConnection(callback);

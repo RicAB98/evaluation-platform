@@ -90,3 +90,19 @@ export function unsuccessfulQueries (startDate, endDate){
         }
     });
 }
+
+export function queryEvolution (string){
+
+    let query = apiHost + "/query?query=" + string
+
+    /*if(endDate != null)
+        query = query + "&endDate=" + endDate*/
+
+    return fetch(query, {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json;charset=utf-8',
+            'Access-Control-Allow-Origin': '*' 
+        }
+    });
+}

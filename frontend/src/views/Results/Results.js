@@ -6,7 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import Table from "../../components/Table/Table.js";
 import Calendar from "../../components/Calendar/Calendar.js";
-import BarChart from "../../components/Chart/Chart.js";
+import LineChart from "../../components/Chart/LineChart";
 import { topQueries, unsuccessfulQueries} from "../../requests/requests.js";
 
 class Result extends Component {
@@ -21,7 +21,7 @@ class Result extends Component {
         search_string: 'Loading...',
         n: 'Loading...'
       }],
-      startDate: new Date('2021-01-29'),
+      startDate: new Date('2021-01-20'),
       endDate: null,
       checkbox: false
     }
@@ -75,8 +75,7 @@ class Result extends Component {
 
   render() { 
       return (
-        <div>
-          
+        <div>         
           <div style= {{ display:"flex", 
                          flexDirection: "column",
                       }}>
@@ -115,13 +114,6 @@ class Result extends Component {
         </div>
       )
   }
-
 }
 
-/*<Button
-color="secondary"
-onClick={() => this.testAPI()}
->
-  Check checkbox
-</Button>*/
 export default Result;

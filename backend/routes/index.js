@@ -116,4 +116,28 @@ router.get('/unsuccessfulqueries', function(req, res, next) {
 
 });
 
+router.get('/query', function(req, res, next) {
+
+  let query = req.query.query;
+
+  db.getConnection((err, conn) => {
+    conn.query(`select date_format(date, "%d-%m") as x, count(*) as y from fourdays group by search_string,date having search_string like '${query}'`, (error, results, fields) => {
+      if (err) throw err
+      response = 
+      [
+      {
+        id: query,
+        color: "hsl(181, 70%, 50%)",
+        data: results
+      }
+      ]
+
+      res.send(response);
+      conn.release();
+    });
+  });
+});
+
+
+
 module.exports = router;

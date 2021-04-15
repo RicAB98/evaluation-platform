@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Button from "../../components/Button/Button.js";
+import Table from "../../components/Table/Table.js";
 
 import { runEvaluation } from "../../requests/requests.js";
 
@@ -16,6 +17,12 @@ class Run extends Component {
       [2, "Last week"],
       [3, "Last month"]
     ],
+    results: 
+      [{
+        search_string: 'Loading...',
+        n: 'Loading...'
+      }],
+    showResults: false,
     name: '',
     selectedEvaluation: null,
     selectedPeriod: null,
@@ -34,11 +41,11 @@ class Run extends Component {
   };
 
   submitEvaluation = () => {
-    const formData = new FormData();
-
     let evaluationType = this.state.evaluationTypes[this.state.selectedEvaluation - 1]
     let period = this.state.periodTypes[this.state.selectedPeriod - 1]
     let name = this.state.name
+
+    this.setState({ showResults: true});
 
     runEvaluation(name, evaluationType, period)
     .then(res => res.text())
@@ -74,6 +81,13 @@ class Run extends Component {
       >
         Run
       </Button>
+      { this.state.showResults ? 
+        <Table 
+          tableTitle="Results"
+          tableHeaderColor="grey"
+          tableHead={["#", "Query", "Occurrences"]}
+          tableData={this.state.results}
+        /> : null}
     </div>)
   }
 }
