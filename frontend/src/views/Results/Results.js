@@ -5,18 +5,17 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import Table from "../../components/Table/Table.js";
-import { topQueries } from "../../requests/requests.js";
+import { topQueries, unsuccessfulQueries} from "../../requests/requests.js";
 import Calendar from "../../components/Calendar/Calendar.js";
 
 class Result extends Component {
   state = {
-      counters: [
-         {id: 1, value: 4},
-         {id: 2, value: 0},
-         {id: 3, value: 0},
-         {id: 4, value: 0},
-      ],
       popularQueries: 
+      [{
+        search_string: 'Loading...',
+        n: 'Loading...'
+      }],
+      unsuccessfulQueries: 
       [{
         search_string: 'Loading...',
         n: 'Loading...'
@@ -34,6 +33,7 @@ class Result extends Component {
   componentDidMount()
   {
     this.getPopularQueries(this.state.startDate, null)
+    this.getUnsuccessfulQueries(this.state.startDate, null)
   }
 
   getPopularQueries = (startDate, endDate) => {
@@ -45,16 +45,27 @@ class Result extends Component {
     .then(res => this.setState({ popularQueries: res}) )
   }
 
+  getUnsuccessfulQueries = (startDate, endDate) => {
+
+    this.setState({ unsuccessfulQueries: [{search_string: 'Loading...',n: 'Loading...'}],});
+
+    unsuccessfulQueries(startDate, endDate)
+    .then(res => res.json())
+    .then(res => this.setState({ unsuccessfulQueries: res}) )
+  }
+
   changeStartDate = (date) => {
     this.setState({ startDate: date});
     
     this.getPopularQueries(date, this.state.endDate)
+    this.getUnsuccessfulQueries(date, this.state.endDate)
   };
 
   changeEndDate = (date) => {
     this.setState({ endDate: date});
 
     this.getPopularQueries(this.state.startDate, date)
+    this.getUnsuccessfulQueries(this.state.startDate, date)
   };
 
   testAPI = (date) => {
@@ -64,24 +75,41 @@ class Result extends Component {
   render() { 
       return (
         <div>
-          <Calendar 
-            selectedDate = {this.state.startDate}
-            onChange={this.changeStartDate}
-            label = {this.state.checkbox == true ? "Start date" : "Date"}
-          />
-          <FormControlLabel control={<Checkbox checked={this.state.checkbox} onChange={this.handleCheckbox} name="checkbox" />} label="Date range" />
-          {this.state.checkbox == true ? (
-          <Calendar 
-            selectedDate = {this.state.endDate}
-            onChange={this.changeEndDate}
-            label="End date"
-          /> 
-          ): null}
-          <Table 
-          tableHeaderColor="grey"
-          tableHead={["Query", "Occurences"]}
-          tableData={this.state.popularQueries}
+          <div style= {{ display:"flex", 
+                         flexDirection: "column",
+                      }}>
+            <Calendar 
+              selectedDate = {this.state.startDate}
+              onChange={this.changeStartDate}
+              label = {this.state.checkbox == true ? "Start date" : "Date"}
             />
+            <FormControlLabel control={<Checkbox checked={this.state.checkbox} onChange={this.handleCheckbox} name="checkbox" />} label="Date range" />
+            {this.state.checkbox == true ? (
+            <Calendar 
+              selectedDate = {this.state.endDate}
+              onChange={this.changeEndDate}
+              label="End date"
+            /> 
+            ): null}
+          </div>
+          <div style= {{ display:"flex", 
+                         flexDirection: "row", 
+                         width: "75%", 
+                         justifyContent: "space-between",
+                      }}>
+            <Table 
+              tableTitle="Popular queries"
+              tableHeaderColor="grey"
+              tableHead={["#", "Query", "Occurrences"]}
+              tableData={this.state.popularQueries}
+            />
+            <Table 
+              tableTitle="Unsuccessful queries"
+              tableHeaderColor="grey"
+              tableHead={["#", "Query", "Occurrences"]}
+              tableData={this.state.unsuccessfulQueries}
+            />
+          </div>
         </div>
       )
   }

@@ -32,7 +32,7 @@ const tableStyle = theme => ({
     color: grayColor[0]
   },
   table: {
-    width: "35%",
+    width: "100%",
     maxWidth: "100%",
     border: "1px solid black",
   },
@@ -57,8 +57,8 @@ const tableStyle = theme => ({
     textAlign: "center"
   },
   tableResponsive: {
-    width: "100%",
-    marginTop: theme.spacing(3),
+    width: 400,
+    marginTop: 50,
     overflowX: "auto"
   },
   tableHeadRow: {
