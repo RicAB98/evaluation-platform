@@ -5,8 +5,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import Table from "../../components/Table/Table.js";
-import { topQueries, unsuccessfulQueries} from "../../requests/requests.js";
 import Calendar from "../../components/Calendar/Calendar.js";
+import BarChart from "../../components/Chart/Chart.js";
+import { topQueries, unsuccessfulQueries} from "../../requests/requests.js";
 
 class Result extends Component {
   state = {
@@ -75,6 +76,7 @@ class Result extends Component {
   render() { 
       return (
         <div>
+          
           <div style= {{ display:"flex", 
                          flexDirection: "column",
                       }}>
