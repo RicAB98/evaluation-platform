@@ -101,13 +101,13 @@ class Result extends Component {
             <Table 
               tableTitle="Popular queries"
               tableHeaderColor="grey"
-              tableHead={["#", "Query", "Occurrences"]}
+              tableHead={["#", "Query", "Occurrences", ' ']}
               tableData={this.state.popularQueries}
             />
             <Table 
               tableTitle="Unsuccessful queries"
               tableHeaderColor="grey"
-              tableHead={["#", "Query", "Occurrences"]}
+              tableHead={["#", "Query", "Occurrences", ' ']}
               tableData={this.state.unsuccessfulQueries}
             />
           </div>

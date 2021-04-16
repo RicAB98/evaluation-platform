@@ -6,6 +6,7 @@ import LineChart from "../../components/Chart/LineChart";
 import { queryEvolution} from "../../requests/requests.js";
 
 class QueryPerformance extends Component {
+ 
   state = {
       startDate: new Date('2021-01-29'),
       endDate: null,
@@ -24,7 +25,13 @@ class QueryPerformance extends Component {
           ]
         }
     ],
-      name: '',
+      name: this.props.location.state != null ? this.props.location.state.string: '',
+    }
+
+    componentDidMount()
+    {
+      if(this.state.name != '')
+        this.submitEvaluation();
     }
 
     changeValue = (event) => {
@@ -41,7 +48,8 @@ class QueryPerformance extends Component {
       };
 
   render() { 
-      return (     
+      return (
+           
         <div style= {{ display:"flex", 
             flexDirection: "column",
             }}>  

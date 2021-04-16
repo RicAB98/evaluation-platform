@@ -43,8 +43,8 @@ router.get('/geteval', function(req, res, next) {
   
       evaluations = []
 
-      for (r of results)
-       evaluations.push([r["id"], r["name"]])
+      /*for (r of results)
+       evaluations.push([r["id"], r["name"]])*/
 
       res.send(evaluations);
       conn.release();

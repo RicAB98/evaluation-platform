@@ -3,6 +3,7 @@ import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOut
 import PublishOutlinedIcon from '@material-ui/icons/PublishOutlined';
 import CompareArrowsOutlinedIcon from '@material-ui/icons/CompareArrowsOutlined';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import TimelineIcon from '@material-ui/icons/Timeline';
 // core components/views for Admin layout
 
 import RunPage from "./views/Run/Run.js";
@@ -38,7 +39,7 @@ const dashboardRoutes = [
   {
     path: "/query",
     name: "Query Performance",
-    icon: AccessTimeIcon,
+    icon: TimelineIcon,
     component: QueryPage,
     layout: "/admin"
   },

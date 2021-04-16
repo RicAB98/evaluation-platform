@@ -7,6 +7,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import TimelineIcon from '@material-ui/icons/Timeline';
+import { Link } from 'react-router-dom';
 // core components
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
 
@@ -48,6 +50,16 @@ export default function CustomTable(props) {
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key} style = {{ textAlign: "center" }}>
                   {prop["n"]}
+                </TableCell>
+                <TableCell className={classes.tableCell} key={key} style = {{ textAlign: "center" }}>
+                <Link
+                  to={{
+                    pathname: "/admin/query",
+                    state: { string: prop["search_string"] }
+                  }}
+                >
+                  <TimelineIcon/>
+                </Link>
                 </TableCell>
               </TableRow>
             );

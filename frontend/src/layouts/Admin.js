@@ -33,7 +33,6 @@ const switchRoutes = (
       }
       return null;
     })}
-    <Redirect from="/" to="/admin/run" />
   </Switch>
 );
 
