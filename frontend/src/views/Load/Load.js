@@ -12,9 +12,16 @@ class Load extends Component {
     ],
     selectedEvaluation: null,
     loaded: false,
-    loadedEvaluation: [
-      ["Loading..", "Loading.."]
-    ]
+    popularQueries: 
+    [{
+      search_string: 'Loading...',
+      n: 'Loading...'
+    }],
+    unsuccessfulQueries: 
+    [{
+      search_string: 'Loading...',
+      n: 'Loading...'
+    }],
   }
 
   componentDidMount()
@@ -29,13 +36,12 @@ class Load extends Component {
   };
 
   loadEvaluation = () => {
-    const formData = new FormData();
 
     loadEvaluation(this.state.selectedEvaluation)
     .then(res => res.json())
-    .then(res => 
-      this.setState({ loadedEvaluation: res }), 
-      this.setState({ loaded: true }))
+    .then(res => (this.setState({ popularQueries: JSON.parse(res[0]["popular"]) }, 
+                  this.setState({ unsuccessfulQueries: JSON.parse(res[0]["unsuccessful"]) }),  
+                  this.setState({ loaded: true }))))
   };
 
   render() {
@@ -53,12 +59,24 @@ class Load extends Component {
           Load
         </Button>
         {this.state.loaded == true ? 
+          <div style= {{ display:"flex", 
+          flexDirection: "row", 
+          width: "75%", 
+          justifyContent: "space-between",
+          }}>
           <Table 
-          tableHeaderColor="warning"
-          tableHead={["Query", "Percentage"]}
-          tableData={this.state.loadedEvaluation}
-            />
-        : null}
+          tableTitle="Popular queries"
+          tableHeaderColor="grey"
+          tableHead={["#", "Query", "Occurrences", ' ']}
+          tableData={this.state.popularQueries}
+          />
+          <Table 
+          tableTitle="Unsuccessful queries"
+          tableHeaderColor="grey"
+          tableHead={["#", "Query", "Occurrences", ' ']}
+          tableData={this.state.unsuccessfulQueries}
+          />
+        </div> : null}
       </div>)
   }
 }

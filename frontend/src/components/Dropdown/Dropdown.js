@@ -36,7 +36,7 @@ export default function Dropdown(props) {
         >
             <option aria-label="None" value="" />
             {list.map((item) =>
-             <option value={item[0]}> {item[1]} </option>)}
+             <option value={item["id"]}> {item["name"]} </option>)}
         </Select>
       </FormControl>
     </div>

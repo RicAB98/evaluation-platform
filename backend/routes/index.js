@@ -6,8 +6,8 @@ router.post('/runeval', function(req, res, next) {
   db.getConnection((err, conn) => {
 
     let name = req.body.name
-    let type = req.body.type[1]
-    let period = req.body.period[1]
+    let type = req.body.type["name"]
+    let period = req.body.period["name"]
     let startDate = new Date(req.body.startDate)
     let endDate = new Date(req.body.endDate)
 
@@ -30,7 +30,7 @@ router.post('/runeval', function(req, res, next) {
 
     let popResponse
     let UnsResponse
-    let date = startDate.getFullYear() + "-" + startDate.getMonth() + 1 + "-" + startDate.getDate() + " " +  startDate.getHours() + ":" + startDate.getMinutes() + ":" + startDate.getSeconds();
+    let date = endDate.getFullYear() + "-" + endDate.getMonth() + 1 + "-" + endDate.getDate() + " " +  endDate.getHours() + ":" + endDate.getMinutes() + ":" + endDate.getSeconds();
 
     db.getConnection((err, conn) => {
       conn.query(queryPop, (error, results, fields) => {
@@ -45,7 +45,10 @@ router.post('/runeval', function(req, res, next) {
         
           UnsResponse = results
 
-          conn.query(`INSERT INTO evaluation (name, type, period, popular, unsuccessful, date) VALUES ('${name}', '${type}', '${period}', '${popResponse}', '${UnsResponse}', '${date}')`, (err, results, fields) => {
+          console.log(JSON.stringify(UnsResponse))
+
+          conn.query(`INSERT INTO evaluation (name, type, period, popular, unsuccessful, date) VALUES 
+          ('${name}', '${type}', '${period}', '${JSON.stringify(popResponse)}', '${JSON.stringify(UnsResponse)}', '${date}')`, (err, results, fields) => {
             if (err) 
               throw err
 
@@ -84,30 +87,25 @@ router.post('/runeval', function(req, res, next) {
   });
 });
 
-router.get('/loadeval/:id', function(req, res, next) {
-  let id = req.params.id
+router.get('/loadeval', function(req, res, next) {
+  let id = req.query.id
 
-  res.send([
-    [id, "Niger"],
-    [id, "Curaçao"],
-    [id, "Netherlands"],
-    [id, "Korea, South"],
-    [id, "Malawi"],
-    [id, "Chile"]
-  ]);
+  db.getConnection((err, conn) => {
+    conn.query(`SELECT popular, unsuccessful from evaluation where id = ${id}`, (err, results, fields) => {
+      if (err) throw err
+
+      res.send(results);
+      conn.release();
+    });
+  });
 });
 
-router.get('/geteval', function(req, res, next) {
+router.get('/getevaluations', function(req, res, next) {
   db.getConnection((err, conn) => {
-    conn.query('SELECT * from Evaluation', (error, results, fields) => {
+    conn.query('SELECT id,name from evaluation', (err, results, fields) => {
       if (err) throw err
-  
-      evaluations = []
 
-      /*for (r of results)
-       evaluations.push([r["id"], r["name"]])*/
-
-      res.send(evaluations);
+      res.send(results);
       conn.release();
     });
   });

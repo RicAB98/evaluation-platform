@@ -19,7 +19,7 @@ export function runEvaluation (name, type, period, startDate, endDate){
 
 
 export function loadEvaluation (id){
-    return fetch(apiHost + "/loadeval/" + id, {
+    return fetch(apiHost + "/loadeval/?id=" + id, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json;charset=utf-8',
@@ -29,7 +29,7 @@ export function loadEvaluation (id){
 }
 
 export function getEvaluations (){
-    return fetch(apiHost + "/geteval", {
+    return fetch(apiHost + "/getevaluations", {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json;charset=utf-8',
