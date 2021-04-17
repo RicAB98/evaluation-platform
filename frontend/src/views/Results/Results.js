@@ -67,7 +67,7 @@ class Result extends Component {
 
     topQueries(startDate, endDate)
     .then(res => res.json())
-    .then(res => this.setState({ popularQueries: res}) )
+    .then(res => console.log(res));//this.setState({ popularQueries: res}) )
   }
 
   getUnsuccessfulQueries = (startDate, endDate) => {

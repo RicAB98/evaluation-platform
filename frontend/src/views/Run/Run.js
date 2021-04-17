@@ -3,7 +3,7 @@ import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
 
-import { topQueries, unsuccessfulQueries} from "../../requests/requests.js";
+import { topQueries, unsuccessfulQueries, runEvaluation} from "../../requests/requests.js";
 
 class Run extends Component {
   state = {
@@ -51,29 +51,13 @@ class Run extends Component {
     this.setState({ selectedPeriod: event.target.value});
   };
 
-  getPopularQueries = (startDate, endDate) => {
-
-    this.setState({ popularQueries: [{search_string: 'Loading...',n: 'Loading...'}],});
-
-    topQueries(startDate, endDate)
-    .then(res => res.json())
-    .then(res => this.setState({ popularQueries: res}) )
-  }
-
-  getUnsuccessfulQueries = (startDate, endDate) => {
-
-    this.setState({ unsuccessfulQueries: [{search_string: 'Loading...',n: 'Loading...'}],});
-
-    unsuccessfulQueries(startDate, endDate)
-    .then(res => res.json())
-    .then(res => this.setState({ unsuccessfulQueries: res}) )
-  }
-
   submitEvaluation = () => {
     let evaluationType = this.state.evaluationTypes[this.state.selectedEvaluation - 1]
     let period = this.state.periodTypes[this.state.selectedPeriod - 1]
     let name = this.state.name
 
+    this.setState({ popularQueries: [{search_string: 'Loading...',n: 'Loading...'}],});
+    this.setState({ unsuccessfulQueries: [{search_string: 'Loading...',n: 'Loading...'}],});
     this.setState({ showResults: true});
   
     let minute = 60000;
@@ -81,13 +65,9 @@ class Run extends Component {
     let currentDate = new Date('2021-01-23 23:59:59');
     let referenceDate = new Date(currentDate - period[2] * minute)
 
-    topQueries(referenceDate, currentDate)
+    runEvaluation(name, evaluationType, period, referenceDate, currentDate)
     .then(res => res.json())
-    .then(res => this.setState({ popularQueries: res}) )
-
-    unsuccessfulQueries(referenceDate, currentDate)
-    .then(res => res.json())
-    .then(res => this.setState({ unsuccessfulQueries: res}) )
+    .then(res => ( console.log(res["popular"]), this.setState({ unsuccessfulQueries: res["unsuccessful"]}),  this.setState({ popularQueries: res["popular"]})   ))
   };
 
   render() {

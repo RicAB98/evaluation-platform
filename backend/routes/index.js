@@ -5,29 +5,80 @@ var router = express.Router();
 router.post('/runeval', function(req, res, next) {
   db.getConnection((err, conn) => {
 
-    if(req.body.type == null || req.body.period == null)
-    {
-      res.send("Missing parameters")
-      return
-    }
-
     let name = req.body.name
     let type = req.body.type[1]
     let period = req.body.period[1]
+    let startDate = new Date(req.body.startDate)
+    let endDate = new Date(req.body.endDate)
 
-    let currentTime =  '2021-01-23 23:59:59';
-    let date = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+    /*if(req.body.type == null || req.body.period == null)
+    {
+      res.send("Missing parameters")
+      return
+    }*/
 
-    let popularQuery = `SELECT search_string, count(*) as n from fourdays where time > '${time}' group by search_string order by count(*) DESC LIMIT 10`  
 
-    conn.query(`INSERT INTO Evaluation (name, type, period, date) VALUES ('${name}', '${type}', '${period}', '${date}')`, (error, results, fields) => {
-      if (error)
-      { 
-        error_type = error.toString().substring(7,19)
-        res.send(error_type);
+    queryPop = `select search_string, count(*) as n from fourdays where 
+    time > '${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()} ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}' and
+    time < '${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()} ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}' 
+    group by search_string order by count(*) DESC LIMIT 10`
+
+    queryUns = `select search_string, count(*) as n from fourdays where page_number > 5 and
+    time > '${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()} ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}' and
+    time < '${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()} ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}' 
+    group by search_string order by count(*) DESC LIMIT 10`
+
+    let popResponse
+    let UnsResponse
+    let date = startDate.getFullYear() + "-" + startDate.getMonth() + 1 + "-" + startDate.getDate() + " " +  startDate.getHours() + ":" + startDate.getMinutes() + ":" + startDate.getSeconds();
+
+    db.getConnection((err, conn) => {
+      conn.query(queryPop, (error, results, fields) => {
+        if (err) 
+          throw err
+  
+        popResponse = results
+
+        conn.query(queryUns, (error, results, fields) => {
+          if (err) 
+            throw err
+        
+          UnsResponse = results
+
+          conn.query(`INSERT INTO evaluation (name, type, period, popular, unsuccessful, date) VALUES ('${name}', '${type}', '${period}', '${popResponse}', '${UnsResponse}', '${date}')`, (err, results, fields) => {
+            if (err) 
+              throw err
+
+            let response = {
+              popular: popResponse,
+              unsuccessful: UnsResponse
+            }
+
+            res.send(response)
+          });
+        });
+      });
+     
+      conn.release();
+
+    })
+
+  
+    
+
+    
+    return;
+
+    conn.query(`INSERT INTO Evaluation (name, type, period, popular, unsuccessful, date) VALUES ('${name}', '${type}', '${period}', '${popResponse}', '${UnsResponse}', '${date}')`, (error, results, fields) => {
+      if (err) 
+          throw err
+
+      let response = {
+        popular: popResponse,
+        unsuccessful: unsuccessfulQueries
       }
-      else
-        res.send("Evaluation created");
+
+      res.send()
       conn.release();
     });
   });
