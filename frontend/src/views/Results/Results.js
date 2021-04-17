@@ -1,12 +1,11 @@
 import React, {Component} from "react";
 // core components
-import Button from "@material-ui/core/Button";
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Button from "../../components/Button/Button.js";
 
 import Table from "../../components/Table/Table.js";
 import Calendar from "../../components/Calendar/Calendar.js";
-import LineChart from "../../components/Chart/LineChart";
 import { topQueries, unsuccessfulQueries} from "../../requests/requests.js";
 
 class Result extends Component {
@@ -21,7 +20,7 @@ class Result extends Component {
         search_string: 'Loading...',
         n: 'Loading...'
       }],
-      startDate: new Date('2021-01-20'),
+      startDate: new Date('2021-01-20 0:0:0'),
       endDate: null,
       checkbox: false
     }
@@ -35,6 +34,31 @@ class Result extends Component {
   {
     this.getPopularQueries(this.state.startDate, null)
     this.getUnsuccessfulQueries(this.state.startDate, null)
+  }
+
+  submitEvaluation() {
+
+    let startDate = new Date(this.state.startDate)
+    startDate.setHours(0);
+    startDate.setMinutes(0);
+    startDate.setSeconds(0);
+    
+    if(this.state.endDate != null)
+    {
+      let endDate = new Date(this.state.endDate)
+      endDate.setHours(23);
+      endDate.setMinutes(59);
+      endDate.setSeconds(59);
+
+      this.getPopularQueries(startDate, endDate)
+      this.getUnsuccessfulQueries(startDate, endDate)
+    }
+
+    else
+    {
+      this.getPopularQueries(startDate, this.state.endDate)
+      this.getUnsuccessfulQueries(startDate, this.state.endDate)
+    }
   }
 
   getPopularQueries = (startDate, endDate) => {
@@ -57,20 +81,10 @@ class Result extends Component {
 
   changeStartDate = (date) => {
     this.setState({ startDate: date});
-    
-    this.getPopularQueries(date, this.state.endDate)
-    this.getUnsuccessfulQueries(date, this.state.endDate)
   };
 
   changeEndDate = (date) => {
     this.setState({ endDate: date});
-
-    this.getPopularQueries(this.state.startDate, date)
-    this.getUnsuccessfulQueries(this.state.startDate, date)
-  };
-
-  testAPI = (date) => {
-      console.log(this.state.checkbox)
   };
 
   render() { 
@@ -92,23 +106,30 @@ class Result extends Component {
               label="End date"
             /> 
             ): null}
+            <Button
+              color="custom"
+              onClick={() => this.submitEvaluation()}
+              style={{ width: 100}}
+            >
+              Submit
+            </Button>
           </div>
           <div style= {{ display:"flex", 
-                         flexDirection: "row", 
-                         width: "75%", 
-                         justifyContent: "space-between",
-                      }}>
+            flexDirection: "row", 
+            width: "75%", 
+            justifyContent: "space-between",
+            }}>
             <Table 
-              tableTitle="Popular queries"
-              tableHeaderColor="grey"
-              tableHead={["#", "Query", "Occurrences", ' ']}
-              tableData={this.state.popularQueries}
+            tableTitle="Popular queries"
+            tableHeaderColor="grey"
+            tableHead={["#", "Query", "Occurrences", ' ']}
+            tableData={this.state.popularQueries}
             />
             <Table 
-              tableTitle="Unsuccessful queries"
-              tableHeaderColor="grey"
-              tableHead={["#", "Query", "Occurrences", ' ']}
-              tableData={this.state.unsuccessfulQueries}
+            tableTitle="Unsuccessful queries"
+            tableHeaderColor="grey"
+            tableHead={["#", "Query", "Occurrences", ' ']}
+            tableData={this.state.unsuccessfulQueries}
             />
           </div>
         </div>
@@ -116,4 +137,21 @@ class Result extends Component {
   }
 }
 
+/*<div style= {{ display:"flex", 
+flexDirection: "row", 
+width: "75%", 
+justifyContent: "space-between",
+}}>
+<Table 
+tableTitle="Popular queries"
+tableHeaderColor="grey"
+tableHead={["#", "Query", "Occurrences", ' ']}
+tableData={this.state.popularQueries}
+/>
+<Table 
+tableTitle="Unsuccessful queries"
+tableHeaderColor="grey"
+tableHead={["#", "Query", "Occurrences", ' ']}
+tableData={this.state.unsuccessfulQueries}
+/></div>*/
 export default Result;

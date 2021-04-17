@@ -3,19 +3,20 @@ import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
 
-import { runEvaluation } from "../../requests/requests.js";
+import { topQueries, unsuccessfulQueries} from "../../requests/requests.js";
 
 class Run extends Component {
   state = {
     evaluationTypes: [
-      [1, "Least successful"],
-      [2, "Most searched"],
-      [3, "Overall"]
+      [1, "Unsuccessful"],
+      [2, "Popular"],
+      [3, "All"]
     ],
     periodTypes: [
-      [1, "Last day"],
-      [2, "Last week"],
-      [3, "Last month"]
+      [1, "Last hour", 60],
+      [2, "Last 3 hours", 180],
+      [3, "Last 12 hours", 720],
+      [4, "Last day", 1440],
     ],
     results: 
       [{
@@ -26,6 +27,16 @@ class Run extends Component {
     name: '',
     selectedEvaluation: null,
     selectedPeriod: null,
+    popularQueries: 
+      [{
+        search_string: 'Loading...',
+        n: 'Loading...'
+      }],
+      unsuccessfulQueries: 
+      [{
+        search_string: 'Loading...',
+        n: 'Loading...'
+      }],
   }
 
   changeValue = (event) => {
@@ -40,16 +51,43 @@ class Run extends Component {
     this.setState({ selectedPeriod: event.target.value});
   };
 
+  getPopularQueries = (startDate, endDate) => {
+
+    this.setState({ popularQueries: [{search_string: 'Loading...',n: 'Loading...'}],});
+
+    topQueries(startDate, endDate)
+    .then(res => res.json())
+    .then(res => this.setState({ popularQueries: res}) )
+  }
+
+  getUnsuccessfulQueries = (startDate, endDate) => {
+
+    this.setState({ unsuccessfulQueries: [{search_string: 'Loading...',n: 'Loading...'}],});
+
+    unsuccessfulQueries(startDate, endDate)
+    .then(res => res.json())
+    .then(res => this.setState({ unsuccessfulQueries: res}) )
+  }
+
   submitEvaluation = () => {
     let evaluationType = this.state.evaluationTypes[this.state.selectedEvaluation - 1]
     let period = this.state.periodTypes[this.state.selectedPeriod - 1]
     let name = this.state.name
 
     this.setState({ showResults: true});
+  
+    let minute = 60000;
 
-    runEvaluation(name, evaluationType, period)
-    .then(res => res.text())
-    .then(res => console.log(res))
+    let currentDate = new Date('2021-01-23 23:59:59');
+    let referenceDate = new Date(currentDate - period[2] * minute)
+
+    topQueries(referenceDate, currentDate)
+    .then(res => res.json())
+    .then(res => this.setState({ popularQueries: res}) )
+
+    unsuccessfulQueries(referenceDate, currentDate)
+    .then(res => res.json())
+    .then(res => this.setState({ unsuccessfulQueries: res}) )
   };
 
   render() {
@@ -82,12 +120,24 @@ class Run extends Component {
         Run
       </Button>
       { this.state.showResults ? 
+        <div style= {{ display:"flex", 
+        flexDirection: "row", 
+        width: "75%", 
+        justifyContent: "space-between",
+        }}>
         <Table 
-          tableTitle="Results"
-          tableHeaderColor="grey"
-          tableHead={["#", "Query", "Occurrences"]}
-          tableData={this.state.results}
-        /> : null}
+        tableTitle="Popular queries"
+        tableHeaderColor="grey"
+        tableHead={["#", "Query", "Occurrences", ' ']}
+        tableData={this.state.popularQueries}
+        />
+        <Table 
+        tableTitle="Unsuccessful queries"
+        tableHeaderColor="grey"
+        tableHead={["#", "Query", "Occurrences", ' ']}
+        tableData={this.state.unsuccessfulQueries}
+        />
+      </div> : null}
     </div>)
   }
 }
