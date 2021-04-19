@@ -12,7 +12,7 @@ export default function LineChart (props) {
     const {data} = props;
 
     return (
-    <div style = {{ height:500}}>
+    <div style = {{ height:450, width: 800}}>
     <ResponsiveLine
         data={data}
         margin={{ top: 50, right: 110, bottom: 50, left: 60 }}

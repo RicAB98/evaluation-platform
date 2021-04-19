@@ -8,15 +8,15 @@ import { topQueries, unsuccessfulQueries, runEvaluation} from "../../requests/re
 class Run extends Component {
   state = {
     evaluationTypes: [
-      [1, "Unsuccessful"],
-      [2, "Popular"],
-      [3, "All"]
+      {id: 1, name: "Unsuccessful"},
+      {id: 2, name: "Popular"},
+      {id: 3, name: "All"}
     ],
     periodTypes: [
-      [1, "Last hour", 60],
-      [2, "Last 3 hours", 180],
-      [3, "Last 12 hours", 720],
-      [4, "Last day", 1440],
+      {id: 1, name: "Last hour", minutes: 60},
+      {id: 2, name: "Last 3 hours", minutes: 180},
+      {id: 3, name: "Last 12 hours", minutes: 720},
+      {id: 4, name: "Last day", minutes: 1440},
     ],
     results: 
       [{
@@ -63,7 +63,7 @@ class Run extends Component {
     let minute = 60000;
 
     let currentDate = new Date('2021-01-23 23:59:59');
-    let referenceDate = new Date(currentDate - period[2] * minute)
+    let referenceDate = new Date(currentDate - period["minutes"] * minute)
 
     runEvaluation(name, evaluationType, period, referenceDate, currentDate)
     .then(res => res.json())
@@ -83,11 +83,11 @@ class Run extends Component {
           style={{ marginLeft: 8 }}
         />
       </label>
-      <Dropdown 
+      {/*<Dropdown 
         list={this.state.evaluationTypes} 
         name="Type"
         onChange={this.changeEvaluation}
-      />
+      />*/}
       <Dropdown 
         list={this.state.periodTypes} 
         name="Period"

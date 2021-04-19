@@ -6,7 +6,7 @@ import Button from "../../components/Button/Button.js";
 
 import Table from "../../components/Table/Table.js";
 import Calendar from "../../components/Calendar/Calendar.js";
-import { topQueries, unsuccessfulQueries} from "../../requests/requests.js";
+import { topQueries, unsuccessfulQueries, loadDailyEvaluation} from "../../requests/requests.js";
 
 class Result extends Component {
   state = {
@@ -32,11 +32,20 @@ class Result extends Component {
 
   componentDidMount()
   {
-    this.getPopularQueries(this.state.startDate, null)
-    this.getUnsuccessfulQueries(this.state.startDate, null)
+    //this.getPopularQueries(this.state.startDate, null)
+    //this.getUnsuccessfulQueries(this.state.startDate, null)
   }
 
   submitEvaluation() {
+
+    console.log("submit")
+
+    loadDailyEvaluation(this.state.startDate)
+    .then(res => res.json())
+    .then(res => (this.setState({ popularQueries: JSON.parse(res[0]["popular"]) }, 
+                  this.setState({ unsuccessfulQueries: JSON.parse(res[0]["unsuccessful"]) }) )))
+
+    return
 
     let startDate = new Date(this.state.startDate)
     startDate.setHours(0);
@@ -67,7 +76,7 @@ class Result extends Component {
 
     topQueries(startDate, endDate)
     .then(res => res.json())
-    .then(res => console.log(res));//this.setState({ popularQueries: res}) )
+    .then(res => this.setState({ popularQueries: res}) )
   }
 
   getUnsuccessfulQueries = (startDate, endDate) => {

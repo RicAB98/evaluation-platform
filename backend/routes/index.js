@@ -5,18 +5,18 @@ var router = express.Router();
 router.post('/runeval', function(req, res, next) {
   db.getConnection((err, conn) => {
 
-    let name = req.body.name
-    let type = req.body.type[1]
-    let period = req.body.period[1]
-    let startDate = new Date(req.body.startDate)
-    let endDate = new Date(req.body.endDate)
-
-    /*if(req.body.type == null || req.body.period == null)
+    if(req.body.period == null)
     {
       res.send("Missing parameters")
       return
-    }*/
+    }
 
+    let name = req.body.name
+    //let type = req.body.type["name"]
+    let type = "All"
+    let period = req.body.period["name"].replace("Last", "Previous");
+    let startDate = new Date(req.body.startDate)
+    let endDate = new Date(req.body.endDate)
 
     queryPop = `select search_string, count(*) as n from fourdays where 
     time > '${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()} ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}' and
@@ -30,7 +30,7 @@ router.post('/runeval', function(req, res, next) {
 
     let popResponse
     let UnsResponse
-    let date = startDate.getFullYear() + "-" + startDate.getMonth() + 1 + "-" + startDate.getDate() + " " +  startDate.getHours() + ":" + startDate.getMinutes() + ":" + startDate.getSeconds();
+    let date = endDate.getFullYear() + "-" + endDate.getMonth() + 1 + "-" + endDate.getDate() + " " +  endDate.getHours() + ":" + endDate.getMinutes() + ":" + endDate.getSeconds();
 
     db.getConnection((err, conn) => {
       conn.query(queryPop, (error, results, fields) => {
@@ -45,7 +45,8 @@ router.post('/runeval', function(req, res, next) {
         
           UnsResponse = results
 
-          conn.query(`INSERT INTO evaluation (name, type, period, popular, unsuccessful, date) VALUES ('${name}', '${type}', '${period}', '${popResponse}', '${UnsResponse}', '${date}')`, (err, results, fields) => {
+          conn.query(`INSERT INTO evaluation (name, type, period, popular, unsuccessful, date) VALUES 
+          ('${name}', '${type}', '${period}', '${JSON.stringify(popResponse)}', '${JSON.stringify(UnsResponse)}', '${date}')`, (err, results, fields) => {
             if (err) 
               throw err
 
@@ -62,52 +63,45 @@ router.post('/runeval', function(req, res, next) {
       conn.release();
 
     })
+  });
+});
 
-  
-    
+router.get('/loaddailyeval', function(req, res, next) {
+  let date = new Date(req.query.date)
+  let query = `SELECT popular, unsuccessful from daily_evaluation where 
+                date = '${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}'`
 
-    
-    return;
+  console.log(query)
 
-    conn.query(`INSERT INTO Evaluation (name, type, period, popular, unsuccessful, date) VALUES ('${name}', '${type}', '${period}', '${popResponse}', '${UnsResponse}', '${date}')`, (error, results, fields) => {
-      if (err) 
-          throw err
+  db.getConnection((err, conn) => {
+    conn.query(query, (err, results, fields) => {
+      if (err) throw err
 
-      let response = {
-        popular: popResponse,
-        unsuccessful: unsuccessfulQueries
-      }
-
-      res.send()
+      res.send(results);
       conn.release();
     });
   });
 });
 
-router.get('/loadeval/:id', function(req, res, next) {
-  let id = req.params.id
+router.get('/loadeval', function(req, res, next) {
+  let id = req.query.id
 
-  res.send([
-    [id, "Niger"],
-    [id, "Curaçao"],
-    [id, "Netherlands"],
-    [id, "Korea, South"],
-    [id, "Malawi"],
-    [id, "Chile"]
-  ]);
+  db.getConnection((err, conn) => {
+    conn.query(`SELECT period, date, popular, unsuccessful from evaluation where id = ${id}`, (err, results, fields) => {
+      if (err) throw err
+
+      res.send(results);
+      conn.release();
+    });
+  });
 });
 
-router.get('/geteval', function(req, res, next) {
+router.get('/getevaluations', function(req, res, next) {
   db.getConnection((err, conn) => {
-    conn.query('SELECT * from Evaluation', (error, results, fields) => {
+    conn.query('SELECT id,name from evaluation', (err, results, fields) => {
       if (err) throw err
-  
-      evaluations = []
 
-      /*for (r of results)
-       evaluations.push([r["id"], r["name"]])*/
-
-      res.send(evaluations);
+      res.send(results);
       conn.release();
     });
   });
@@ -174,12 +168,12 @@ router.get('/unsuccessfulqueries', function(req, res, next) {
 
 });
 
-router.get('/query', function(req, res, next) {
+router.get('/queryGraph', function(req, res, next) {
 
   let query = req.query.query;
 
   db.getConnection((err, conn) => {
-    conn.query(`select date_format(date, "%d-%m") as x, count(*) as y from fourdays group by search_string,date having search_string like '${query}'`, (error, results, fields) => {
+    conn.query(`select date_format(date, "%d-%m") as x, count(*) as y from fourdays group by search_string,date having search_string like '${query}'`, (err, results, fields) => {
       if (err) throw err
       response = 
       [
@@ -196,6 +190,31 @@ router.get('/query', function(req, res, next) {
   });
 });
 
+router.get('/queryTable', function(req, res, next) {
 
+  let query = req.query.query;
+
+  db.getConnection((err, conn) => {
+    conn.query(`select page_number, mysql_id, count(*) as n from fourdays where search_string = '${query}' group by page_number, mysql_id order by page_number, mysql_id`, (err, results, fields) => {
+      if (err) throw err
+
+      let sum = 0;
+      let processedResults = []
+
+      for(r of results)
+      {
+        if (r.page_number <= 1)
+          processedResults.push(r)
+        else
+          sum += r.n  
+      }
+
+      processedResults.push({page_number: '20+', mysql_id: '', n: sum })
+
+      res.send(processedResults);
+      conn.release();
+    });
+  });
+});
 
 module.exports = router;

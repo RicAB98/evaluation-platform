@@ -19,7 +19,19 @@ export function runEvaluation (name, type, period, startDate, endDate){
 
 
 export function loadEvaluation (id){
-    return fetch(apiHost + "/loadeval/" + id, {
+    return fetch(apiHost + "/loadeval/?id=" + id, {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json;charset=utf-8',
+            'Access-Control-Allow-Origin': '*' 
+        }
+    });
+}
+
+export function loadDailyEvaluation (date){
+
+
+    return fetch(apiHost + "/loaddailyeval?date=" + date, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json;charset=utf-8',
@@ -29,7 +41,7 @@ export function loadEvaluation (id){
 }
 
 export function getEvaluations (){
-    return fetch(apiHost + "/geteval", {
+    return fetch(apiHost + "/getevaluations", {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json;charset=utf-8',
@@ -70,9 +82,25 @@ export function unsuccessfulQueries (startDate, endDate){
     });
 }
 
-export function queryEvolution (string){
+export function queryGraph (string){
 
-    let query = apiHost + "/query?query=" + string
+    let query = apiHost + "/queryGraph?query=" + string
+
+    /*if(endDate != null)
+        query = query + "&endDate=" + endDate*/
+
+    return fetch(query, {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json;charset=utf-8',
+            'Access-Control-Allow-Origin': '*' 
+        }
+    });
+}
+
+export function queryTable (string){
+
+    let query = apiHost + "/queryTable?query=" + string
 
     /*if(endDate != null)
         query = query + "&endDate=" + endDate*/

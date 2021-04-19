@@ -12,9 +12,18 @@ class Load extends Component {
     ],
     selectedEvaluation: null,
     loaded: false,
-    loadedEvaluation: [
-      ["Loading..", "Loading.."]
-    ]
+    period: null,
+    date: null,
+    popularQueries: 
+    [{
+      search_string: 'Loading...',
+      n: 'Loading...'
+    }],
+    unsuccessfulQueries: 
+    [{
+      search_string: 'Loading...',
+      n: 'Loading...'
+    }],
   }
 
   componentDidMount()
@@ -29,13 +38,14 @@ class Load extends Component {
   };
 
   loadEvaluation = () => {
-    const formData = new FormData();
 
     loadEvaluation(this.state.selectedEvaluation)
     .then(res => res.json())
-    .then(res => 
-      this.setState({ loadedEvaluation: res }), 
-      this.setState({ loaded: true }))
+    .then(res => (this.setState({ popularQueries: JSON.parse(res[0]["popular"]) }, 
+                  this.setState({ unsuccessfulQueries: JSON.parse(res[0]["unsuccessful"]) }),  
+                  this.setState({ period: res[0]["period"] }),  
+                  this.setState({ date: new Date(res[0]["date"]) }),  
+                  this.setState({ loaded: true }))))
   };
 
   render() {
@@ -53,12 +63,28 @@ class Load extends Component {
           Load
         </Button>
         {this.state.loaded == true ? 
-          <Table 
-          tableHeaderColor="warning"
-          tableHead={["Query", "Percentage"]}
-          tableData={this.state.loadedEvaluation}
-            />
-        : null}
+          <div>
+            <h3 style= {{ marginTop: 20}} >{this.state.date.getFullYear()}-{this.state.date.getMonth() + 1}-{this.state.date.getDate()} {this.state.date.getHours()}:{this.state.date.getMinutes()}:{this.state.date.getSeconds()}</h3>
+            <h4 style= {{ marginTop: 10}} >{this.state.period}</h4>
+            <div style= {{ display:"flex", 
+            flexDirection: "row", 
+            width: "75%", 
+            justifyContent: "space-between",
+            }}>
+              <Table 
+              tableTitle="Popular queries"
+              tableHeaderColor="grey"
+              tableHead={["#", "Query", "Occurrences", ' ']}
+              tableData={this.state.popularQueries}
+              />
+              <Table 
+              tableTitle="Unsuccessful queries"
+              tableHeaderColor="grey"
+              tableHead={["#", "Query", "Occurrences", ' ']}
+              tableData={this.state.unsuccessfulQueries}
+              />
+            </div>
+        </div> : null}
       </div>)
   }
 }
