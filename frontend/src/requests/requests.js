@@ -20,7 +20,6 @@ export function runEvaluation (name, type, period, startDate, endDate){
 
 export function loadEvaluation (id){
     return fetch(apiHost + "/loadeval/?id=" + id, {
-<<<<<<< HEAD
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json;charset=utf-8',
@@ -33,8 +32,6 @@ export function loadDailyEvaluation (date){
 
 
     return fetch(apiHost + "/loaddailyeval?date=" + date, {
-=======
->>>>>>> 0bbda8de16febbff758fe5b49124d9d96d8f299f
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json;charset=utf-8',

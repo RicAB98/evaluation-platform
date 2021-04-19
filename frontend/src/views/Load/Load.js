@@ -12,11 +12,8 @@ class Load extends Component {
     ],
     selectedEvaluation: null,
     loaded: false,
-<<<<<<< HEAD
     period: null,
     date: null,
-=======
->>>>>>> 0bbda8de16febbff758fe5b49124d9d96d8f299f
     popularQueries: 
     [{
       search_string: 'Loading...',
