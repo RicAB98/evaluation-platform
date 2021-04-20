@@ -7,8 +7,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TimelineIcon from '@material-ui/icons/Timeline';
-import { Link } from 'react-router-dom';
+import TimelineIcon from "@material-ui/icons/Timeline";
+import { Link } from "react-router-dom";
 // core components
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
 
@@ -16,12 +16,18 @@ const useStyles = makeStyles(styles);
 
 export default function CustomTable(props) {
   const classes = useStyles();
-  const { tableTitle, tableDate, tableHead, tableData, tableHeaderColor } = props;
+  const {
+    tableTitle,
+    tableDate,
+    tableHead,
+    tableData,
+    tableHeaderColor,
+  } = props;
 
   return (
     <div className={classes.tableResponsive}>
-      <h5 style = {{ marginBottom: 30}}> {tableTitle} </h5> 
-      <Table className={classes.table} >
+      <h5 style={{ marginBottom: 30 }}> {tableTitle} </h5>
+      <Table className={classes.table}>
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
             <TableRow className={classes.tableHeadRow}>
@@ -39,7 +45,7 @@ export default function CustomTable(props) {
           </TableHead>
         ) : null}
         <TableBody>
-        {console.log(tableData)}
+          {console.log(tableData)}
           {tableData.map((prop, key) => {
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
@@ -49,30 +55,38 @@ export default function CustomTable(props) {
                 <TableCell className={classes.tableCell} key={key}>
                   {prop["search_string"]}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key} style = {{ textAlign: "center" }}>
+                <TableCell
+                  className={classes.tableCell}
+                  key={key}
+                  style={{ textAlign: "center" }}
+                >
                   {prop["n"]}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key} style = {{ textAlign: "center" }}>
-                <Link
-                  to={{
-                    pathname: "/admin/query",
-                    state: { string: prop["search_string"] }
-                  }}
+                <TableCell
+                  className={classes.tableCell}
+                  key={key}
+                  style={{ textAlign: "center" }}
                 >
-                  <TimelineIcon/>
-                </Link>
+                  <Link
+                    to={{
+                      pathname: "/admin/query",
+                      state: { string: prop["search_string"] },
+                    }}
+                  >
+                    <TimelineIcon />
+                  </Link>
                 </TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
-    </div> 
+    </div>
   );
 }
 
 CustomTable.defaultProps = {
-  tableHeaderColor: "gray"
+  tableHeaderColor: "gray",
 };
 
 CustomTable.propTypes = {
@@ -83,8 +97,8 @@ CustomTable.propTypes = {
     "success",
     "info",
     "rose",
-    "gray"
+    "gray",
   ]),
   tableHead: PropTypes.arrayOf(PropTypes.string),
-  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))
+  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
 };

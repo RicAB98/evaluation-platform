@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
-import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import { makeStyles } from "@material-ui/core/styles";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import { loadEvaluation } from "../../requests/requests.js";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,15 +30,16 @@ export default function Dropdown(props) {
           value={selectedEvaluation}
           onChange={onChange}
           inputProps={{
-            name: 'evaluations',
-            id: 'age-native-simple',
+            name: "evaluations",
+            id: "age-native-simple",
           }}
         >
-            <option aria-label="None" value="" />
-            {list.map((item) =>
-             <option value={item["id"]}> {item["name"]} </option>)}
+          <option aria-label="None" value="" />
+          {list.map((item) => (
+            <option value={item["id"]}> {item["name"]} </option>
+          ))}
         </Select>
       </FormControl>
     </div>
-  )
+  );
 }

@@ -1,115 +1,106 @@
-const apiHost = 'http://localhost:9000';
+const apiHost = "http://localhost:9000";
 
-export function runEvaluation (name, type, period, startDate, endDate){
-    return fetch(apiHost + "/runeval", {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json;charset=utf-8',
-            'Access-Control-Allow-Origin': '*' 
-        },
-        body: JSON.stringify({
-            "name": name,
-            "type": type,
-            "period": period,
-            "startDate": startDate,
-            "endDate": endDate,
-        })
-    });
+export function runEvaluation(name, type, period, startDate, endDate) {
+  return fetch(apiHost + "/runeval", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+    body: JSON.stringify({
+      name: name,
+      type: type,
+      period: period,
+      startDate: startDate,
+      endDate: endDate,
+    }),
+  });
 }
 
-
-export function loadEvaluation (id){
-    return fetch(apiHost + "/loadeval/?id=" + id, {
-        method: 'GET',
-        headers: { 
-            'Content-Type': 'application/json;charset=utf-8',
-            'Access-Control-Allow-Origin': '*' 
-        }
-    });
+export function loadEvaluation(id) {
+  return fetch(apiHost + "/loadeval/?id=" + id, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
 }
 
-export function loadDailyEvaluation (date){
-
-
-    return fetch(apiHost + "/loaddailyeval?date=" + date, {
-        method: 'GET',
-        headers: { 
-            'Content-Type': 'application/json;charset=utf-8',
-            'Access-Control-Allow-Origin': '*' 
-        }
-    });
+export function loadDailyEvaluation(date) {
+  return fetch(apiHost + "/loaddailyeval?date=" + date, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
 }
 
-export function getEvaluations (){
-    return fetch(apiHost + "/getevaluations", {
-        method: 'GET',
-        headers: { 
-            'Content-Type': 'application/json;charset=utf-8',
-            'Access-Control-Allow-Origin': '*' 
-        }
-    });
+export function getEvaluations() {
+  return fetch(apiHost + "/getevaluations", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
 }
 
-export function topQueries (startDate, endDate){
+export function topQueries(startDate, endDate) {
+  let query = apiHost + "/topqueries?startDate=" + startDate;
 
-    let query = apiHost + "/topqueries?startDate=" + startDate
+  if (endDate != null) query = query + "&endDate=" + endDate;
 
-    if(endDate != null)
-        query = query + "&endDate=" + endDate
-
-    return fetch(query, {
-        method: 'GET',
-        headers: { 
-            'Content-Type': 'application/json;charset=utf-8',
-            'Access-Control-Allow-Origin': '*' 
-        }
-    });
+  return fetch(query, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
 }
 
-export function unsuccessfulQueries (startDate, endDate){
+export function unsuccessfulQueries(startDate, endDate) {
+  let query = apiHost + "/unsuccessfulqueries?startDate=" + startDate;
 
-    let query = apiHost + "/unsuccessfulqueries?startDate=" + startDate
+  if (endDate != null) query = query + "&endDate=" + endDate;
 
-    if(endDate != null)
-        query = query + "&endDate=" + endDate
-
-    return fetch(query, {
-        method: 'GET',
-        headers: { 
-            'Content-Type': 'application/json;charset=utf-8',
-            'Access-Control-Allow-Origin': '*' 
-        }
-    });
+  return fetch(query, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
 }
 
-export function queryGraph (string){
+export function queryGraph(string) {
+  let query = apiHost + "/queryGraph?query=" + string;
 
-    let query = apiHost + "/queryGraph?query=" + string
-
-    /*if(endDate != null)
+  /*if(endDate != null)
         query = query + "&endDate=" + endDate*/
 
-    return fetch(query, {
-        method: 'GET',
-        headers: { 
-            'Content-Type': 'application/json;charset=utf-8',
-            'Access-Control-Allow-Origin': '*' 
-        }
-    });
+  return fetch(query, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
 }
 
-export function queryTable (string){
+export function queryTable(string) {
+  let query = apiHost + "/queryTable?query=" + string;
 
-    let query = apiHost + "/queryTable?query=" + string
-
-    /*if(endDate != null)
+  /*if(endDate != null)
         query = query + "&endDate=" + endDate*/
 
-    return fetch(query, {
-        method: 'GET',
-        headers: { 
-            'Content-Type': 'application/json;charset=utf-8',
-            'Access-Control-Allow-Origin': '*' 
-        }
-    });
+  return fetch(query, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
 }
