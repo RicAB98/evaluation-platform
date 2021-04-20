@@ -90,7 +90,6 @@ class Run extends Component {
         <label style={{ marginLeft: 8 }}>
           Name:
           <input
-            defaultValue="Default"
             value={this.state.name}
             onChange={this.changeValue}
             type="text"
@@ -121,13 +120,13 @@ class Run extends Component {
           >
             <Table
               tableTitle="Popular queries"
-              tableHeaderColor="grey"
+              tableHeaderColor="gray"
               tableHead={["#", "Query", "Occurrences", " "]}
               tableData={this.state.popularQueries}
             />
             <Table
               tableTitle="Unsuccessful queries"
-              tableHeaderColor="grey"
+              tableHeaderColor="gray"
               tableHead={["#", "Query", "Occurrences", " "]}
               tableData={this.state.unsuccessfulQueries}
             />

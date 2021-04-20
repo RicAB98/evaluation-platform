@@ -37,8 +37,6 @@ class Result extends Component {
   };
 
   submitEvaluation() {
-    console.log("submit");
-
     loadDailyEvaluation(this.state.startDate)
       .then((res) => res.json())
       .then((res) =>
@@ -143,13 +141,13 @@ class Result extends Component {
         >
           <Table
             tableTitle="Popular queries"
-            tableHeaderColor="grey"
+            tableHeaderColor="gray"
             tableHead={["#", "Query", "Occurrences", " "]}
             tableData={this.state.popularQueries}
           />
           <Table
             tableTitle="Unsuccessful queries"
-            tableHeaderColor="grey"
+            tableHeaderColor="gray"
             tableHead={["#", "Query", "Occurrences", " "]}
             tableData={this.state.unsuccessfulQueries}
           />

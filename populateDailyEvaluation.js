@@ -34,9 +34,7 @@ const pool = mysql.createPool({
         (async () => {
             try {
               const popular = await query(popularQuery);
-              console.log("pop" + formattedDate)
               const unsuccessful = await query(unsuccessfulQuery);
-              console.log("uns" + formattedDate)
               await query(`INSERT INTO daily_evaluation (popular, unsuccessful, date) VALUES 
               ('${JSON.stringify(popular)}', '${JSON.stringify(unsuccessful)}', '${formattedDate}')`)
               
@@ -46,26 +44,6 @@ const pool = mysql.createPool({
           })()
 
           continue;
-
-        conn.query(popularQuery, (err, results1, fields) => {
-            if (err) throw err
-            console.log("pop ")
-
-            conn.query(unsuccessfulQuery, (err, results2, fields) => {
-
-                if (err) throw err
-                console.log("uns ")
-                conn.query(`INSERT INTO daily_evaluation (popular, unsuccessful, date) VALUES 
-                ('${JSON.stringify(results1)}', '${JSON.stringify(results2)}', '${formattedDate}')`, (err, results2, fields) => {
-
-                    if (err) throw err
-                    console.log("ins " + formattedDate)
-                    conn.release();
-                });
-            });
-        });
-
-        console.log("ins " + formattedDate)
     }   
     conn.release();
 })

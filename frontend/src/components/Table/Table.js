@@ -44,26 +44,23 @@ export default function CustomTable(props) {
           </TableHead>
         ) : null}
         <TableBody>
-          {console.log(tableData)}
           {tableData.map((prop, key) => {
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell}>
                   {key + 1}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell}>
                   {prop["search_string"]}
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
-                  key={key}
                   style={{ textAlign: "center" }}
                 >
                   {prop["n"]}
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
-                  key={key}
                   style={{ textAlign: "center" }}
                 >
                   <Link

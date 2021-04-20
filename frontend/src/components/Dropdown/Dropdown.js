@@ -33,9 +33,10 @@ export default function Dropdown(props) {
             id: "age-native-simple",
           }}
         >
-          <option aria-label="None" value="" />
+          <option key="0" aria-label="None" value="" />
           {list.map((item) => (
-            <option value={item["id"]}> {item["name"]} </option>
+            <option key={item["id"]} value={item["id"]}>  {item["name"]} </option>
+             
           ))}
         </Select>
       </FormControl>

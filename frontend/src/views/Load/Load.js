@@ -81,13 +81,13 @@ class Load extends Component {
             >
               <Table
                 tableTitle="Popular queries"
-                tableHeaderColor="grey"
+                tableHeaderColor="gray"
                 tableHead={["#", "Query", "Occurrences", " "]}
                 tableData={this.state.popularQueries}
               />
               <Table
                 tableTitle="Unsuccessful queries"
-                tableHeaderColor="grey"
+                tableHeaderColor="gray"
                 tableHead={["#", "Query", "Occurrences", " "]}
                 tableData={this.state.unsuccessfulQueries}
               />

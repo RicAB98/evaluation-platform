@@ -43,7 +43,6 @@ class QueryPerformance extends Component {
   };
 
   submitEvaluation = () => {
-    console.log("dsds");
 
     this.setState({
       optionsClicked: [
