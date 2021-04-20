@@ -28,6 +28,8 @@ class Result extends Component {
     ],
     startDate: new Date("2021-01-20 0:0:0"),
     endDate: null,
+    calculatedStartDate: null,
+    calculatedEndDate: null,
     checkbox: false,
   };
 
@@ -37,6 +39,10 @@ class Result extends Component {
   };
 
   submitEvaluation() {
+    this.setState({ calculatedStartDate: this.state.startDate });
+    this.setState({ showTables: true });
+
+
     if (this.state.endDate != null) {
       let startDate = new Date(this.state.startDate);
       startDate.setHours(0);
@@ -48,12 +54,13 @@ class Result extends Component {
       endDate.setMinutes(59);
       endDate.setSeconds(59);
 
-      console.log(startDate)
-      console.log(endDate)
-      
+      this.setState({ calculatedEndDate: this.state.endDate });
+
       this.getPopularQueries(startDate, endDate);
       this.getUnsuccessfulQueries(startDate, endDate);
     } else {
+      this.setState({ calculatedEndDate: null });
+
       loadDailyEvaluation(this.state.startDate)
         .then((res) => res.json())
         .then((res) =>
@@ -95,6 +102,10 @@ class Result extends Component {
     this.setState({ endDate: date });
   };
 
+  addOne(value) {
+    return value + 1;
+  }
+
   render() {
     return (
       <div>
@@ -129,27 +140,44 @@ class Result extends Component {
             Submit
           </Button>
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            width: "75%",
-            justifyContent: "space-between",
-          }}
-        >
-          <Table
-            tableTitle="Popular queries"
-            tableHeaderColor="gray"
-            tableHead={["#", "Query", "Occurrences", " "]}
-            tableData={this.state.popularQueries}
-          />
-          <Table
-            tableTitle="Unsuccessful queries"
-            tableHeaderColor="gray"
-            tableHead={["#", "Query", "Occurrences", " "]}
-            tableData={this.state.unsuccessfulQueries}
-          />
-        </div>
+        {this.state.showTables === true ? (
+          <div>
+            <h3 style={{ marginTop: 20 }}>
+              {this.state.calculatedStartDate.getDate()}/
+              {this.addOne(this.state.calculatedStartDate.getMonth())}/
+              {this.state.calculatedStartDate.getFullYear()}
+              {this.state.calculatedEndDate !== null
+                ? "   -   " +
+                  this.state.calculatedEndDate.getDate() +
+                  "/" +
+                  this.addOne(this.state.calculatedEndDate.getMonth()) +
+                  "/" +
+                  this.state.calculatedEndDate.getFullYear()
+                : null}
+            </h3>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "75%",
+                justifyContent: "space-between",
+              }}
+            >
+              <Table
+                tableTitle="Popular queries"
+                tableHeaderColor="gray"
+                tableHead={["#", "Query", "Occurrences", " "]}
+                tableData={this.state.popularQueries}
+              />
+              <Table
+                tableTitle="Unsuccessful queries"
+                tableHeaderColor="gray"
+                tableHead={["#", "Query", "Occurrences", " "]}
+                tableData={this.state.unsuccessfulQueries}
+              />
+            </div>
+          </div>
+        ) : null}
       </div>
     );
   }

@@ -66,8 +66,8 @@ class Load extends Component {
         {this.state.loaded === true ? (
           <div>
             <h3 style={{ marginTop: 20 }}>
-              {this.state.date.getFullYear()}-{this.state.date.getMonth() + 1}-
-              {this.state.date.getDate()} {this.state.date.getHours()}:
+              {this.state.date.getDate()}/{this.state.date.getMonth() + 1}/
+              {this.state.date.getFullYear()} {this.state.date.getHours()}:
               {this.state.date.getMinutes()}:{this.state.date.getSeconds()}
             </h3>
             <h4 style={{ marginTop: 10 }}>{this.state.period}</h4>
