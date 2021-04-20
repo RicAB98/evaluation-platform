@@ -63,7 +63,7 @@ class Load extends Component {
         <Button color="custom" onClick={() => this.loadEvaluation()}>
           Load
         </Button>
-        {this.state.loaded == true ? (
+        {this.state.loaded === true ? (
           <div>
             <h3 style={{ marginTop: 20 }}>
               {this.state.date.getFullYear()}-{this.state.date.getMonth() + 1}-

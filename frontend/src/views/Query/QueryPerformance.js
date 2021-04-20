@@ -35,7 +35,7 @@ class QueryPerformance extends Component {
   };
 
   componentDidMount() {
-    if (this.state.name != "") this.submitEvaluation();
+    if (this.state.name !== "") this.submitEvaluation();
   }
 
   changeValue = (event) => {
@@ -109,10 +109,10 @@ class QueryPerformance extends Component {
             justifyContent: "left",
           }}
         >
-          {this.state.showGraph == true ? (
+          {this.state.showGraph === true ? (
             <LineChart data={this.state.data} />
           ) : null}
-          {this.state.showTable == true ? (
+          {this.state.showTable === true ? (
             <Table
               tableTitle="Results clicked"
               tableHeaderColor="grey"

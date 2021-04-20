@@ -76,12 +76,11 @@ class Run extends Component {
 
     runEvaluation(name, evaluationType, period, referenceDate, currentDate)
       .then((res) => res.json())
-      .then(
-        (res) => (
-          console.log(res["popular"]),
-          this.setState({ unsuccessfulQueries: res["unsuccessful"] }),
-          this.setState({ popularQueries: res["popular"] })
-        )
+      .then((res) =>
+        this.setState({
+          unsuccessfulQueries: res["unsuccessful"],
+          popularQueries: res["popular"],
+        })
       );
   };
 

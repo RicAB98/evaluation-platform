@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import { loadEvaluation } from "../../requests/requests.js";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -19,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Dropdown(props) {
   const classes = useStyles();
   const { list, name, onChange } = props;
-  const [selectedEvaluation, setEvalution] = useState();
+  const [selectedEvaluation] = useState();
 
   return (
     <div>

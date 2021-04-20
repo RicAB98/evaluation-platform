@@ -111,7 +111,7 @@ class Result extends Component {
           <Calendar
             selectedDate={this.state.startDate}
             onChange={this.changeStartDate}
-            label={this.state.checkbox == true ? "Start date" : "Date"}
+            label={this.state.checkbox === true ? "Start date" : "Date"}
           />
           <FormControlLabel
             control={
@@ -123,7 +123,7 @@ class Result extends Component {
             }
             label="Date range"
           />
-          {this.state.checkbox == true ? (
+          {this.state.checkbox === true ? (
             <Calendar
               selectedDate={this.state.endDate}
               onChange={this.changeEndDate}

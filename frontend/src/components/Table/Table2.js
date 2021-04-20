@@ -48,7 +48,7 @@ export default function Table2(props) {
                   {key + 1}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                  {prop["page_number"] != "20+"
+                  {prop["page_number"] !== "20+"
                     ? 10 * prop["page_number"] + prop["mysql_id"]
                     : "20+"}
                 </TableCell>

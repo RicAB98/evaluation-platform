@@ -18,7 +18,6 @@ export default function CustomTable(props) {
   const classes = useStyles();
   const {
     tableTitle,
-    tableDate,
     tableHead,
     tableData,
     tableHeaderColor,
