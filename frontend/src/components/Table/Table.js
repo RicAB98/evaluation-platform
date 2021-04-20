@@ -66,7 +66,7 @@ export default function CustomTable(props) {
                   <Link
                     to={{
                       pathname: "/admin/query",
-                      state: { string: prop["search_string"] },
+                      search: "?string=" + prop["search_string"]
                     }}
                   >
                     <TimelineIcon />

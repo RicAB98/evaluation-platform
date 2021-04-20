@@ -31,7 +31,7 @@ class QueryPerformance extends Component {
       },
     ],
     name:
-      this.props.location.state != null ? this.props.location.state.string : "",
+      this.props.location.search === "" ? "": this.props.location.search.replace("?string=", ""),
   };
 
   componentDidMount() {
@@ -43,6 +43,11 @@ class QueryPerformance extends Component {
   };
 
   submitEvaluation = () => {
+
+    this.props.history.push({
+      pathname: '/admin/query',
+      search: '?string=' + this.state.name
+    })
 
     this.setState({
       optionsClicked: [
