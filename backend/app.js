@@ -7,47 +7,8 @@ var cors = require("cors");
 const db = require('./database/db.js');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var testAPIRouter = require("./routes/testAPI");
 
 var app = express();
-
-/*var connection = mysql.createConnection({
-  host: '144.91.116.216',
-  user: 'sczzpt_admin', 
-  password: ',b-D66s&{K2a',
-  database: 'sczzpt_database'
-})
-
-
-connection.connect()*/
-/*db.getConnection((err, conn) => {
-  conn.query('select * from Evaluation', (error, results, fields) => {
-    if (err) throw err
-
-    console.log('The solution is: ', results)
-    conn.release();
-  });
-});*/
-
-//let insert = `INSERT INTO Evaluation (name, type, period, date) VALUES ('${name}', '${type}', '${period}', '${date}')`
-
-/*connection.query(insert, (err, results, fields) => {
-  if (err) {
-    return console.error(err.message);
-  }
-  // get inserted id
-  console.log('Todo Id:' + results.insertId);
-});
-*/
-
-/*connection.query('select * from test', function (err, rows, fields) {
-  if (err) throw err
-
-  console.log('The solution is: ', rows)
-})*/
-
-//connection.end()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -61,8 +22,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use("/testAPI", testAPIRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
