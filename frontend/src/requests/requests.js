@@ -76,7 +76,7 @@ export function unsuccessfulQueries(startDate, endDate) {
 }
 
 export function queryGraph(string) {
-  let query = apiHost + "/queryGraph?query=" + string;
+  let query = apiHost + "/queryGraph?string=" + string;
 
   /*if(endDate != null)
         query = query + "&endDate=" + endDate*/
@@ -91,7 +91,7 @@ export function queryGraph(string) {
 }
 
 export function queryTable(string) {
-  let query = apiHost + "/queryTable?query=" + string;
+  let query = apiHost + "/queryTable?string=" + string;
 
   /*if(endDate != null)
         query = query + "&endDate=" + endDate*/

@@ -36,11 +36,6 @@ class Result extends Component {
     this.setState({ endDate: null });
   };
 
-  componentDidMount() {
-    //this.getPopularQueries(this.state.startDate, null)
-    //this.getUnsuccessfulQueries(this.state.startDate, null)
-  }
-
   submitEvaluation() {
     console.log("submit");
 
