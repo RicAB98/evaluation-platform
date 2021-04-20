@@ -167,7 +167,7 @@ router.get("/queryGraph", function (req, res, next) {
       if (err) throw err;
       response = [
         {
-          id: query,
+          id: string,
           color: "hsl(181, 70%, 50%)",
           data: results,
         },

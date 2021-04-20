@@ -115,7 +115,7 @@ class QueryPerformance extends Component {
             <Table
               tableTitle="Results clicked"
               tableHeaderColor="grey"
-              tableHead={["#", "Rank", "Occurrences"]}
+              tableHead={["Rank", "Clicks"]}
               tableData={this.state.optionsClicked}
             />
           ) : null}
