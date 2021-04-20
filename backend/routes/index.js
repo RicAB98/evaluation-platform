@@ -136,9 +136,10 @@ router.get("/topqueries", function (req, res, next) {
 });
 
 router.get("/unsuccessfulqueries", function (req, res, next) {
+  
   let startDate = new Date(req.query.startDate);
 
-  let query = queryUtil.singleDayUnsuccessful(date);
+  let query = queryUtil.singleDayUnsuccessful(startDate);
 
   if (req.query.endDate != null) {
     endDate = new Date(req.query.endDate);

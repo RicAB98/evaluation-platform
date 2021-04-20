@@ -37,35 +37,33 @@ class Result extends Component {
   };
 
   submitEvaluation() {
-    loadDailyEvaluation(this.state.startDate)
-      .then((res) => res.json())
-      .then((res) =>
-        this.setState(
-          { popularQueries: JSON.parse(res[0]["popular"]) },
-          this.setState({
-            unsuccessfulQueries: JSON.parse(res[0]["unsuccessful"]),
-          })
-        )
-      );
-
-    return;
-
-    let startDate = new Date(this.state.startDate);
-    startDate.setHours(0);
-    startDate.setMinutes(0);
-    startDate.setSeconds(0);
-
     if (this.state.endDate != null) {
+      let startDate = new Date(this.state.startDate);
+      startDate.setHours(0);
+      startDate.setMinutes(0);
+      startDate.setSeconds(0);
+
       let endDate = new Date(this.state.endDate);
       endDate.setHours(23);
       endDate.setMinutes(59);
       endDate.setSeconds(59);
 
+      console.log(startDate)
+      console.log(endDate)
+      
       this.getPopularQueries(startDate, endDate);
       this.getUnsuccessfulQueries(startDate, endDate);
     } else {
-      this.getPopularQueries(startDate, this.state.endDate);
-      this.getUnsuccessfulQueries(startDate, this.state.endDate);
+      loadDailyEvaluation(this.state.startDate)
+        .then((res) => res.json())
+        .then((res) =>
+          this.setState(
+            { popularQueries: JSON.parse(res[0]["popular"]) },
+            this.setState({
+              unsuccessfulQueries: JSON.parse(res[0]["unsuccessful"]),
+            })
+          )
+        );
     }
   }
 

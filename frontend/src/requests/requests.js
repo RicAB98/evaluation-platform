@@ -52,6 +52,8 @@ export function topQueries(startDate, endDate) {
 
   if (endDate != null) query = query + "&endDate=" + endDate;
 
+  console.log(query)
+
   return fetch(query, {
     method: "GET",
     headers: {
