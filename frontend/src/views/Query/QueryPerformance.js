@@ -31,7 +31,9 @@ class QueryPerformance extends Component {
       },
     ],
     name:
-      this.props.location.search === "" ? "": this.props.location.search.replace("?string=", ""),
+      this.props.location.search === ""
+        ? ""
+        : this.props.location.search.replace("?string=", ""),
   };
 
   componentDidMount() {
@@ -43,11 +45,10 @@ class QueryPerformance extends Component {
   };
 
   submitEvaluation = () => {
-
     this.props.history.push({
-      pathname: '/admin/query',
-      search: '?string=' + this.state.name
-    })
+      pathname: "/admin/query",
+      search: "?string=" + this.state.name,
+    });
 
     this.setState({
       optionsClicked: [
@@ -90,22 +91,29 @@ class QueryPerformance extends Component {
   render() {
     return (
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <label style={{ marginLeft: 8 }}>
-          Query:
-          <input
-            value={this.state.name}
-            onChange={this.changeValue}
-            type="text"
-            style={{ marginLeft: 8 }}
-          />
-        </label>
-        <Button
-          color="custom"
-          onClick={() => this.submitEvaluation()}
-          style={{ width: 100 }}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            width: 400,
+            justifyContent: "space-around",
+          }}
         >
-          Submit
-        </Button>
+          <label
+            style={{ marginLeft: 8, marginTop: "auto", marginBottom: "auto" }}
+          >
+            Query:
+            <input
+              value={this.state.name}
+              onChange={this.changeValue}
+              type="text"
+              style={{ marginLeft: 8, marginTop: "auto", marginBottom: "auto" }}
+            />
+          </label>
+          <Button color="custom" onClick={() => this.submitEvaluation()}>
+            Submit
+          </Button>
+        </div>
         <div
           style={{
             display: "flex",

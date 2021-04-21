@@ -55,16 +55,25 @@ class Load extends Component {
   render() {
     return (
       <div>
-        <Dropdown
-          list={this.state.evaluations}
-          name="Evaluations"
-          onChange={this.changeEvaluation}
-        />
-        <Button color="custom" onClick={() => this.loadEvaluation()}>
-          Load
-        </Button>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            width: 300,
+            justifyContent: "space-around",
+          }}
+        >
+          <Dropdown
+            list={this.state.evaluations}
+            name="Evaluations"
+            onChange={this.changeEvaluation}
+          />
+          <Button color="custom" onClick={() => this.loadEvaluation()}>
+            Load
+          </Button>
+        </div>
         {this.state.loaded === true ? (
-          <div>
+          <div style={{ marginLeft: 8 }}>
             <h3 style={{ marginTop: 20 }}>
               {this.state.date.getDate()}/{this.state.date.getMonth() + 1}/
               {this.state.date.getFullYear()} {this.state.date.getHours()}:

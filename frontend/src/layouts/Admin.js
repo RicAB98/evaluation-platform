@@ -127,4 +127,3 @@ export default function Admin({ ...rest }) {
     </div>
   );
 }
-//{getRoute() ? <Footer /> : null}

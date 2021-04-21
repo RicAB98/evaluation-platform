@@ -7,7 +7,7 @@ import {
 } from "@material-ui/pickers";
 
 export default function Calendar(props) {
-  const { selectedDate, label, onChange } = props;
+  const { selectedDate, label, onChange, margin } = props;
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -23,7 +23,7 @@ export default function Calendar(props) {
         KeyboardButtonProps={{
           "aria-label": "change date",
         }}
-        style={{ width: 200 }}
+        style = {{ width: 200, marginLeft: margin}}
       />
     </MuiPickersUtilsProvider>
   );

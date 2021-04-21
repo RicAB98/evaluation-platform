@@ -86,29 +86,41 @@ class Run extends Component {
 
   render() {
     return (
-      <div>
-        <label style={{ marginLeft: 8 }}>
-          Name:
-          <input
-            value={this.state.name}
-            onChange={this.changeValue}
-            type="text"
-            style={{ marginLeft: 8 }}
-          />
-        </label>
-        {/*<Dropdown 
+      <div style={{ marginLeft: 8 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            width: 500,
+            justifyContent: "space-around",
+          }}
+        >
+          <label
+            style={{ marginLeft: 8, marginTop: "auto", marginBottom: "auto" }}
+          >
+            Name:
+            <input
+              value={this.state.name}
+              onChange={this.changeValue}
+              type="text"
+              style={{ marginLeft: 8 }}
+            />
+          </label>
+          {/*<Dropdown 
         list={this.state.evaluationTypes} 
         name="Type"
         onChange={this.changeEvaluation}
       />*/}
-        <Dropdown
-          list={this.state.periodTypes}
-          name="Period"
-          onChange={this.changePeriod}
-        />
-        <Button color="custom" onClick={() => this.submitEvaluation()}>
-          Run
-        </Button>
+          <Dropdown
+            list={this.state.periodTypes}
+            name="Period"
+            onChange={this.changePeriod}
+            style={{ marginTop: "auto", marginBottom: "auto" }}
+          />
+          <Button color="custom" onClick={() => this.submitEvaluation()}>
+            Run
+          </Button>
+        </div>
         {this.state.showResults ? (
           <div
             style={{
@@ -116,6 +128,7 @@ class Run extends Component {
               flexDirection: "row",
               width: "75%",
               justifyContent: "space-between",
+              marginLeft: 8,
             }}
           >
             <Table

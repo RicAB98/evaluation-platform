@@ -14,6 +14,7 @@ import {
 const buttonStyle = {
   button: {
     minHeight: "auto",
+    height: 40,
     minWidth: "auto",
     backgroundColor: grayColor[0],
     color: whiteColor,
@@ -28,9 +29,10 @@ const buttonStyle = {
     border: "none",
     borderRadius: "3px",
     position: "relative",
-    padding: "12px 30px",
-    marginTop:"30px",
-    marginLeft: "8px",
+    padding: "1px 30px",
+    marginLeft: "20px",
+    marginTop: "auto",
+    marginBottom: "auto",
     fontSize: "12px",
     fontWeight: "400",
     textTransform: "uppercase",

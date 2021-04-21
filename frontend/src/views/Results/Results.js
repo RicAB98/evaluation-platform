@@ -42,7 +42,6 @@ class Result extends Component {
     this.setState({ calculatedStartDate: this.state.startDate });
     this.setState({ showTables: true });
 
-
     if (this.state.endDate != null) {
       let startDate = new Date(this.state.startDate);
       startDate.setHours(0);
@@ -108,35 +107,47 @@ class Result extends Component {
 
   render() {
     return (
-      <div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <Calendar
-            selectedDate={this.state.startDate}
-            onChange={this.changeStartDate}
-            label={this.state.checkbox === true ? "Start date" : "Date"}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={this.state.checkbox}
-                onChange={this.handleCheckbox}
-                name="checkbox"
-              />
-            }
-            label="Date range"
-          />
+      <div style={{ marginLeft: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            width: 800,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "start",
+            }}
+          >
+            <Calendar
+              selectedDate={this.state.startDate}
+              onChange={this.changeStartDate}
+              label={this.state.checkbox === true ? "Start date" : "Date"}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.checkbox}
+                  onChange={this.handleCheckbox}
+                  name="checkbox"
+                />
+              }
+              label="Date range"
+              style={{ marginTop: "auto", marginBottom: "auto" }}
+            />
+          </div>
           {this.state.checkbox === true ? (
             <Calendar
               selectedDate={this.state.endDate}
               onChange={this.changeEndDate}
               label="End date"
+              margin="20px"
             />
           ) : null}
-          <Button
-            color="custom"
-            onClick={() => this.submitEvaluation()}
-            style={{ width: 100 }}
-          >
+          <Button color="custom" onClick={() => this.submitEvaluation()}>
             Submit
           </Button>
         </div>
