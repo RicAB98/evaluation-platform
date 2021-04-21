@@ -30,7 +30,7 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/last",
+    path: "/daily",
     name: "Daily Evaluation",
     icon: AccessTimeIcon,
     component: ResultsPage,

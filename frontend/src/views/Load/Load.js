@@ -8,7 +8,10 @@ import { loadEvaluation, getEvaluations } from "../../requests/requests.js";
 class Load extends Component {
   state = {
     evaluations: [[1, "Loading evaluations..."]],
-    selectedEvaluation: null,
+    selectedEvaluation:
+      this.props.location.search === ""
+        ? ""
+        : decodeURIComponent(this.props.location.search.replace("?id=", "")),
     loaded: false,
     startDate: null,
     endDate: null,
@@ -30,6 +33,7 @@ class Load extends Component {
     getEvaluations()
       .then((res) => res.json())
       .then((res) => this.setState({ evaluations: res }));
+    if (this.state.selectedEvaluation !== "") this.loadEvaluation();
   }
 
   changeEvaluation = (event) => {
@@ -37,6 +41,11 @@ class Load extends Component {
   };
 
   loadEvaluation = () => {
+    this.props.history.push({
+      pathname: "/admin/load",
+      search: "?id=" + this.state.selectedEvaluation,
+    });
+
     loadEvaluation(this.state.selectedEvaluation)
       .then((res) => res.json())
       .then((res) =>
@@ -77,7 +86,7 @@ class Load extends Component {
           </Button>
         </div>
         {this.state.loaded === true ? (
-          <div style={{ marginLeft: 8 }}>
+          <div style={{ marginLeft: 22 }}>
             <h3 style={{ marginTop: 20 }}>
               {this.state.startDate.getDate()}/
               {this.addOne(this.state.startDate.getMonth())}/
