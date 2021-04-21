@@ -4,15 +4,14 @@ var router = express.Router();
 const queryUtil = require("../utils/query.js");
 
 router.post("/runeval", function (req, res, next) {
-  if (req.body.period == null) {
+  /*if (req.body.period == null) {
     res.send("Missing parameters");
     return;
-  }
+  }*/
 
   let name = req.body.name;
   //let type = req.body.type["name"]
   let type = "All";
-  let period = req.body.period["name"].replace("Last", "Previous");
   let startDate = new Date(req.body.startDate);
   let endDate = new Date(req.body.endDate);
 
@@ -21,7 +20,22 @@ router.post("/runeval", function (req, res, next) {
 
   let popResponse;
   let UnsResponse;
-  let date =
+
+  startDate =
+    startDate.getFullYear() +
+    "-" +
+    startDate.getMonth() +
+    1 +
+    "-" +
+    startDate.getDate() +
+    " " +
+    startDate.getHours() +
+    ":" +
+    startDate.getMinutes() +
+    ":" +
+    startDate.getSeconds();
+
+  endDate =
     endDate.getFullYear() +
     "-" +
     endDate.getMonth() +
@@ -49,10 +63,10 @@ router.post("/runeval", function (req, res, next) {
         insertQuery = queryUtil.insertEvaluation(
           name,
           type,
-          period,
           popResponse,
           UnsResponse,
-          date
+          startDate,
+          endDate
         );
 
         conn.query(insertQuery, (err, results, fields) => {
@@ -159,7 +173,7 @@ router.get("/unsuccessfulqueries", function (req, res, next) {
 router.get("/queryGraph", function (req, res, next) {
   let string = req.query.string;
 
-  let query = queryUtil.getSeachesPerDay(string);
+  let query = queryUtil.getSearchesPerDay(string);
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
@@ -208,11 +222,13 @@ router.get("/queryTable", function (req, res, next) {
       }
 
       processedResults = processedResults.concat(secondPage);
-      processedResults.push({
-        page_number: "20+",
-        mysql_id: "",
-        n: otherPagesClicks,
-      });
+
+      if(otherPagesClicks > 0)
+        processedResults.push({
+          page_number: "20+",
+          mysql_id: "",
+          n: otherPagesClicks,
+        });
 
       res.send(processedResults);
       conn.release();

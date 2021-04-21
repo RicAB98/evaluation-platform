@@ -10,8 +10,8 @@ class Load extends Component {
     evaluations: [[1, "Loading evaluations..."]],
     selectedEvaluation: null,
     loaded: false,
-    period: null,
-    date: null,
+    startDate: null,
+    endDate: null,
     popularQueries: [
       {
         search_string: "Loading...",
@@ -45,8 +45,8 @@ class Load extends Component {
           this.setState({
             unsuccessfulQueries: JSON.parse(res[0]["unsuccessful"]),
           }),
-          this.setState({ period: res[0]["period"] }),
-          this.setState({ date: new Date(res[0]["date"]) }),
+          this.setState({ startDate: new Date(res[0]["startDate"]) }),
+          this.setState({ endDate: new Date(res[0]["endDate"]) }),
           this.setState({ loaded: true })
         )
       );
@@ -75,11 +75,19 @@ class Load extends Component {
         {this.state.loaded === true ? (
           <div style={{ marginLeft: 8 }}>
             <h3 style={{ marginTop: 20 }}>
-              {this.state.date.getDate()}/{this.state.date.getMonth() + 1}/
-              {this.state.date.getFullYear()} {this.state.date.getHours()}:
-              {this.state.date.getMinutes()}:{this.state.date.getSeconds()}
+              {this.state.startDate.getDate()}/
+              {this.state.startDate.getMonth() + 1}/
+              {this.state.startDate.getFullYear()}{" "}
+              {this.state.startDate.getHours()}:
+              {this.state.startDate.getMinutes()}:
+              {this.state.startDate.getSeconds()} -
             </h3>
-            <h4 style={{ marginTop: 10 }}>{this.state.period}</h4>
+            <h3 style={{ marginTop: 10 }}>
+              {this.state.endDate.getDate()}/{this.state.endDate.getMonth() + 1}
+              /{this.state.endDate.getFullYear()}{" "}
+              {this.state.endDate.getHours()}:{this.state.endDate.getMinutes()}:
+              {this.state.endDate.getSeconds()}
+            </h3>
             <div
               style={{
                 display: "flex",
