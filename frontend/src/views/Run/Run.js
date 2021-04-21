@@ -71,7 +71,7 @@ class Run extends Component {
 
     let minute = 60000;
 
-    let currentDate = new Date("2021-01-23 23:59:59");
+    let currentDate = new Date("2021-02-23 23:59:59");
     let referenceDate = new Date(currentDate - period["minutes"] * minute);
 
     runEvaluation(name, evaluationType, period, referenceDate, currentDate)

@@ -21,11 +21,13 @@ router.post("/runeval", function (req, res, next) {
   let popResponse;
   let UnsResponse;
 
+  startDate = new Date(startDate.getFullYear(), startDate.getMonth()+1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), startDate.getSeconds())
+  endDate = new Date(endDate.getFullYear(), endDate.getMonth()+1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), endDate.getSeconds())
+
   startDate =
     startDate.getFullYear() +
     "-" +
     startDate.getMonth() +
-    1 +
     "-" +
     startDate.getDate() +
     " " +
@@ -39,7 +41,6 @@ router.post("/runeval", function (req, res, next) {
     endDate.getFullYear() +
     "-" +
     endDate.getMonth() +
-    1 +
     "-" +
     endDate.getDate() +
     " " +

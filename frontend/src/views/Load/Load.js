@@ -52,6 +52,10 @@ class Load extends Component {
       );
   };
 
+  addOne(value) {
+    return value + 1;
+  }
+
   render() {
     return (
       <div>
@@ -76,14 +80,14 @@ class Load extends Component {
           <div style={{ marginLeft: 8 }}>
             <h3 style={{ marginTop: 20 }}>
               {this.state.startDate.getDate()}/
-              {this.state.startDate.getMonth() + 1}/
+              {this.addOne(this.state.startDate.getMonth())}/
               {this.state.startDate.getFullYear()}{" "}
               {this.state.startDate.getHours()}:
               {this.state.startDate.getMinutes()}:
               {this.state.startDate.getSeconds()} -
             </h3>
             <h3 style={{ marginTop: 10 }}>
-              {this.state.endDate.getDate()}/{this.state.endDate.getMonth() + 1}
+              {this.state.endDate.getDate()}/{this.addOne(this.state.endDate.getMonth())}
               /{this.state.endDate.getFullYear()}{" "}
               {this.state.endDate.getHours()}:{this.state.endDate.getMinutes()}:
               {this.state.endDate.getSeconds()}
