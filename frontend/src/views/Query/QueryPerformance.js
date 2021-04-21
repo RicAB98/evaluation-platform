@@ -33,7 +33,7 @@ class QueryPerformance extends Component {
     name:
       this.props.location.search === ""
         ? ""
-        : this.props.location.search.replace("?string=", ""),
+        : decodeURIComponent(this.props.location.search.replace("?string=", "")),
   };
 
   componentDidMount() {
@@ -53,7 +53,8 @@ class QueryPerformance extends Component {
     this.setState({
       optionsClicked: [
         {
-          rank: "Loading...",
+          page_number: 1,
+          mysql_id: 0,
           n: "Loading...",
         },
       ],
@@ -127,7 +128,7 @@ class QueryPerformance extends Component {
           {this.state.showTable === true ? (
             <Table
               tableTitle="Results clicked"
-              tableHeaderColor="grey"
+              tableHeaderColor="gray"
               tableHead={["Rank", "Clicks"]}
               tableData={this.state.optionsClicked}
             />
