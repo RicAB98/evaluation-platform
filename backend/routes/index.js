@@ -136,7 +136,6 @@ router.get("/topqueries", function (req, res, next) {
 });
 
 router.get("/unsuccessfulqueries", function (req, res, next) {
-  
   let startDate = new Date(req.query.startDate);
 
   let query = queryUtil.singleDayUnsuccessful(startDate);
@@ -188,15 +187,32 @@ router.get("/queryTable", function (req, res, next) {
     conn.query(query, (err, results, fields) => {
       if (err) throw err;
 
-      let sum = 0;
       let processedResults = [];
+      let firstPage = new Array(10).fill(0);
+      let secondPage = [];
+      let otherPagesClicks = 0;
 
       for (r of results) {
-        if (r.page_number <= 1) processedResults.push(r);
-        else sum += r.n;
+        if (r.page_number <= 1) firstPage[r.mysql_id - 1] += r.n;
+        else if (r.page_number == 2) secondPage.push(r);
+        else otherPagesClicks += r.n;
       }
 
-      processedResults.push({ page_number: "20+", mysql_id: "", n: sum });
+      for (s in firstPage) {
+        if (firstPage[s] != 0)
+          processedResults.push({
+            page_number: 1,
+            mysql_id: Number(s) + 1,
+            n: firstPage[s],
+          });
+      }
+
+      processedResults = processedResults.concat(secondPage);
+      processedResults.push({
+        page_number: "20+",
+        mysql_id: "",
+        n: otherPagesClicks,
+      });
 
       res.send(processedResults);
       conn.release();

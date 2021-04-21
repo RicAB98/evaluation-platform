@@ -9,7 +9,7 @@ const query = {
   },
 
   getStringClicks(string) {
-    return `select page_number, mysql_id, count(*) as n from fourdays where search_string = '${string}' group by page_number, mysql_id order by page_number, mysql_id`;
+    return `select page_number, mysql_id, count(*) as n from fourdays where mysql_id <> 0 and search_string = '${string}' group by page_number, mysql_id order by page_number, mysql_id`;
   },
 
   loadDailyEvaluation(date) {
