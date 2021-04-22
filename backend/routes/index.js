@@ -269,4 +269,20 @@ router.get("/pagesperrank", function (req, res, next) {
   });
 });
 
+router.get("/unsuccessfulsessions", function (req, res, next) {
+
+  let string = req.query.string;
+
+  let query = queryUtil.getUnsuccessfulSessions(string);
+  
+  db.getConnection((err, conn) => {
+    conn.query(query, (err, results, fields) => {
+      if (err) throw err;
+      
+      res.send(results[0]);
+      conn.release();
+    });
+  });
+});
+
 module.exports = router;

@@ -24,6 +24,11 @@ const query = {
       return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE page_number > 2 AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
   },
 
+  getUnsuccessfulSessions(string)
+  {
+    return `SELECT count(*) as n FROM fourdays WHERE fk_item = 0 AND search_string='${string}'` 
+  },
+
   loadDailyEvaluation(date) {
     return `SELECT popular, unsuccessful FROM daily_evaluation WHERE 
                           date = '${date.getFullYear()}-${

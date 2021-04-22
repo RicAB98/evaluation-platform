@@ -9,7 +9,7 @@ import Button from "../../components/Button/Button.js";
 import LineChart from "../../components/Chart/LineChart";
 import Table from "../../components/Table/Table.js";
 import Table2 from "../../components/Table/Table2.js";
-import { queryGraph, getClicksRanks, getPagesPerRank } from "../../requests/requests.js";
+import { queryGraph, getClicksRanks, getPagesPerRank, getUnsuccessfulSessions } from "../../requests/requests.js";
 
 class QueryPerformance extends Component {
   state = {
@@ -28,6 +28,7 @@ class QueryPerformance extends Component {
     showClickRank: false,
     showPagesPerRank: false,
 
+    unsuccessfulSessions: "",
     clickRank: [
       {
         rank: "Loading...",
@@ -65,7 +66,7 @@ class QueryPerformance extends Component {
 
   submitPagesPerRank = (page, mysql_id) =>
   {
-    let calculatedRank = ((page == "20+") ? "20+": (10 * (page-1) + mysql_id));
+    let calculatedRank = ((page === "20+") ? "20+": (10 * (page-1) + mysql_id));
 
     this.setState({
       calculatedRank: calculatedRank,
@@ -94,6 +95,7 @@ class QueryPerformance extends Component {
 
     this.setState({calculatedString: this.state.string})
     this.setState({showPagesPerRank: false})
+    this.setState({unsuccessfulSessions: ""})
 
     this.setState({
       clickRank: [
@@ -132,6 +134,11 @@ class QueryPerformance extends Component {
         (res) => this.setState({ clickRank: res }),
         this.setState({ showClickRank: true })
       );
+    getUnsuccessfulSessions(this.state.string)
+    .then((res) => res.json())
+    .then((res) => 
+      this.setState({ unsuccessfulSessions: res["n"] }),
+    );
   };
 
   render() {
@@ -169,10 +176,10 @@ class QueryPerformance extends Component {
             <LineChart data={this.state.data} />
           ) : null}
           </GridItem>
+          {this.state.showClickRank === true ? (
           <GridItem xs={this.state.showPagesPerRank === true ? 12: 18} 
                 sm={this.state.showPagesPerRank === true ? 12: 18}  
                 md={this.state.showPagesPerRank === true ? 4: 6} >
-          {this.state.showClickRank === true ? (
             <Table2
               tableTitle={"Clicks' rank for query \"" + this.state.calculatedString + "\""}
               tableHeaderColor="gray"
@@ -180,12 +187,12 @@ class QueryPerformance extends Component {
               tableData={this.state.clickRank}
               onClick={this.submitPagesPerRank}
             />
-            ) : null}
-          </GridItem>
+            <h6 style = {{ marginTop: 10}}>Sessions without a click: {this.state.unsuccessfulSessions} </h6>
+          </GridItem>): null}
           <GridItem xs={12} sm={12} md={4}>
           {this.state.showPagesPerRank === true ? (
             <Table
-              tableTitle={"Clicked pages on position " + this.state.calculatedRank}
+              tableTitle={"Clicked pages on rank " + this.state.calculatedRank}
               tableHeaderColor="gray"
               tableHead={["#", "Ids", "Count", ""]}
               tableData={this.state.pagesPerRank}
