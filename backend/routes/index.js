@@ -245,7 +245,7 @@ router.get("/pagesperrank", function (req, res, next) {
   let string = req.query.string;
 
   let query = queryUtil.getPagesPerRank(page, mysql_id, string);
-
+  
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
       if (err) throw err;

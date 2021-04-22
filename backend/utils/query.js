@@ -17,9 +17,11 @@ const query = {
   getPagesPerRank(page, mysql_id, string)
   {
     if(page == 1)
-      return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE (page = ${page} OR page = 0 ) AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
-    else
-      return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE page = ${page} AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
+      return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE (page_number = ${page} OR page_number = 0 ) AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
+    else if (page == 2)
+      return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE page_number = ${page} AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
+    else 
+      return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE page_number > 2 AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
   },
 
   loadDailyEvaluation(date) {

@@ -65,8 +65,10 @@ class QueryPerformance extends Component {
 
   submitPagesPerRank = (page, mysql_id) =>
   {
+    let calculatedRank = ((page == "20+") ? "20+": (10 * (page-1) + mysql_id));
+
     this.setState({
-      calculatedRank: 10 * (page-1) + mysql_id,
+      calculatedRank: calculatedRank,
       pagesPerRank: [
         {
           page: "Loading...",
@@ -172,7 +174,7 @@ class QueryPerformance extends Component {
                 md={this.state.showPagesPerRank === true ? 4: 6} >
           {this.state.showClickRank === true ? (
             <Table2
-              tableTitle={"Click's rank for query \"" + this.state.calculatedString + "\""}
+              tableTitle={"Clicks' rank for query \"" + this.state.calculatedString + "\""}
               tableHeaderColor="gray"
               tableHead={["Rank", "Clicks", ""]}
               tableData={this.state.clickRank}
@@ -195,25 +197,6 @@ class QueryPerformance extends Component {
             ) : null}
           </GridItem>
         </GridContainer>
-        {/*<div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "left",
-          }}
-        >
-          {this.state.showGraph === true ? (
-            <LineChart data={this.state.data} />
-          ) : null}
-          {this.state.showTable === true ? (
-            <Table
-              tableTitle="Results clicked"
-              tableHeaderColor="gray"
-              tableHead={["Rank", "Clicks"]}
-              tableData={this.state.clickRank}
-            />
-          ) : null}
-          </div>*/}
       </div>
     );
   }
