@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
-import TimelineIcon from '@material-ui/icons/Timeline';
+import TimelineIcon from "@material-ui/icons/Timeline";
 
 import { runEvaluation } from "../../requests/requests.js";
 

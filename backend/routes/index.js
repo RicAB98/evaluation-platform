@@ -22,12 +22,41 @@ router.post("/runeval", function (req, res, next) {
   let popResponse;
   let UnsResponse;
 
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth()+1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), startDate.getSeconds())
-  endDate = new Date(endDate.getFullYear(), endDate.getMonth()+1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), endDate.getSeconds())
+  startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate(),
+    startDate.getHours(),
+    startDate.getMinutes(),
+    startDate.getSeconds()
+  );
+  endDate = new Date(
+    endDate.getFullYear(),
+    endDate.getMonth() + 1,
+    endDate.getDate(),
+    endDate.getHours(),
+    endDate.getMinutes(),
+    endDate.getSeconds()
+  );
 
-  if(name == "")
-    name = "EVAL_" + startDate.getFullYear() + startDate.getMonth() + startDate.getDate() + "-" + startDate.getHours() + startDate.getMinutes() + startDate.getSeconds() + "_" +
-            endDate.getFullYear() + endDate.getMonth() + endDate.getDate() + "-" + endDate.getHours() + endDate.getMinutes() + endDate.getSeconds()
+  if (name == "")
+    name =
+      "EVAL_" +
+      startDate.getFullYear() +
+      startDate.getMonth() +
+      startDate.getDate() +
+      "-" +
+      startDate.getHours() +
+      startDate.getMinutes() +
+      startDate.getSeconds() +
+      "_" +
+      endDate.getFullYear() +
+      endDate.getMonth() +
+      endDate.getDate() +
+      "-" +
+      endDate.getHours() +
+      endDate.getMinutes() +
+      endDate.getSeconds();
 
   startDate =
     startDate.getFullYear() +
@@ -229,7 +258,7 @@ router.get("/clicksranks", function (req, res, next) {
 
       processedResults = processedResults.concat(secondPage);
 
-      if(otherPagesClicks > 0)
+      if (otherPagesClicks > 0)
         processedResults.push({
           page_number: "20+",
           mysql_id: "",
@@ -243,28 +272,28 @@ router.get("/clicksranks", function (req, res, next) {
 });
 
 router.get("/pagesperrank", function (req, res, next) {
-
   let page = req.query.page;
   let mysql_id = req.query.mysql_id;
   let string = req.query.string;
 
   let query = queryUtil.getPagesPerRank(page, mysql_id, string);
-  
+
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
       if (err) throw err;
-      
-      for(r in results)
-      {
-        let row = results[r]
 
-        results[r] = 
-        {
+      for (r in results) {
+        let row = results[r];
+
+        results[r] = {
           tp_item: row.tp_item + ", ",
           fk_item: row.fk_item,
           n: row.n,
-          link: "https://www.zerozero.pt/" + utils.tp_item_list[row.tp_item] + row.fk_item
-        }
+          link:
+            "https://www.zerozero.pt/" +
+            utils.tp_item_list[row.tp_item] +
+            row.fk_item,
+        };
       }
 
       res.send(results);
@@ -274,15 +303,14 @@ router.get("/pagesperrank", function (req, res, next) {
 });
 
 router.get("/unsuccessfulsessions", function (req, res, next) {
-
   let string = req.query.string;
 
   let query = queryUtil.getUnsuccessfulSessions(string);
-  
+
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
       if (err) throw err;
-      
+
       res.send(results[0]);
       conn.release();
     });
@@ -290,16 +318,15 @@ router.get("/unsuccessfulsessions", function (req, res, next) {
 });
 
 router.get("/stringsperpage", function (req, res, next) {
-
   let tp_item = req.query.tp_item;
   let fk_item = req.query.fk_item;
 
   let query = queryUtil.getSearchStringsPerPage(tp_item, fk_item);
-  
+
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
       if (err) throw err;
-      
+
       res.send(results);
       conn.release();
     });

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 // core components
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import TimelineIcon from '@material-ui/icons/Timeline';
+import TimelineIcon from "@material-ui/icons/Timeline";
 
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";

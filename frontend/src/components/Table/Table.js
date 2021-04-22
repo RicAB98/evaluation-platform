@@ -7,7 +7,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from "@material-ui/core/IconButton";
 
 // core components
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
@@ -24,7 +24,7 @@ export default function CustomTable(props) {
     firstColumn,
     secondColumn,
     linkPath,
-    linkIcon
+    linkIcon,
   } = props;
 
   return (
@@ -51,23 +51,36 @@ export default function CustomTable(props) {
           {tableData.map((prop, key) => {
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
+                <TableCell className={classes.tableCell}>{key + 1}</TableCell>
                 <TableCell className={classes.tableCell}>
-                  {key + 1}
-                </TableCell>
-                <TableCell className={classes.tableCell}>
-                  {firstColumn.map((field) => { return (prop[field])})}
+                  {firstColumn.map((field) => {
+                    return prop[field];
+                  })}
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
                   style={{ textAlign: "center" }}
                 >
-                  {secondColumn.map((field) => { return (prop[field])})}
+                  {secondColumn.map((field) => {
+                    return prop[field];
+                  })}
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
                   style={{ textAlign: "center" }}
                 >
-                  <IconButton color="primary"  component="span"  onClick={prop[linkPath] !== undefined ? () => window.open(prop[linkPath]): () => window.open("/admin/query?string=" + prop[firstColumn])}>
+                  <IconButton
+                    color="primary"
+                    component="span"
+                    onClick={
+                      prop[linkPath] !== undefined
+                        ? () => window.open(prop[linkPath])
+                        : () =>
+                            window.open(
+                              "/admin/query?string=" + prop[firstColumn]
+                            )
+                    }
+                  >
                     {linkIcon}
                   </IconButton>
                 </TableCell>

@@ -14,23 +14,20 @@ const query = {
   },
 
   //Returns list of pages where user clicked on a specific rank
-  getPagesPerRank(page, mysql_id, string)
-  {
-    if(page == 1)
+  getPagesPerRank(page, mysql_id, string) {
+    if (page == 1)
       return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE (page_number = ${page} OR page_number = 0 ) AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
     else if (page == 2)
       return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE page_number = ${page} AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
-    else 
+    else
       return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE page_number > 2 AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
   },
 
-  getUnsuccessfulSessions(string)
-  {
-    return `SELECT count(*) as n FROM fourdays WHERE fk_item = 0 AND search_string='${string}'` 
+  getUnsuccessfulSessions(string) {
+    return `SELECT count(*) as n FROM fourdays WHERE fk_item = 0 AND search_string='${string}'`;
   },
 
-  getSearchStringsPerPage(tp_item, fk_item)
-  {
+  getSearchStringsPerPage(tp_item, fk_item) {
     return `SELECT search_string, count(*) as n FROM fourdays WHERE tp_item='${tp_item}' and fk_item='${fk_item}' GROUP BY search_string ORDER BY count(*) DESC LIMIT 20`;
   },
 

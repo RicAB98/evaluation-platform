@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
-import TimelineIcon from '@material-ui/icons/Timeline';
+import TimelineIcon from "@material-ui/icons/Timeline";
 
 import { loadEvaluation, getEvaluations } from "../../requests/requests.js";
 
@@ -97,9 +97,10 @@ class Load extends Component {
               {this.state.startDate.getSeconds()} -
             </h3>
             <h3 style={{ marginTop: 10 }}>
-              {this.state.endDate.getDate()}/{this.addOne(this.state.endDate.getMonth())}
-              /{this.state.endDate.getFullYear()}{" "}
-              {this.state.endDate.getHours()}:{this.state.endDate.getMinutes()}:
+              {this.state.endDate.getDate()}/
+              {this.addOne(this.state.endDate.getMonth())}/
+              {this.state.endDate.getFullYear()} {this.state.endDate.getHours()}
+              :{this.state.endDate.getMinutes()}:
               {this.state.endDate.getSeconds()}
             </h3>
             <div

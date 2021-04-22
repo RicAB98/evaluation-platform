@@ -7,26 +7,28 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import IconButton from '@material-ui/core/IconButton';
-import FindInPageIcon from '@material-ui/icons/FindInPage';
+import IconButton from "@material-ui/core/IconButton";
 
 // core components
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
 
 const useStyles = makeStyles(styles);
 
-export default function Table2(props) {
+export default function CustomTable(props) {
   const classes = useStyles();
   const {
     tableTitle,
     tableHead,
     tableData,
     tableHeaderColor,
-    onClick
+    firstColumn,
+    secondColumn,
+    linkPath,
+    linkIcon,
   } = props;
 
   return (
-    <div className={classes.tableResponsive} style={{ marginTop: 0 }}>
+    <div className={classes.tableResponsive}>
       <h5 style={{ marginBottom: 30 }}> {tableTitle} </h5>
       <Table className={classes.table}>
         {tableHead !== undefined ? (
@@ -49,23 +51,37 @@ export default function Table2(props) {
           {tableData.map((prop, key) => {
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
-                <TableCell className={classes.tableCell} >
-                  {prop["page_number"] !== "20+"
-                    ? 10 * (prop["page_number"] - 1) + prop["mysql_id"]
-                    : "20+"}
+                <TableCell className={classes.tableCell}>{key + 1}</TableCell>
+                <TableCell className={classes.tableCell}>
+                  {firstColumn.map((field) => {
+                    return prop[field];
+                  })}
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
                   style={{ textAlign: "center" }}
                 >
-                  {prop["n"]}
+                  {secondColumn.map((field) => {
+                    return prop[field];
+                  })}
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
                   style={{ textAlign: "center" }}
                 >
-                  <IconButton color="primary"  component="span"  onClick={() => onClick(prop["page_number"], prop["mysql_id"])}>
-                    <FindInPageIcon />
+                  <IconButton
+                    color="primary"
+                    component="span"
+                    onClick={
+                      prop[linkPath] !== undefined
+                        ? () => window.open(prop[linkPath])
+                        : () =>
+                            window.open(
+                              "/admin/query?string=" + prop[firstColumn]
+                            )
+                    }
+                  >
+                    {linkIcon}
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -77,11 +93,11 @@ export default function Table2(props) {
   );
 }
 
-Table2.defaultProps = {
+CustomTable.defaultProps = {
   tableHeaderColor: "gray",
 };
 
-Table2.propTypes = {
+CustomTable.propTypes = {
   tableHeaderColor: PropTypes.oneOf([
     "warning",
     "primary",
