@@ -64,7 +64,7 @@ const query = {
   singleDayUnsuccessful(date) {
     return `SELECT search_string, count(*) as n FROM fourdays WHERE 
                          search_string <> '' AND
-                         mysql_id = 0 AND
+                         fk_item = 0 AND
                          date = '${date.getFullYear()}-${
       date.getMonth() + 1
     }-${date.getDate()}' 
@@ -72,7 +72,7 @@ const query = {
   },
 
   rangeUnsuccessful(startDate, endDate) {
-    return `SELECT search_string, count(*) as n FROM fourdays WHERE mysql_id = 0 AND
+    return `SELECT search_string, count(*) as n FROM fourdays WHERE fk_item = 0 AND
                   search_string <> '' AND
                   time > '${startDate.getFullYear()}-${
       startDate.getMonth() + 1
