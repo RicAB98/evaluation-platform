@@ -2,6 +2,7 @@ var express = require("express");
 const db = require("../database/db.js");
 var router = express.Router();
 const queryUtil = require("../utils/query.js");
+const utils = require("../utils/utils");
 
 router.post("/runeval", function (req, res, next) {
   /*if (req.body.period == null) {
@@ -193,10 +194,10 @@ router.get("/queryGraph", function (req, res, next) {
   });
 });
 
-router.get("/queryTable", function (req, res, next) {
+router.get("/clicksranks", function (req, res, next) {
   let string = req.query.string;
 
-  query = queryUtil.getStringClicks(string);
+  query = queryUtil.getClickRanks(string);
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
@@ -232,6 +233,37 @@ router.get("/queryTable", function (req, res, next) {
         });
 
       res.send(processedResults);
+      conn.release();
+    });
+  });
+});
+
+router.get("/pagesperrank", function (req, res, next) {
+
+  let page = req.query.page;
+  let mysql_id = req.query.mysql_id;
+  let string = req.query.string;
+
+  let query = queryUtil.getPagesPerRank(page, mysql_id, string);
+
+  db.getConnection((err, conn) => {
+    conn.query(query, (err, results, fields) => {
+      if (err) throw err;
+      
+      for(r in results)
+      {
+        let row = results[r]
+
+        results[r] = 
+        {
+          tp_item: row.tp_item + ", ",
+          fk_item: row.fk_item,
+          n: row.n,
+          link: "https://www.zerozero.pt/" + utils.tp_item_list[row.tp_item] + row.fk_item
+        }
+      }
+
+      res.send(results);
       conn.release();
     });
   });

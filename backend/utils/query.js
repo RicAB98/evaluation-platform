@@ -8,8 +8,18 @@ const query = {
     return `SELECT date_format(date, "%d-%m") as x, count(*) as y FROM fourdays GROUP BY search_string, date HAVING search_string = '${string}'`;
   },
 
-  getStringClicks(string) {
-    return `SELECT page_number, mysql_id, count(*) as n FROM fourdays WHERE mysql_id <> 0 AND search_string = '${string}' GROUP BY page_number, mysql_id ORDER BY page_number, mysql_id`;
+  //Returns list of the rank of the clicked options
+  getClickRanks(string) {
+    return `SELECT page_number, mysql_id, count(*) as n FROM fourdays WHERE mysql_id <> 0 AND fk_item <> 0 AND search_string = '${string}' GROUP BY page_number, mysql_id ORDER BY page_number, mysql_id`;
+  },
+
+  //Returns list of pages where user clicked on a specific rank
+  getPagesPerRank(page, mysql_id, string)
+  {
+    if(page == 1)
+      return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE (page = ${page} OR page = 0 ) AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
+    else
+      return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE page = ${page} AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
   },
 
   loadDailyEvaluation(date) {
@@ -47,7 +57,7 @@ const query = {
   singleDayUnsuccessful(date) {
     return `SELECT search_string, count(*) as n FROM fourdays WHERE 
                          search_string <> '' AND
-                         page_number > 5 AND
+                         mysql_id = 0 AND
                          date = '${date.getFullYear()}-${
       date.getMonth() + 1
     }-${date.getDate()}' 

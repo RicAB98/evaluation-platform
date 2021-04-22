@@ -7,6 +7,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import IconButton from '@material-ui/core/IconButton';
+import FindInPageIcon from '@material-ui/icons/FindInPage';
 
 // core components
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
@@ -16,13 +18,16 @@ const useStyles = makeStyles(styles);
 export default function Table2(props) {
   const classes = useStyles();
   const {
+    tableTitle,
     tableHead,
     tableData,
     tableHeaderColor,
+    onClick
   } = props;
 
   return (
     <div className={classes.tableResponsive} style={{ marginTop: 0 }}>
+      <h5 style={{ marginBottom: 30 }}> {tableTitle} </h5>
       <Table className={classes.table}>
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
@@ -54,6 +59,14 @@ export default function Table2(props) {
                   style={{ textAlign: "center" }}
                 >
                   {prop["n"]}
+                </TableCell>
+                <TableCell
+                  className={classes.tableCell}
+                  style={{ textAlign: "center" }}
+                >
+                  <IconButton color="primary"  component="span"  onClick={() => onClick(prop["page_number"], prop["mysql_id"])}>
+                    <FindInPageIcon />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             );

@@ -2,15 +2,18 @@ import React, { Component } from "react";
 // core components
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Button from "../../components/Button/Button.js";
+import TimelineIcon from '@material-ui/icons/Timeline';
 
+import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
 import Calendar from "../../components/Calendar/Calendar.js";
+
 import {
   topQueries,
   unsuccessfulQueries,
   loadDailyEvaluation,
 } from "../../requests/requests.js";
+import Timeline from "@material-ui/icons/Timeline";
 
 class Result extends Component {
   state = {
@@ -179,12 +182,18 @@ class Result extends Component {
                 tableHeaderColor="gray"
                 tableHead={["#", "Query", "Occurrences", " "]}
                 tableData={this.state.popularQueries}
+                firstColumn={["search_string"]}
+                secondColumn={["n"]}
+                linkIcon={<TimelineIcon />}
               />
               <Table
                 tableTitle="Unsuccessful queries"
                 tableHeaderColor="gray"
                 tableHead={["#", "Query", "Occurrences", " "]}
                 tableData={this.state.unsuccessfulQueries}
+                firstColumn={["search_string"]}
+                secondColumn={["n"]}
+                linkIcon={<TimelineIcon />}
               />
             </div>
           </div>

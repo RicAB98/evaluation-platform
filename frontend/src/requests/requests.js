@@ -92,8 +92,23 @@ export function queryGraph(string) {
   });
 }
 
-export function queryTable(string) {
-  let query = apiHost + "/queryTable?string=" + string;
+export function getClicksRanks(string) {
+  let query = apiHost + "/clicksranks?string=" + string;
+
+  /*if(endDate != null)
+        query = query + "&endDate=" + endDate*/
+
+  return fetch(query, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+}
+
+export function getPagesPerRank(page, mysql_id, string) {
+  let query = apiHost + "/pagesperrank?page=" + page + "&mysql_id=" + mysql_id + "&string=" + string;
 
   /*if(endDate != null)
         query = query + "&endDate=" + endDate*/

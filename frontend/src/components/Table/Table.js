@@ -7,8 +7,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TimelineIcon from "@material-ui/icons/Timeline";
-import { Link } from "react-router-dom";
+import IconButton from '@material-ui/core/IconButton';
+
 // core components
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
 
@@ -21,6 +21,10 @@ export default function CustomTable(props) {
     tableHead,
     tableData,
     tableHeaderColor,
+    firstColumn,
+    secondColumn,
+    linkPath,
+    linkIcon
   } = props;
 
   return (
@@ -51,26 +55,21 @@ export default function CustomTable(props) {
                   {key + 1}
                 </TableCell>
                 <TableCell className={classes.tableCell}>
-                  {prop["search_string"]}
+                  {firstColumn.map((field) => { return (prop[field])})}
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
                   style={{ textAlign: "center" }}
                 >
-                  {prop["n"]}
+                  {secondColumn.map((field) => { return (prop[field])})}
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
                   style={{ textAlign: "center" }}
                 >
-                  <Link
-                    to={{
-                      pathname: "/admin/query",
-                      search: "?string=" + prop["search_string"]
-                    }}
-                  >
-                    <TimelineIcon />
-                  </Link>
+                  <IconButton color="primary"  component="span"  onClick={prop[linkPath] !== undefined ? () => window.open(prop[linkPath]): () => window.open("/admin/query?string=" + prop[firstColumn])}>
+                    {linkIcon}
+                  </IconButton>
                 </TableCell>
               </TableRow>
             );
