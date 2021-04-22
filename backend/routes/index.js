@@ -25,6 +25,10 @@ router.post("/runeval", function (req, res, next) {
   startDate = new Date(startDate.getFullYear(), startDate.getMonth()+1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), startDate.getSeconds())
   endDate = new Date(endDate.getFullYear(), endDate.getMonth()+1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), endDate.getSeconds())
 
+  if(name == "")
+    name = "EVAL_" + startDate.getFullYear() + startDate.getMonth() + startDate.getDate() + "-" + startDate.getHours() + startDate.getMinutes() + startDate.getSeconds() + "_" +
+            endDate.getFullYear() + endDate.getMonth() + endDate.getDate() + "-" + endDate.getHours() + endDate.getMinutes() + endDate.getSeconds()
+
   startDate =
     startDate.getFullYear() +
     "-" +
