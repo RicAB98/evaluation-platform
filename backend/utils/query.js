@@ -29,6 +29,11 @@ const query = {
     return `SELECT count(*) as n FROM fourdays WHERE fk_item = 0 AND search_string='${string}'` 
   },
 
+  getSearchStringsPerPage(tp_item, fk_item)
+  {
+    return `SELECT search_string, count(*) as n FROM fourdays WHERE tp_item='${tp_item}' and fk_item='${fk_item}' GROUP BY search_string ORDER BY count(*) DESC LIMIT 20`;
+  },
+
   loadDailyEvaluation(date) {
     return `SELECT popular, unsuccessful FROM daily_evaluation WHERE 
                           date = '${date.getFullYear()}-${

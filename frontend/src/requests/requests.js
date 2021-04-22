@@ -137,3 +137,18 @@ export function getPagesPerRank(page, mysql_id, string) {
     });
   }
 
+  export function getSearchStringsPerPage(tp_item, fk_item) {
+    let query = apiHost + "/stringsperpage?tp_item=" + tp_item + "&fk_item=" + fk_item;
+  
+    /*if(endDate != null)
+          query = query + "&endDate=" + endDate*/
+  
+    return fetch(query, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+  }
+

@@ -9,7 +9,7 @@ import Button from "../../components/Button/Button.js";
 import LineChart from "../../components/Chart/LineChart";
 import Table from "../../components/Table/Table.js";
 import Table2 from "../../components/Table/Table2.js";
-import { queryGraph, getClicksRanks, getPagesPerRank, getUnsuccessfulSessions } from "../../requests/requests.js";
+import { queryGraph, getClicksRanks, getPagesPerRank, getUnsuccessfulSessions, getSearchStringsPerPage } from "../../requests/requests.js";
 
 class QueryPerformance extends Component {
   state = {
@@ -88,6 +88,14 @@ class QueryPerformance extends Component {
   }
 
   submitEvaluation = () => {
+
+    getSearchStringsPerPage(3, 4)
+    .then((res) => res.json())
+    .then(
+      (res) => console.log(res))
+
+      return;
+
     this.props.history.push({
       pathname: "/admin/query",
       search: "?string=" + this.state.string,
