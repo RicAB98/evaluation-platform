@@ -13,7 +13,6 @@ import {
   unsuccessfulQueries,
   loadDailyEvaluation,
 } from "../../requests/requests.js";
-import Timeline from "@material-ui/icons/Timeline";
 
 class Result extends Component {
   state = {

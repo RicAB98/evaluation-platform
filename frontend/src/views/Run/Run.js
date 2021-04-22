@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
+import TimelineIcon from '@material-ui/icons/Timeline';
 
 import { runEvaluation } from "../../requests/requests.js";
 
@@ -71,7 +72,7 @@ class Run extends Component {
 
     let minute = 60000;
 
-    let currentDate = new Date("2021-02-23 23:59:59");
+    let currentDate = new Date("2021-01-23 23:59:59");
     let referenceDate = new Date(currentDate - period["minutes"] * minute);
 
     runEvaluation(name, evaluationType, period, referenceDate, currentDate)
@@ -128,6 +129,7 @@ class Run extends Component {
               flexDirection: "row",
               width: "75%",
               justifyContent: "space-between",
+              marginTop: 20,
               marginLeft: 8,
             }}
           >
@@ -136,12 +138,18 @@ class Run extends Component {
               tableHeaderColor="gray"
               tableHead={["#", "Query", "Occurrences", " "]}
               tableData={this.state.popularQueries}
+              firstColumn={["search_string"]}
+              secondColumn={["n"]}
+              linkIcon={<TimelineIcon />}
             />
             <Table
               tableTitle="Unsuccessful queries"
               tableHeaderColor="gray"
               tableHead={["#", "Query", "Occurrences", " "]}
               tableData={this.state.unsuccessfulQueries}
+              firstColumn={["search_string"]}
+              secondColumn={["n"]}
+              linkIcon={<TimelineIcon />}
             />
           </div>
         ) : null}

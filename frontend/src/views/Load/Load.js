@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
+import TimelineIcon from '@material-ui/icons/Timeline';
 
 import { loadEvaluation, getEvaluations } from "../../requests/requests.js";
 
@@ -114,12 +115,18 @@ class Load extends Component {
                 tableHeaderColor="gray"
                 tableHead={["#", "Query", "Occurrences", " "]}
                 tableData={this.state.popularQueries}
+                firstColumn={["search_string"]}
+                secondColumn={["n"]}
+                linkIcon={<TimelineIcon />}
               />
               <Table
                 tableTitle="Unsuccessful queries"
                 tableHeaderColor="gray"
                 tableHead={["#", "Query", "Occurrences", " "]}
                 tableData={this.state.unsuccessfulQueries}
+                firstColumn={["search_string"]}
+                secondColumn={["n"]}
+                linkIcon={<TimelineIcon />}
               />
             </div>
           </div>
