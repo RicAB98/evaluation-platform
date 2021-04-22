@@ -4,12 +4,14 @@ import PublishOutlinedIcon from '@material-ui/icons/PublishOutlined';
 import CompareArrowsOutlinedIcon from '@material-ui/icons/CompareArrowsOutlined';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import TimelineIcon from '@material-ui/icons/Timeline';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 // core components/views for Admin layout
 
 import RunPage from "./views/Run/Run.js";
 import LoadPage from "./views/Load/Load.js";
 import ResultsPage from "./views/Results/Results.js";
 import QueryPage from "./views/Query/QueryPerformance.js";
+import PageAnalysisPage from "./views/Page/PageAnalysis";
 import ComparePage from "./views/Compare/Compare.js";
 
 const dashboardRoutes = [
@@ -38,9 +40,16 @@ const dashboardRoutes = [
   },
   {
     path: "/query",
-    name: "Query Performance",
+    name: "Query Analysis",
     icon: TimelineIcon,
     component: QueryPage,
+    layout: "/admin"
+  },
+  {
+    path: "/page",
+    name: "Page Analysis",
+    icon: MenuBookIcon,
+    component: PageAnalysisPage,
     layout: "/admin"
   },
   {
