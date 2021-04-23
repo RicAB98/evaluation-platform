@@ -213,13 +213,23 @@ router.get("/queryGraph", function (req, res, next) {
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
       if (err) throw err;
-      response = [
+
+      dates = new Array()
+      clicks = new Array()
+
+      for(r of results)
+      { 
+        dates.push(r.x)
+        clicks.push(r.y)
+      }
+
+      response = 
         {
-          id: string,
+          string: string,
           color: "hsl(181, 70%, 50%)",
-          data: results,
-        },
-      ];
+            dates: dates,
+          clicks: clicks
+        }
 
       res.send(response);
       conn.release();

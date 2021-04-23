@@ -8,27 +8,19 @@ import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import IconButton from "@material-ui/core/IconButton";
+import FindInPageIcon from "@material-ui/icons/FindInPage";
 
 // core components
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
 
 const useStyles = makeStyles(styles);
 
-export default function CustomTable(props) {
+export default function Table2(props) {
   const classes = useStyles();
-  const {
-    tableTitle,
-    tableHead,
-    tableData,
-    tableHeaderColor,
-    firstColumn,
-    secondColumn,
-    linkPath,
-    linkIcon,
-  } = props;
+  const { tableTitle, tableHead, tableData, tableHeaderColor, onClick } = props;
 
   return (
-    <div className={classes.tableResponsive}>
+    <div className={classes.tableResponsive} style={{ marginTop: 0 }}>
       <h5 style={{ marginBottom: 30 }}> {tableTitle} </h5>
       <Table className={classes.table}>
         {tableHead !== undefined ? (
@@ -51,19 +43,16 @@ export default function CustomTable(props) {
           {tableData.map((prop, key) => {
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
-                <TableCell className={classes.tableCell}>{key + 1}</TableCell>
                 <TableCell className={classes.tableCell}>
-                  {firstColumn.map((field) => {
-                    return prop[field];
-                  })}
+                  {prop["page_number"] !== "20+"
+                    ? 10 * (prop["page_number"] - 1) + prop["mysql_id"]
+                    : "20+"}
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
                   style={{ textAlign: "center" }}
                 >
-                  {secondColumn.map((field) => {
-                    return prop[field];
-                  })}
+                  {prop["n"]}
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
@@ -72,16 +61,11 @@ export default function CustomTable(props) {
                   <IconButton
                     color="primary"
                     component="span"
-                    onClick={
-                      prop[linkPath] !== undefined
-                        ? () => window.open(prop[linkPath])
-                        : () =>
-                            window.open(
-                              "/admin/query?string=" + prop[firstColumn]
-                            )
+                    onClick={() =>
+                      onClick(prop["page_number"], prop["mysql_id"])
                     }
                   >
-                    {linkIcon}
+                    <FindInPageIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -93,11 +77,11 @@ export default function CustomTable(props) {
   );
 }
 
-CustomTable.defaultProps = {
+Table2.defaultProps = {
   tableHeaderColor: "gray",
 };
 
-CustomTable.propTypes = {
+Table2.propTypes = {
   tableHeaderColor: PropTypes.oneOf([
     "warning",
     "primary",

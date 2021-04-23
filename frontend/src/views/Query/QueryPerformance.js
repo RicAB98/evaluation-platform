@@ -6,9 +6,9 @@ import LinkIcon from "@material-ui/icons/Link";
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
 import Button from "../../components/Button/Button.js";
-import LineChart from "../../components/Chart/LineChart";
 import Table from "../../components/Table/Table.js";
 import Table2 from "../../components/Table/Table2.js";
+import Chart from "../../components/Chart/GoogleChart";
 import {
   queryGraph,
   getClicksRanks,
@@ -50,18 +50,10 @@ class QueryPerformance extends Component {
         n: "Loading...",
       },
     ],
-    data: [
+    graphData: 
       {
-        id: "loading",
-        color: "hsl(0, 70%, 50%)",
-        data: [
-          {
-            x: "20-01",
-            y: 0,
-          },
-        ],
+        string: "Loading..",
       },
-    ],
   };
 
   componentDidMount() {
@@ -95,11 +87,6 @@ class QueryPerformance extends Component {
   };
 
   submitEvaluation = () => {
-    getSearchStringsPerPage(3, 4)
-      .then((res) => res.json())
-      .then((res) => console.log(res));
-
-    return;
 
     this.props.history.push({
       pathname: "/admin/query",
@@ -118,27 +105,16 @@ class QueryPerformance extends Component {
           n: "Loading...",
         },
       ],
-    });
-
-    this.setState({
-      data: [
-        {
-          id: "loading",
-          color: "hsl(0, 70%, 50%)",
-          data: [
-            {
-              x: "20-01",
-              y: 0,
-            },
-          ],
-        },
-      ],
+      graphData: 
+      {
+        string: "Loading..",
+      },
     });
 
     queryGraph(this.state.string)
       .then((res) => res.json())
       .then(
-        (res) => this.setState({ data: res }),
+        (res) => this.setState({ graphData: res }),
         this.setState({ showGraph: true })
       );
     getClicksRanks(this.state.string)
@@ -186,7 +162,11 @@ class QueryPerformance extends Component {
             md={this.state.showPagesPerRank === true ? 4 : 6}
           >
             {this.state.showGraph === true ? (
-              <LineChart data={this.state.data} />
+               <Chart
+                string = {this.state.graphData["string"]}
+                labels = {this.state.graphData["dates"]}
+                data = {this.state.graphData["clicks"]}
+               />
             ) : null}
           </GridItem>
           {this.state.showClickRank === true ? (

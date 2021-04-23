@@ -100,7 +100,7 @@ export default function Admin({ ...rest }) {
         color={color}
         {...rest}
       />
-      <div className={classes.mainPanel} ref={mainPanel}>
+      <div className={classes.mainPanel} ref={mainPanel} style={{ backgroundColor: "#F5F5F5" }}>
         <Navbar
           routes={routes}
           handleDrawerToggle={handleDrawerToggle}

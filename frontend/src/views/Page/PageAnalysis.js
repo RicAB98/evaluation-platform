@@ -6,7 +6,6 @@ import LinkIcon from "@material-ui/icons/Link";
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
 import Button from "../../components/Button/Button.js";
-import LineChart from "../../components/Chart/LineChart";
 import Table from "../../components/Table/Table.js";
 import Table2 from "../../components/Table/Table2.js";
 import {
@@ -185,9 +184,9 @@ class PageAnalysis extends Component {
             sm={this.state.showPagesPerRank === true ? 12 : 18}
             md={this.state.showPagesPerRank === true ? 4 : 6}
           >
-            {this.state.showGraph === true ? (
+            {/*this.state.showGraph === true ? (
               <LineChart data={this.state.data} />
-            ) : null}
+            ) : null*/}
           </GridItem>
           {this.state.showClickRank === true ? (
             <GridItem
