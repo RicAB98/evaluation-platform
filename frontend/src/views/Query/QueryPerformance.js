@@ -15,7 +15,6 @@ import {
   getClicksRanks,
   getPagesPerRank,
   getUnsuccessfulSessions,
-  getSearchStringsPerPage,
 } from "../../requests/requests.js";
 
 class QueryPerformance extends Component {
