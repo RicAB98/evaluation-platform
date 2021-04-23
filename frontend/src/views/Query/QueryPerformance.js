@@ -8,7 +8,8 @@ import GridContainer from "../../components/Grid/GridContainer.js";
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
 import Table2 from "../../components/Table/Table2.js";
-import Chart from "../../components/Chart/GoogleChart";
+import Calendar from "../../components/Calendar/Calendar.js";
+import Chart from "../../components/Chart/Chart";
 import {
   queryGraph,
   getClicksRanks,
@@ -29,20 +30,32 @@ class QueryPerformance extends Component {
             this.props.location.search.replace("?string=", "")
           ),
 
+    showGraph: false,
+    graphStartDate: null,
+    graphEndDate: null,
+
+    showClickRank: false,
     calculatedString: null,
+    unsuccessfulSessions: "",
+
+    showPagesPerRank: false,
     calculatedRank: null,
 
-    showGraph: false,
-    showClickRank: false,
-    showPagesPerRank: false,
+    graphData: {
+      string: "Loading..",
+    },
 
-    unsuccessfulSessions: "",
+    showedGraphData: {
+      string: "Loading..",
+    },
+
     clickRank: [
       {
         rank: "Loading...",
         n: "Loading...",
       },
     ],
+
     pagesPerRank: [
       {
         page: "Loading...",
@@ -50,10 +63,6 @@ class QueryPerformance extends Component {
         n: "Loading...",
       },
     ],
-    graphData: 
-      {
-        string: "Loading..",
-      },
   };
 
   componentDidMount() {
@@ -87,7 +96,6 @@ class QueryPerformance extends Component {
   };
 
   submitEvaluation = () => {
-
     this.props.history.push({
       pathname: "/admin/query",
       search: "?string=" + this.state.string,
@@ -105,17 +113,26 @@ class QueryPerformance extends Component {
           n: "Loading...",
         },
       ],
-      graphData: 
-      {
+      graphData: {
         string: "Loading..",
       },
+      showedGraphData: {
+        string: "Loading..",
+      },
+      graphStartDate: null,
+      graphEndDate: null,
     });
 
     queryGraph(this.state.string)
       .then((res) => res.json())
-      .then(
-        (res) => this.setState({ graphData: res }),
-        this.setState({ showGraph: true })
+      .then((res) =>
+        this.setState({
+          showGraph: true,
+          graphData: res,
+          showedGraphData: res,
+          graphStartDate: new Date(res["dates"][0]),
+          graphEndDate: new Date(res["dates"][res["dates"].length - 1]),
+        })
       );
     getClicksRanks(this.state.string)
       .then((res) => res.json())
@@ -127,6 +144,106 @@ class QueryPerformance extends Component {
       .then((res) => res.json())
       .then((res) => this.setState({ unsuccessfulSessions: res["n"] }));
   };
+
+  changeStartDate = (newDate) => {
+    let formatedDate =
+      newDate.getFullYear() +
+      "-" +
+      this.addOne(newDate.getMonth()) +
+      "-" +
+      newDate.getDate();
+    let dateArray = this.state.graphData["dates"];
+    let closerDateInArray = newDate;
+
+    if (newDate > this.state.graphEndDate) return;
+
+    if (dateArray.indexOf(formatedDate) === -1) {
+      let rangeStart = new Date(dateArray[0]);
+      let rangeEnd = new Date(dateArray[dateArray.length - 1]);
+
+      if (newDate < rangeStart || newDate > rangeEnd) return;
+    }
+
+    this.setState({ graphStartDate: newDate });
+    this.changeGraphRange(closerDateInArray, this.state.graphEndDate);
+  };
+
+  changeEndDate = (newDate) => {
+    let formatedDate =
+      newDate.getFullYear() +
+      "-" +
+      this.addOne(newDate.getMonth()) +
+      "-" +
+      newDate.getDate();
+    let dateArray = this.state.graphData["dates"];
+    let closerDateInArray = newDate;
+
+    if (newDate < this.state.graphStartDate) return;
+
+    if (dateArray.indexOf(formatedDate) === -1) {
+      let rangeStart = new Date(dateArray[0]);
+      let rangeEnd = new Date(dateArray[dateArray.length - 1]);
+
+      if (newDate < rangeStart || newDate > rangeEnd) return;
+    }
+
+    this.setState({ graphEndDate: newDate });
+    this.changeGraphRange(this.state.graphStartDate, closerDateInArray);
+  };
+
+  changeGraphRange(startDate, endDate) {
+    let string = this.state.graphData["string"];
+    let dates = this.state.graphData["dates"];
+    let clicks = this.state.graphData["clicks"];
+
+    let closerStartDate = this.closerDateInArray(startDate, "start");
+    let closerEndDate = this.closerDateInArray(endDate, "end");
+
+    let formatedStartDate =
+      closerStartDate.getFullYear() +
+      "-" +
+      this.addOne(closerStartDate.getMonth()) +
+      "-" +
+      closerStartDate.getDate();
+    let formatedEndDate =
+      closerEndDate.getFullYear() +
+      "-" +
+      this.addOne(closerEndDate.getMonth()) +
+      "-" +
+      closerEndDate.getDate();
+
+    this.setState({
+      showedGraphData: {
+        string: string,
+        dates: dates.slice(
+          dates.indexOf(formatedStartDate),
+          dates.indexOf(formatedEndDate) + 1
+        ),
+        clicks: clicks.slice(
+          dates.indexOf(formatedStartDate),
+          dates.indexOf(formatedEndDate) + 1
+        ),
+      },
+    });
+  }
+
+  closerDateInArray(date, type) {
+    let dateArray = this.state.graphData["dates"];
+
+    if (type === "start")
+      return new Date(dateArray.find((element) => new Date(element) >= date));
+    else if (type === "end") {
+      let dateArrayCopy = dateArray.slice();
+
+      return new Date(
+        dateArrayCopy.reverse().find((element) => new Date(element) <= date)
+      );
+    }
+  }
+
+  addOne(value) {
+    return value + 1;
+  }
 
   render() {
     return (
@@ -155,59 +272,84 @@ class QueryPerformance extends Component {
           </Button>
         </div>
 
-        <GridContainer>
-          <GridItem
-            xs={this.state.showPagesPerRank === true ? 12 : 18}
-            sm={this.state.showPagesPerRank === true ? 12 : 18}
-            md={this.state.showPagesPerRank === true ? 4 : 6}
-          >
-            {this.state.showGraph === true ? (
-               <Chart
-                string = {this.state.graphData["string"]}
-                labels = {this.state.graphData["dates"]}
-                data = {this.state.graphData["clicks"]}
-               />
-            ) : null}
-          </GridItem>
-          {this.state.showClickRank === true ? (
+        <div style={{ marginTop: 20 }}>
+          <GridContainer>
             <GridItem
               xs={this.state.showPagesPerRank === true ? 12 : 18}
               sm={this.state.showPagesPerRank === true ? 12 : 18}
               md={this.state.showPagesPerRank === true ? 4 : 6}
             >
-              <Table2
-                tableTitle={
-                  "Clicks' rank for query \"" +
-                  this.state.calculatedString +
-                  '"'
-                }
-                tableHeaderColor="gray"
-                tableHead={["Rank", "Clicks", ""]}
-                tableData={this.state.clickRank}
-                onClick={this.submitPagesPerRank}
-              />
-              <h6 style={{ marginTop: 10 }}>
-                Sessions without a click: {this.state.unsuccessfulSessions}{" "}
-              </h6>
+              {this.state.showGraph === true ? (
+                <div>
+                  <Chart
+                    string={this.state.showedGraphData["string"]}
+                    labels={this.state.showedGraphData["dates"]}
+                    data={this.state.showedGraphData["clicks"]}
+                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      width: 800,
+                    }}
+                  >
+                    <Calendar
+                      id="startDate"
+                      selectedDate={this.state.graphStartDate}
+                      onChange={this.changeStartDate}
+                      label="Start date"
+                    />
+                    <Calendar
+                      id="endDate"
+                      selectedDate={this.state.graphEndDate}
+                      onChange={this.changeEndDate}
+                      label="End date"
+                      margin="20px"
+                    />
+                  </div>
+                </div>
+              ) : null}
             </GridItem>
-          ) : null}
-          <GridItem xs={12} sm={12} md={4}>
-            {this.state.showPagesPerRank === true ? (
-              <Table
-                tableTitle={
-                  "Clicked pages on rank " + this.state.calculatedRank
-                }
-                tableHeaderColor="gray"
-                tableHead={["#", "Ids", "Count", ""]}
-                tableData={this.state.pagesPerRank}
-                firstColumn={["tp_item", "fk_item"]}
-                secondColumn={["n"]}
-                linkPath="link"
-                linkIcon={<LinkIcon />}
-              />
+            {this.state.showClickRank === true ? (
+              <GridItem
+                xs={this.state.showPagesPerRank === true ? 12 : 18}
+                sm={this.state.showPagesPerRank === true ? 12 : 18}
+                md={this.state.showPagesPerRank === true ? 4 : 6}
+              >
+                <Table2
+                  tableTitle={
+                    "Clicks' rank for query \"" +
+                    this.state.calculatedString +
+                    '"'
+                  }
+                  tableHeaderColor="gray"
+                  tableHead={["Rank", "Clicks", ""]}
+                  tableData={this.state.clickRank}
+                  onClick={this.submitPagesPerRank}
+                />
+                <h6 style={{ marginTop: 10 }}>
+                  Sessions without a click: {this.state.unsuccessfulSessions}{" "}
+                </h6>
+              </GridItem>
             ) : null}
-          </GridItem>
-        </GridContainer>
+            <GridItem xs={12} sm={12} md={4}>
+              {this.state.showPagesPerRank === true ? (
+                <Table
+                  tableTitle={
+                    "Clicked pages on rank " + this.state.calculatedRank
+                  }
+                  tableHeaderColor="gray"
+                  tableHead={["#", "Ids", "Count", ""]}
+                  tableData={this.state.pagesPerRank}
+                  firstColumn={["tp_item", "fk_item"]}
+                  secondColumn={["n"]}
+                  linkPath="link"
+                  linkIcon={<LinkIcon />}
+                />
+              ) : null}
+            </GridItem>
+          </GridContainer>
+        </div>
       </div>
     );
   }

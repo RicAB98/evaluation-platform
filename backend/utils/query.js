@@ -5,7 +5,7 @@ const query = {
 
   //TODO change to main table AND use dates
   getSearchesPerDay(string) {
-    return `SELECT date_format(date, "%d-%m") as x, count(*) as y FROM fourdays GROUP BY search_string, date HAVING search_string = '${string}'`;
+    return `SELECT date_format(date, "%Y-%c-%d") as x, count(*) as y FROM fourdays GROUP BY search_string, date HAVING search_string = '${string}'`;
   },
 
   //Returns list of the rank of the clicked options

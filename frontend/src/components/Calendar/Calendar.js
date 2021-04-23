@@ -7,7 +7,7 @@ import {
 } from "@material-ui/pickers";
 
 export default function Calendar(props) {
-  const { selectedDate, label, onChange, margin } = props;
+  const { id, selectedDate, label, onChange, margin } = props;
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -16,7 +16,7 @@ export default function Calendar(props) {
         variant="inline"
         format="dd/MM/yyyy"
         margin="normal"
-        id="date-picker-inline"
+        id={id}
         label={label}
         value={selectedDate}
         onChange={onChange}

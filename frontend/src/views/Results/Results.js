@@ -28,7 +28,7 @@ class Result extends Component {
         n: "Loading...",
       },
     ],
-    startDate: new Date("2021-01-20 0:0:0"),
+    startDate: new Date("2021-01-20"),
     endDate: null,
     calculatedStartDate: null,
     calculatedEndDate: null,

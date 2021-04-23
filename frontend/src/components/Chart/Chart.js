@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import {Line} from 'react-chartjs-2';
 
 /*const state = {
@@ -56,7 +56,7 @@ export default function Chart (props) {
             plugins: {
                 title:{
                   display:true,
-                  text:'Clicks',
+                  text:'Searches per day',
                   fontSize:20
                 },
                 legend:{
@@ -76,7 +76,7 @@ export default function Chart (props) {
                     title:
                     {
                         display: true,
-                        text: 'Clicks'
+                        text: 'Number of searches'
                     }
                 }
               }
