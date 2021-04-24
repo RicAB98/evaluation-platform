@@ -327,7 +327,7 @@ router.get("/unsuccessfulsessions", function (req, res, next) {
   });
 });
 
-router.get("/stringsperpage", function (req, res, next) {
+/*router.get("/stringsperpage", function (req, res, next) {
   let tp_item = req.query.tp_item;
   let fk_item = req.query.fk_item;
 
@@ -341,7 +341,7 @@ router.get("/stringsperpage", function (req, res, next) {
       conn.release();
     });
   });
-});
+});*/
 
 router.get("/pagesrank", function (req, res, next) {
   let tp_item = req.query.tp_item;
@@ -387,4 +387,34 @@ router.get("/pagesrank", function (req, res, next) {
     });
   });
 });
+
+router.get("/stringsperrank", function (req, res, next) {
+  let page = req.query.page;
+  let mysql_id = req.query.mysql_id;
+  let tp_item = req.query.tp_item;
+  let fk_item = req.query.fk_item;
+
+  let query = queryUtil.getStringsPerRank(page, mysql_id, tp_item, fk_item);
+
+  db.getConnection((err, conn) => {
+    conn.query(query, (err, results, fields) => {
+      if (err) throw err;
+
+      for (r in results) {
+        let row = results[r];
+
+        results[r] = {
+          search_string: row.search_string,
+          n: row.n,
+          link:
+            "https://www.zerozero.pt/search.php?search_string=" + row.search_string
+        };
+      }
+
+      res.send(results);
+      conn.release();
+    });
+  });
+});
+
 module.exports = router;

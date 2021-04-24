@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 // core components
 import LinkIcon from "@material-ui/icons/Link";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
@@ -26,7 +27,7 @@ class QueryPerformance extends Component {
       this.props.location.search === ""
         ? ""
         : decodeURIComponent(
-            this.props.location.search.replace("?string=", "")
+            this.props.location.search.replace("?search_string=", "")
           ),
 
     showGraph: false,
@@ -97,7 +98,7 @@ class QueryPerformance extends Component {
   submitEvaluation = () => {
     this.props.history.push({
       pathname: "/admin/query",
-      search: "?string=" + this.state.string,
+      search: "?search_string=" + this.state.string,
     });
 
     this.setState({ calculatedString: this.state.string });
@@ -338,12 +339,15 @@ class QueryPerformance extends Component {
                     "Clicked pages on rank " + this.state.calculatedRank
                   }
                   tableHeaderColor="gray"
-                  tableHead={["#", "Ids", "Count", ""]}
+                  tableHead={["#", "Ids", "Count", "", ""]}
                   tableData={this.state.pagesPerRank}
                   firstColumn={["tp_item", "fk_item"]}
                   secondColumn={["n"]}
-                  linkPath="link"
-                  linkIcon={<LinkIcon />}
+                  localLinkPath="/admin/page?"
+                  localLinkIcon={<MenuBookIcon />}
+                  externalLink={true}
+                  externalLinkPath="link"
+                  externalLinkIcon={<LinkIcon />}
                 />
               ) : null}
             </GridItem>

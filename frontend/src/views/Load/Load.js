@@ -118,7 +118,9 @@ class Load extends Component {
                 tableData={this.state.popularQueries}
                 firstColumn={["search_string"]}
                 secondColumn={["n"]}
-                linkIcon={<TimelineIcon />}
+                localLinkPath="/admin/query?"
+                localLinkIcon={<TimelineIcon />}
+                externalLink={false}
               />
               <Table
                 tableTitle="Unsuccessful queries"
@@ -127,7 +129,9 @@ class Load extends Component {
                 tableData={this.state.unsuccessfulQueries}
                 firstColumn={["search_string"]}
                 secondColumn={["n"]}
-                linkIcon={<TimelineIcon />}
+                localLinkPath="/admin/query?"
+                localLinkIcon={<TimelineIcon />}
+                externalLink={false}
               />
             </div>
           </div>

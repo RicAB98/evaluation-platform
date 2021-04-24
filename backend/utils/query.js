@@ -28,6 +28,16 @@ const query = {
       return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE page_number > 2 AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
   },
 
+    //Returns list of pages where user clicked on a specific rank
+    getStringsPerRank(page, mysql_id, tp_item, fk_item) {
+      if (page == 1)
+        return `SELECT search_string, count(*) as n FROM fourdays WHERE (page_number = ${page} OR page_number = 0 ) AND mysql_id = ${mysql_id} AND tp_item = ${tp_item} AND fk_item = '${fk_item}' GROUP BY search_string ORDER BY n DESC`;
+      else if (page == 2)
+        return `SELECT search_string, count(*) as n FROM fourdays WHERE page_number = ${page} AND mysql_id = ${mysql_id} AND tp_item = ${tp_item} AND fk_item = '${fk_item}' GROUP BY search_string ORDER BY n DESC`;
+      else
+        return `SELECT search_string, count(*) as n FROM fourdays WHERE page_number > 2 AND tp_item = ${tp_item} AND fk_item = '${fk_item}' GROUP BY search_string ORDER BY n DESC`;
+    },
+
   //Returns number of search sessions that resulted in no further click
   getUnsuccessfulSessions(string) {
     return `SELECT count(*) as n FROM fourdays WHERE fk_item = 0 AND search_string='${string}'`;

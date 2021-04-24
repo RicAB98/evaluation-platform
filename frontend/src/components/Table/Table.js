@@ -23,8 +23,11 @@ export default function CustomTable(props) {
     tableHeaderColor,
     firstColumn,
     secondColumn,
-    linkPath,
-    linkIcon,
+    localLinkPath,
+    localLinkIcon,
+    externalLink,
+    externalLinkPath,
+    externalLinkIcon,
   } = props;
 
   return (
@@ -72,18 +75,34 @@ export default function CustomTable(props) {
                   <IconButton
                     color="primary"
                     component="span"
-                    onClick={
-                      prop[linkPath] !== undefined
-                        ? () => window.open(prop[linkPath])
-                        : () =>
-                            window.open(
-                              "/admin/query?string=" + prop[firstColumn]
-                            )
+                    onClick={() =>
+                      window.open(
+                        localLinkPath +
+                          String(
+                            firstColumn.map((field) => {
+                              return field + "=" + prop[field];
+                            })
+                          ).replace(", ,", "&")
+                      )
                     }
                   >
-                    {linkIcon}
+                    {localLinkIcon}
                   </IconButton>
                 </TableCell>
+                {externalLink === true ? (
+                  <TableCell
+                    className={classes.tableCell}
+                    style={{ textAlign: "center" }}
+                  >
+                    <IconButton
+                      color="primary"
+                      component="span"
+                      onClick={() => window.open(prop[externalLinkPath])}
+                    >
+                      {externalLinkIcon}
+                    </IconButton>
+                  </TableCell>
+                ) : null}
               </TableRow>
             );
           })}
