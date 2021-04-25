@@ -3,7 +3,11 @@ import React, { Component } from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import TimelineIcon from "@material-ui/icons/Timeline";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import LinkIcon from "@material-ui/icons/LinkOff";
 
+import GridItem from "../../components/Grid/GridItem.js";
+import GridContainer from "../../components/Grid/GridContainer.js";
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
 import Calendar from "../../components/Calendar/Calendar.js";
@@ -11,6 +15,7 @@ import Calendar from "../../components/Calendar/Calendar.js";
 import {
   topQueries,
   unsuccessfulQueries,
+  topPages,
   loadDailyEvaluation,
 } from "../../requests/requests.js";
 
@@ -25,6 +30,13 @@ class Result extends Component {
     unsuccessfulQueries: [
       {
         search_string: "Loading...",
+        n: "Loading...",
+      },
+    ],
+    popularPages: [
+      {
+        tp_item: 0,
+        fk_item: 0,
         n: "Loading...",
       },
     ],
@@ -82,6 +94,8 @@ class Result extends Component {
 
       this.getPopularQueries(startDate, endDate);
       this.getUnsuccessfulQueries(startDate, endDate);
+      this.getPopularPages(startDate, endDate);
+
     } else {
 
       this.props.history.push({
@@ -95,10 +109,10 @@ class Result extends Component {
         .then((res) => res.json())
         .then((res) =>
           this.setState(
-            { popularQueries: JSON.parse(res[0]["popular"]) },
-            this.setState({
+            { popularQueries: JSON.parse(res[0]["popularQueries"]),  
               unsuccessfulQueries: JSON.parse(res[0]["unsuccessful"]),
-            })
+              popularPages: JSON.parse(res[0]["popularPages"])
+            },
           )
         );
     }
@@ -122,6 +136,15 @@ class Result extends Component {
     unsuccessfulQueries(startDate, endDate)
       .then((res) => res.json())
       .then((res) => this.setState({ unsuccessfulQueries: res }));
+  };
+
+  getPopularPages = (startDate, endDate) => {
+    this.setState({
+      popularPages: [{tp_item: 0,fk_item: 0,n: "Loading...",},],});
+
+    topPages(startDate, endDate)
+      .then((res) => res.json())
+      .then((res) => this.setState({ popularPages: res }));
   };
 
   changeStartDate = (date) => {
@@ -197,13 +220,18 @@ class Result extends Component {
                   this.state.calculatedEndDate.getFullYear()
                 : null}
             </h3>
-            <div
-              style={{
+            <GridContainer
+              /*style={{
                 display: "flex",
                 flexDirection: "row",
                 width: "75%",
                 justifyContent: "space-between",
-              }}
+              }}*/
+            >
+              <GridItem
+              xs={12}
+              sm={12}
+              md={4}
             >
               <Table
                 tableTitle="Popular queries"
@@ -216,6 +244,12 @@ class Result extends Component {
                 localLinkIcon={<TimelineIcon />}
                 externalLink={false}
               />
+              </GridItem>
+              <GridItem
+              xs={12}
+              sm={12}
+              md={4}
+            >
               <Table
                 tableTitle="Unsuccessful queries"
                 tableHeaderColor="gray"
@@ -227,7 +261,27 @@ class Result extends Component {
                 localLinkIcon={<TimelineIcon />}
                 externalLink={false}
               />
-            </div>
+              </GridItem>
+              <GridItem
+              xs={12}
+              sm={12}
+              md={4}
+            >
+              <Table
+                tableTitle="Popular pages"
+                tableHeaderColor="gray"
+                tableHead={["#", "IDs", "Occurrences", " ", " "]}
+                tableData={this.state.popularPages}
+                firstColumn={["tp_item", "fk_item"]}
+                secondColumn={["n"]}
+                localLinkPath="/admin/page?"
+                localLinkIcon={<MenuBookIcon />}
+                externalLink={true}
+                externalLinkPath="link"
+                externalLinkIcon={<LinkIcon />}
+              />
+              </GridItem>
+            </GridContainer>
           </div>
         ) : null}
       </div>

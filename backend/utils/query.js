@@ -14,8 +14,8 @@ const query = {
   },
 
   //Returns list of position clicked to reach a certain page
-  getPagesRank(tp_item, fk_item)  {
-    return `SELECT page_number, mysql_id, count(*) as n FROM fourdays WHERE tp_item = ${tp_item} AND fk_item = ${fk_item} GROUP BY page_number, mysql_id ORDER BY page_number, mysql_id`
+  getPagesRank(tp_item, fk_item) {
+    return `SELECT page_number, mysql_id, count(*) as n FROM fourdays WHERE tp_item = ${tp_item} AND fk_item = ${fk_item} GROUP BY page_number, mysql_id ORDER BY page_number, mysql_id`;
   },
 
   //Returns list of pages where user clicked on a specific rank
@@ -28,15 +28,15 @@ const query = {
       return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE page_number > 2 AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
   },
 
-    //Returns list of pages where user clicked on a specific rank
-    getStringsPerRank(page, mysql_id, tp_item, fk_item) {
-      if (page == 1)
-        return `SELECT search_string, count(*) as n FROM fourdays WHERE (page_number = ${page} OR page_number = 0 ) AND mysql_id = ${mysql_id} AND tp_item = ${tp_item} AND fk_item = '${fk_item}' GROUP BY search_string ORDER BY n DESC`;
-      else if (page == 2)
-        return `SELECT search_string, count(*) as n FROM fourdays WHERE page_number = ${page} AND mysql_id = ${mysql_id} AND tp_item = ${tp_item} AND fk_item = '${fk_item}' GROUP BY search_string ORDER BY n DESC`;
-      else
-        return `SELECT search_string, count(*) as n FROM fourdays WHERE page_number > 2 AND tp_item = ${tp_item} AND fk_item = '${fk_item}' GROUP BY search_string ORDER BY n DESC`;
-    },
+  //Returns list of pages where user clicked on a specific rank
+  getStringsPerRank(page, mysql_id, tp_item, fk_item) {
+    if (page == 1)
+      return `SELECT search_string, count(*) as n FROM fourdays WHERE (page_number = ${page} OR page_number = 0 ) AND mysql_id = ${mysql_id} AND tp_item = ${tp_item} AND fk_item = '${fk_item}' GROUP BY search_string ORDER BY n DESC`;
+    else if (page == 2)
+      return `SELECT search_string, count(*) as n FROM fourdays WHERE page_number = ${page} AND mysql_id = ${mysql_id} AND tp_item = ${tp_item} AND fk_item = '${fk_item}' GROUP BY search_string ORDER BY n DESC`;
+    else
+      return `SELECT search_string, count(*) as n FROM fourdays WHERE page_number > 2 AND tp_item = ${tp_item} AND fk_item = '${fk_item}' GROUP BY search_string ORDER BY n DESC`;
+  },
 
   //Returns number of search sessions that resulted in no further click
   getUnsuccessfulSessions(string) {
@@ -50,11 +50,11 @@ const query = {
 
   //Returns list of ranks that a string appeared in while trying to reach a certain page
   getSearchStringRank(tp_item, fk_item, string) {
-    return `SELECT page_number, mysql_id FROM fourdays WHERE tp_item = ${tp_item} AND fk_item = ${fk_item} AND search_string='${string} GROUP BY page_number, mysql_id ORDER BY page_number, mysql_id DESC;` 
+    return `SELECT page_number, mysql_id FROM fourdays WHERE tp_item = ${tp_item} AND fk_item = ${fk_item} AND search_string='${string} GROUP BY page_number, mysql_id ORDER BY page_number, mysql_id DESC;`;
   },
 
   loadDailyEvaluation(date) {
-    return `SELECT popular, unsuccessful FROM daily_evaluation WHERE 
+    return `SELECT popularQueries, unsuccessful, popularPages FROM daily_evaluation WHERE 
                           date = '${date.getFullYear()}-${
       date.getMonth() + 1
     }-${date.getDate()}'`;
@@ -64,7 +64,7 @@ const query = {
     return `SELECT startDate, endDate, popular, unsuccessful FROM evaluation WHERE id = ${id}`;
   },
 
-  singleDayPopular(date) {
+  singleDayPopularQueries(date) {
     return `SELECT search_string, count(*) as n FROM fourdays WHERE 
                                    search_string <> '' AND
                                    date = '${date.getFullYear()}-${
@@ -73,9 +73,9 @@ const query = {
                                    GROUP BY search_string ORDER BY count(*) DESC LIMIT 10`;
   },
 
-  rangePopular(startDate, endDate) {
+  rangePopularQueries(startDate, endDate) {
     return `SELECT search_string, count(*) as n FROM fourdays WHERE 
-                              search_string <> '' AND
+                              search_string <> '' AND 
                               time > '${startDate.getFullYear()}-${
       startDate.getMonth() + 1
     }-${startDate.getDate()} ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}' AND
@@ -105,6 +105,25 @@ const query = {
       endDate.getMonth() + 1
     }-${endDate.getDate()} ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}' 
                   GROUP BY search_string ORDER BY count(*) DESC LIMIT 10`;
+  },
+
+  singleDayPopularPages(date) {
+    return `SELECT Concat(tp_item, ', ') as tp_item, fk_item, count(*) as n FROM fourdays WHERE 
+    fk_item <> 0 AND
+    date = '${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}' 
+    GROUP BY tp_item, fk_item ORDER BY count(*) DESC LIMIT 10`;
+  },
+
+  rangePopularPages(startDate, endDate) {
+    return `SELECT Concat(tp_item, ', ') as tp_item, fk_item, count(*) as n FROM fourdays WHERE 
+    fk_item <> 0 AND
+    time > '${startDate.getFullYear()}-${
+      startDate.getMonth() + 1
+    }-${startDate.getDate()} ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}' AND
+                              time < '${endDate.getFullYear()}-${
+      endDate.getMonth() + 1
+    }-${endDate.getDate()} ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}' 
+    GROUP BY tp_item, fk_item ORDER BY count(*) DESC LIMIT 10`;
   },
 
   insertEvaluation(name, type, popular, unsuccessful, startDate, endDate) {

@@ -166,12 +166,12 @@ router.get("/getevaluations", function (req, res, next) {
 
 router.get("/topqueries", function (req, res, next) {
   let startDate = new Date(req.query.startDate);
-  let query = queryUtil.singleDayPopular(startDate);
+  let query = queryUtil.singleDayPopularQueries(startDate);
 
   if (req.query.endDate != null) {
     endDate = new Date(req.query.endDate);
 
-    query = queryUtil.rangePopular(startDate, endDate);
+    query = queryUtil.rangePopularQueries(startDate, endDate);
   }
 
   db.getConnection((err, conn) => {
@@ -193,6 +193,26 @@ router.get("/unsuccessfulqueries", function (req, res, next) {
     endDate = new Date(req.query.endDate);
 
     query = queryUtil.rangeUnsuccessful(startDate, endDate);
+  }
+
+  db.getConnection((err, conn) => {
+    conn.query(query, (err, results, fields) => {
+      if (err) throw err;
+
+      res.send(results);
+      conn.release();
+    });
+  });
+});
+
+router.get("/toppages", function (req, res, next) {
+  let startDate = new Date(req.query.startDate);
+  let query = queryUtil.singleDayPopularPages(startDate);
+
+  if (req.query.endDate != null) {
+    endDate = new Date(req.query.endDate);
+
+    query = queryUtil.rangePopularPages(startDate, endDate);
   }
 
   db.getConnection((err, conn) => {

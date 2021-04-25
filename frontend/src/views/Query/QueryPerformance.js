@@ -128,12 +128,12 @@ class QueryPerformance extends Component {
       .then((res) => res.json())
       .then((res) =>
         this.setState({
-          showGraph: true,
           graphData: res,
           showedGraphData: res,
           graphStartDate: new Date(res["dates"][0]),
           graphEndDate: new Date(res["dates"][res["dates"].length - 1]),
-        })
+        }),
+        this.setState({ showGraph: true })
       );
     getClicksRanks(this.state.string)
       .then((res) => res.json())

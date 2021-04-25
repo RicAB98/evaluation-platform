@@ -77,6 +77,22 @@ export function unsuccessfulQueries(startDate, endDate) {
   });
 }
 
+export function topPages(startDate, endDate) {
+  let query = apiHost + "/toppages?startDate=" + startDate;
+
+  if (endDate != null) query = query + "&endDate=" + endDate;
+
+  console.log(query)
+
+  return fetch(query, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+}
+
 export function queryGraph(string) {
   let query = apiHost + "/queryGraph?string=" + string;
 
