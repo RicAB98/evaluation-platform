@@ -40,29 +40,54 @@ class Result extends Component {
     this.setState({ endDate: null });
   };
 
-  submitEvaluation() {
-    this.setState({ calculatedStartDate: this.state.startDate });
-    this.setState({ showTables: true });
+  componentDidMount() {
+    let search = window.location.search;
+    let params = new URLSearchParams(search);
 
-    if (this.state.endDate != null) {
-      let startDate = new Date(this.state.startDate);
+    let startDate = params.get("startDate");
+    let endDate = params.get("endDate");
+
+    startDate !== null && this.setState({ startDate: new Date(startDate) }, () => this.submitEvaluation(startDate, endDate) );
+    endDate !== null && this.setState({ endDate: new Date(endDate), checkbox: true});
+  }
+
+  submitEvaluation(startDate, endDate) {
+    startDate = new Date(startDate);
+
+    this.setState({ calculatedStartDate: startDate });
+    this.setState({ showTables: true }); 
+
+    if (endDate != null) {
+      
+      endDate = new Date(endDate);
+
       startDate.setHours(0);
       startDate.setMinutes(0);
       startDate.setSeconds(0);
 
-      let endDate = new Date(this.state.endDate);
       endDate.setHours(23);
       endDate.setMinutes(59);
       endDate.setSeconds(59);
 
-      this.setState({ calculatedEndDate: this.state.endDate });
+      this.setState({ calculatedEndDate: endDate });
+
+      this.props.history.push({
+        pathname: "/admin/daily",
+        search: "?startDate=" + startDate.toISOString().split('T')[0] + "&endDate=" + endDate.toISOString().split('T')[0],
+      });
 
       this.getPopularQueries(startDate, endDate);
       this.getUnsuccessfulQueries(startDate, endDate);
     } else {
+
+      this.props.history.push({
+        pathname: "/admin/daily",
+        search: "?startDate=" + startDate.toISOString().split('T')[0],
+      });
+
       this.setState({ calculatedEndDate: null });
 
-      loadDailyEvaluation(this.state.startDate)
+      loadDailyEvaluation(startDate)
         .then((res) => res.json())
         .then((res) =>
           this.setState(
@@ -149,7 +174,7 @@ class Result extends Component {
               margin="20px"
             />
           ) : null}
-          <Button color="custom" onClick={() => this.submitEvaluation()}>
+          <Button color="custom" onClick={() => this.submitEvaluation(this.state.startDate, this.state.endDate)}>
             Submit
           </Button>
         </div>

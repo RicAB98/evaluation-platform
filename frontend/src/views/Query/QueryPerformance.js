@@ -23,12 +23,7 @@ class QueryPerformance extends Component {
     startDate: new Date("2021-01-29"),
     endDate: null,
 
-    string:
-      this.props.location.search === ""
-        ? ""
-        : decodeURIComponent(
-            this.props.location.search.replace("?search_string=", "")
-          ),
+    string:"",
 
     showGraph: false,
     graphStartDate: null,
@@ -66,7 +61,13 @@ class QueryPerformance extends Component {
   };
 
   componentDidMount() {
-    if (this.state.string !== "") this.submitEvaluation();
+    let search = window.location.search;
+    let params = new URLSearchParams(search);     
+
+    let string = params.get("search_string");
+    
+    if (string !== null)
+      this.setState({ string: string }, () => this.submitEvaluation());     
   }
 
   changeValue = (event) => {

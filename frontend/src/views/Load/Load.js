@@ -9,10 +9,7 @@ import { loadEvaluation, getEvaluations } from "../../requests/requests.js";
 class Load extends Component {
   state = {
     evaluations: [[1, "Loading evaluations..."]],
-    selectedEvaluation:
-      this.props.location.search === ""
-        ? ""
-        : decodeURIComponent(this.props.location.search.replace("?id=", "")),
+    selectedEvaluation:"",
     loaded: false,
     startDate: null,
     endDate: null,
@@ -34,7 +31,14 @@ class Load extends Component {
     getEvaluations()
       .then((res) => res.json())
       .then((res) => this.setState({ evaluations: res }));
-    if (this.state.selectedEvaluation !== "") this.loadEvaluation();
+
+    let search = window.location.search;
+    let params = new URLSearchParams(search);     
+
+    let id = params.get("id");
+    
+    if (id !== null)
+      this.setState({ selectedEvaluation: id }, () => this.loadEvaluation());     
   }
 
   changeEvaluation = (event) => {
@@ -42,6 +46,7 @@ class Load extends Component {
   };
 
   loadEvaluation = () => {
+
     this.props.history.push({
       pathname: "/admin/load",
       search: "?id=" + this.state.selectedEvaluation,

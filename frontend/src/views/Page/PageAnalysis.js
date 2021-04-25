@@ -12,8 +12,6 @@ import Table2 from "../../components/Table/Table2.js";
 
 import { getPagesRank, getStringsPerRank } from "../../requests/requests.js";
 
-const qs = require("qs");
-
 class PageAnalysis extends Component {
   state = {
     tp_item: "",
