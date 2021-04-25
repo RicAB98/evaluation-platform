@@ -9,7 +9,7 @@ import { loadEvaluation, getEvaluations } from "../../requests/requests.js";
 class Load extends Component {
   state = {
     evaluations: [[1, "Loading evaluations..."]],
-    selectedEvaluation:"",
+    selectedEvaluation: "",
     loaded: false,
     startDate: null,
     endDate: null,
@@ -28,17 +28,18 @@ class Load extends Component {
   };
 
   componentDidMount() {
-    getEvaluations()
-      .then((res) => res.json())
-      .then((res) => this.setState({ evaluations: res }));
-
     let search = window.location.search;
-    let params = new URLSearchParams(search);     
+    let params = new URLSearchParams(search);
 
     let id = params.get("id");
-    
-    if (id !== null)
-      this.setState({ selectedEvaluation: id }, () => this.loadEvaluation());     
+
+    getEvaluations()
+    .then((res) => res.json())
+    .then((res) => this.setState({ evaluations: res },
+      () => {
+        if (id !== null)
+            this.setState({ selectedEvaluation: id }, () => this.loadEvaluation() )}));
+   
   }
 
   changeEvaluation = (event) => {
@@ -46,13 +47,21 @@ class Load extends Component {
   };
 
   loadEvaluation = () => {
+    let selectedEvaluation = this.state.selectedEvaluation;
+
+    let idInArray = this.state.evaluations.some(function (item) {
+        return item["id"] == selectedEvaluation;
+      })
+
+    if(!idInArray)
+      return
 
     this.props.history.push({
       pathname: "/admin/load",
-      search: "?id=" + this.state.selectedEvaluation,
+      search: "?id=" + selectedEvaluation,
     });
 
-    loadEvaluation(this.state.selectedEvaluation)
+    loadEvaluation(selectedEvaluation)
       .then((res) => res.json())
       .then((res) =>
         this.setState(

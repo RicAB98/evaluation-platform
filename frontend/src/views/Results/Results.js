@@ -45,10 +45,14 @@ class Result extends Component {
     let params = new URLSearchParams(search);
 
     let startDate = params.get("startDate");
-    let endDate = params.get("endDate");
+    let endDate = params.get("endDate"); 
 
-    startDate !== null && this.setState({ startDate: new Date(startDate) }, () => this.submitEvaluation(startDate, endDate) );
-    endDate !== null && this.setState({ endDate: new Date(endDate), checkbox: true});
+    if(startDate !== null && new Date(startDate) != 'Invalid Date')
+      this.setState({ startDate: new Date(startDate) }, () => {new Date(endDate) != 'Invalid Date' && this.submitEvaluation(startDate, endDate) });
+
+    if(endDate !== null && new Date(endDate) != 'Invalid Date')
+      this.setState({ endDate: new Date(endDate), checkbox: true});
+
   }
 
   submitEvaluation(startDate, endDate) {
