@@ -120,9 +120,7 @@ class Load extends Component {
               {this.state.startDate.getFullYear()}{" "}
               {this.state.startDate.getHours()}:
               {this.state.startDate.getMinutes()}:
-              {this.state.startDate.getSeconds()} -
-            </h3>
-            <h3 style={{ marginTop: 10 }}>
+              {this.state.startDate.getSeconds() + " - "}  
               {this.state.endDate.getDate()}/
               {this.addOne(this.state.endDate.getMonth())}/
               {this.state.endDate.getFullYear()} {this.state.endDate.getHours()}

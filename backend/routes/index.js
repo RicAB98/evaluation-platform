@@ -2,6 +2,7 @@ var express = require("express");
 const db = require("../database/db.js");
 var router = express.Router();
 const queryUtil = require("../utils/query.js");
+const util = require("util");
 const utils = require("../utils/utils");
 
 router.post("/runeval", function (req, res, next) {
@@ -91,7 +92,7 @@ router.post("/runeval", function (req, res, next) {
       if (err) throw err;
 
       popularQueriesResponse = results;
-      
+
       conn.query(unsuccessfulQuery, (err, results, fields) => {
         if (err) throw err;
 
@@ -100,7 +101,7 @@ router.post("/runeval", function (req, res, next) {
         conn.query(popularPagesQuery, (err, results, fields) => {
           if (err) throw err;
 
-          popularPagesResponse = results
+          popularPagesResponse = results;
 
           insertQuery = queryUtil.insertEvaluation(
             name,
@@ -114,17 +115,16 @@ router.post("/runeval", function (req, res, next) {
 
           conn.query(insertQuery, (err, results, fields) => {
             if (err) throw err;
-  
+
             let response = {
               popularQueries: popularQueriesResponse,
               unsuccessfulQueries: unsuccessfulResponse,
-              popularPages: popularPagesResponse
+              popularPages: popularPagesResponse,
             };
-  
+
             res.send(response);
           });
-
-        }); 
+        });
       });
     });
 
@@ -245,22 +245,20 @@ router.get("/queryGraph", function (req, res, next) {
     conn.query(query, (err, results, fields) => {
       if (err) throw err;
 
-      dates = new Array()
-      clicks = new Array()
+      dates = new Array();
+      clicks = new Array();
 
-      for(r of results)
-      { 
-        dates.push(r.x)
-        clicks.push(r.y)
+      for (r of results) {
+        dates.push(r.x);
+        clicks.push(r.y);
       }
 
-      response = 
-        {
-          string: string,
-          color: "hsl(181, 70%, 50%)",
-            dates: dates,
-          clicks: clicks
-        }
+      response = {
+        string: string,
+        color: "hsl(181, 70%, 50%)",
+        dates: dates,
+        clicks: clicks,
+      };
 
       res.send(response);
       conn.release();
@@ -326,18 +324,29 @@ router.get("/pagesperrank", function (req, res, next) {
       for (r in results) {
         let row = results[r];
 
+        let link =
+          "https://www.zerozero.pt/" +
+          utils.tp_item_list[row.tp_item] +
+          row.fk_item;
+
+        if(row.tp_item == 18)
+        {
+          if(row.link.search('https://www.zerozero.pt') == -1)
+            link = "https://www.zerozero.pt/" + row.link;
+          else
+            link = row.link
+        }
+
         results[r] = {
           tp_item: row.tp_item + ", ",
           fk_item: row.fk_item,
           n: row.n,
-          link:
-            "https://www.zerozero.pt/" +
-            utils.tp_item_list[row.tp_item] +
-            row.fk_item,
+          link: link,
         };
       }
 
       res.send(results);
+
       conn.release();
     });
   });
@@ -413,11 +422,11 @@ router.get("/pagesrank", function (req, res, next) {
           n: otherPagesClicks,
         });
 
-      let response = 
-      {
-        link: "https://www.zerozero.pt/" + utils.tp_item_list[tp_item] + fk_item,
-        rank: processedResults
-      }
+      let response = {
+        link:
+          "https://www.zerozero.pt/" + utils.tp_item_list[tp_item] + fk_item,
+        rank: processedResults,
+      };
 
       res.send(response);
       conn.release();
@@ -444,7 +453,8 @@ router.get("/stringsperrank", function (req, res, next) {
           search_string: row.search_string,
           n: row.n,
           link:
-            "https://www.zerozero.pt/search.php?search_string=" + row.search_string
+            "https://www.zerozero.pt/search.php?search_string=" +
+            row.search_string,
         };
       }
 

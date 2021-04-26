@@ -280,6 +280,7 @@ class QueryPerformance extends Component {
               xs={this.state.showPagesPerRank === true ? 12 : 18}
               sm={this.state.showPagesPerRank === true ? 12 : 18}
               md={this.state.showPagesPerRank === true ? 4 : 6}
+              style ={{backgroundColor: "#E8E8E8"}}
             >
               {this.state.showGraph === true ? (
                 <div>
@@ -334,7 +335,7 @@ class QueryPerformance extends Component {
                 </h6>
               </GridItem>
             ) : null}
-            <GridItem xs={12} sm={12} md={4}>
+            <GridItem xs={12} sm={12} md={4} >
               {this.state.showPagesPerRank === true ? (
                 <Table
                   tableTitle={

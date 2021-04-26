@@ -21,11 +21,19 @@ const query = {
   //Returns list of pages where user clicked on a specific rank
   getPagesPerRank(page, mysql_id, string) {
     if (page == 1)
-      return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE (page_number = ${page} OR page_number = 0 ) AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
+      return `SELECT tp_item, fk_item, count(*) as n, (select distinct page from fourdays f2 where f.tp_item=f2.tp_item and f.fk_item=f2.fk_item order by method desc limit 1) as link
+      FROM fourdays f WHERE (page_number = ${page} OR page_number = 0 ) AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
     else if (page == 2)
-      return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE page_number = ${page} AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
+      return `SELECT tp_item, fk_item, count(*) as n, (select distinct page from fourdays f2 where f.tp_item=f2.tp_item and f.fk_item=f2.fk_item order by method desc limit 1) as link
+      FROM fourdays WHERE page_number = ${page} AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
     else
-      return `SELECT tp_item, fk_item, count(*) as n FROM fourdays WHERE page_number > 2 AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
+      return `SELECT tp_item, fk_item, count(*) as n, (select distinct page from fourdays f2 where f.tp_item=f2.tp_item and f.fk_item=f2.fk_item order by method desc limit 1) as link   
+      FROM fourdays WHERE page_number > 2 AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
+  },
+
+  //SELECT tp_item, fk_item, count(*), (select distinct page from fourdays where tp_item=18 and fk_item=72 order by method desc limit 1) as n FROM fourdays WHERE (page_number = 1 OR page_number = 0 ) AND mysql_id = 1 AND fk_item <> 0 AND search_string='apostazz' GROUP BY tp_item, fk_item ORDER BY n DESC;
+  getMenuURL(tp_item, fk_item) {
+    return `SELECT distinct page FROM fourdays WHERE tp_item = ${tp_item} AND fk_item = '${fk_item}' ORDER BY method DESC;`
   },
 
   //Returns list of pages where user clicked on a specific rank
