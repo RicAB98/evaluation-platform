@@ -15,7 +15,8 @@ const query = {
 
   //Returns list of position clicked to reach a certain page
   getPagesRank(tp_item, fk_item) {
-    return `SELECT page_number, mysql_id, count(*) as n FROM fourdays WHERE tp_item = ${tp_item} AND fk_item = ${fk_item} GROUP BY page_number, mysql_id ORDER BY page_number, mysql_id`;
+    return `SELECT page_number, mysql_id, count(*) as n, (select distinct page from fourdays where tp_item = ${tp_item} and fk_item=${fk_item} order by method desc limit 1) as link
+    FROM fourdays WHERE tp_item = ${tp_item} AND fk_item = ${fk_item} GROUP BY page_number, mysql_id ORDER BY page_number, mysql_id`;
   },
 
   //Returns list of pages where user clicked on a specific rank
@@ -29,11 +30,6 @@ const query = {
     else
       return `SELECT tp_item, fk_item, count(*) as n, (select distinct page from fourdays f2 where f.tp_item=f2.tp_item and f.fk_item=f2.fk_item order by method desc limit 1) as link   
       FROM fourdays WHERE page_number > 2 AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
-  },
-
-  //SELECT tp_item, fk_item, count(*), (select distinct page from fourdays where tp_item=18 and fk_item=72 order by method desc limit 1) as n FROM fourdays WHERE (page_number = 1 OR page_number = 0 ) AND mysql_id = 1 AND fk_item <> 0 AND search_string='apostazz' GROUP BY tp_item, fk_item ORDER BY n DESC;
-  getMenuURL(tp_item, fk_item) {
-    return `SELECT distinct page FROM fourdays WHERE tp_item = ${tp_item} AND fk_item = '${fk_item}' ORDER BY method DESC;`
   },
 
   //Returns list of pages where user clicked on a specific rank

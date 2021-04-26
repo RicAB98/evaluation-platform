@@ -393,6 +393,8 @@ router.get("/pagesrank", function (req, res, next) {
     conn.query(query, (err, results, fields) => {
       if (err) throw err;
 
+      let link = "https://www.zerozero.pt/" + utils.tp_item_list[tp_item] + fk_item;
+
       let processedResults = [];
       let firstPage = new Array(10).fill(0);
       let secondPage = [];
@@ -422,9 +424,10 @@ router.get("/pagesrank", function (req, res, next) {
           n: otherPagesClicks,
         });
 
+      (tp_item == 18 && results.length != 0) && (link = results[0].link)
+
       let response = {
-        link:
-          "https://www.zerozero.pt/" + utils.tp_item_list[tp_item] + fk_item,
+        link: link,
         rank: processedResults,
       };
 
