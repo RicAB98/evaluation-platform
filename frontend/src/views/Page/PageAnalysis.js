@@ -3,6 +3,8 @@ import React, { Component } from "react";
 // core components
 import TimelineIcon from "@material-ui/icons/Timeline";
 import LinkIcon from "@material-ui/icons/Link";
+import IconButton from "@material-ui/core/IconButton";
+import ZzIcon from "../../assets/img/logo.png";
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
@@ -17,9 +19,10 @@ class PageAnalysis extends Component {
     tp_item: "",
     fk_item: "",
 
-    showTable: false,
+    showPagesRank: false,
     showStringsPerRank: false,
 
+    pageLink:"",
     calculatedTp_Item: 0,
     calculatedFk_Item: 0,
     calculatedRank: null,
@@ -94,8 +97,10 @@ class PageAnalysis extends Component {
           mysql_id: 0,
           n: "Loading...",
         },
+        
       ],
-      showTable: false,
+      pageLink: "",
+      showPagesRank: false,
       calculatedTp_Item: tp_item,
       calculatedFk_Item: fk_item,
     });
@@ -103,8 +108,8 @@ class PageAnalysis extends Component {
     getPagesRank(tp_item, fk_item)
       .then((res) => res.json())
       .then(
-        (res) => this.setState({ tableData: res }),
-        this.setState({ showTable: true })
+        (res) => this.setState({ tableData: res["rank"], pageLink: res["link"] }),
+        this.setState({ showPagesRank: true })
       );
   };
 
@@ -164,13 +169,17 @@ class PageAnalysis extends Component {
         </div>
 
         <div style={{ marginTop: 20, marginLeft: 16 }}>
+        {this.state.pageLink !== "" ? (
+          <IconButton style={{marginTop:20, marginBottom:20}} onClick={() => window.open(this.state.pageLink)}>
+            <img width="40" src={ZzIcon}/>
+          </IconButton>) : null}
           <GridContainer>
             <GridItem
-              xs={this.state.showPagesPerRank === true ? 12 : 18}
-              sm={this.state.showPagesPerRank === true ? 12 : 18}
-              md={this.state.showPagesPerRank === true ? 4 : 6}
+              xs={this.state.showPagesRank === true ? 12 : 18}
+              sm={this.state.showPagesRank === true ? 12 : 18}
+              md={this.state.showPagesRank === true ? 4 : 6}
             >
-              {this.state.showTable === true ? (
+              {this.state.showPagesRank === true ? (
                 <Table2
                   tableTitle={"Page's ranks"}
                   tableHeaderColor="gray"
@@ -195,7 +204,7 @@ class PageAnalysis extends Component {
                   localLinkIcon={<TimelineIcon />}
                   externalLink={false}
                   externalLinkPath="link"
-                  externalLinkIcon={<LinkIcon />}
+                  externalLinkIcon={<img width="25" src={ZzIcon}/>}
                 />
               ) : null}
             </GridItem>

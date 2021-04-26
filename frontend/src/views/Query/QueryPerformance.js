@@ -3,6 +3,7 @@ import React, { Component } from "react";
 // core components
 import LinkIcon from "@material-ui/icons/Link";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import ZzIcon from "../../assets/img/logo.png";
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
@@ -348,7 +349,7 @@ class QueryPerformance extends Component {
                   localLinkIcon={<MenuBookIcon />}
                   externalLink={true}
                   externalLinkPath="link"
-                  externalLinkIcon={<LinkIcon />}
+                  externalLinkIcon={<img width="25" src={ZzIcon}/>}
                 />
               ) : null}
             </GridItem>

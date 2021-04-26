@@ -402,7 +402,13 @@ router.get("/pagesrank", function (req, res, next) {
           n: otherPagesClicks,
         });
 
-      res.send(processedResults);
+      let response = 
+      {
+        link: "https://www.zerozero.pt/" + utils.tp_item_list[tp_item] + fk_item,
+        rank: processedResults
+      }
+
+      res.send(response);
       conn.release();
     });
   });
