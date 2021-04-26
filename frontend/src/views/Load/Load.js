@@ -3,6 +3,8 @@ import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
 import TimelineIcon from "@material-ui/icons/Timeline";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import LinkIcon from "@material-ui/icons/LinkOff";
 
 import { loadEvaluation, getEvaluations } from "../../requests/requests.js";
 
@@ -13,15 +15,25 @@ class Load extends Component {
     loaded: false,
     startDate: null,
     endDate: null,
+
     popularQueries: [
       {
         search_string: "Loading...",
         n: "Loading...",
       },
     ],
+
     unsuccessfulQueries: [
       {
         search_string: "Loading...",
+        n: "Loading...",
+      },
+    ],
+
+    popularPages: [
+      {
+        tp_item: 0,
+        fk_item: 0,
         n: "Loading...",
       },
     ],
@@ -65,13 +77,13 @@ class Load extends Component {
       .then((res) => res.json())
       .then((res) =>
         this.setState(
-          { popularQueries: JSON.parse(res[0]["popular"]) },
-          this.setState({
-            unsuccessfulQueries: JSON.parse(res[0]["unsuccessful"]),
-          }),
-          this.setState({ startDate: new Date(res[0]["startDate"]) }),
-          this.setState({ endDate: new Date(res[0]["endDate"]) }),
-          this.setState({ loaded: true })
+          { popularQueries: JSON.parse(res[0]["popularQueries"]),
+            unsuccessfulQueries: JSON.parse(res[0]["unsuccessfulQueries"]),
+            popularPages: JSON.parse(res[0]["popularPages"]),
+            startDate: new Date(res[0]["startDate"]),
+            endDate: new Date(res[0]["endDate"]),
+            loaded: true
+         },
         )
       );
   };
@@ -121,7 +133,7 @@ class Load extends Component {
               style={{
                 display: "flex",
                 flexDirection: "row",
-                width: "75%",
+                width: "90%",
                 justifyContent: "space-between",
               }}
             >
@@ -146,6 +158,19 @@ class Load extends Component {
                 localLinkPath="/admin/query?"
                 localLinkIcon={<TimelineIcon />}
                 externalLink={false}
+              />
+              <Table
+                tableTitle="Popular pages"
+                tableHeaderColor="gray"
+                tableHead={["#", "IDs", "Occurrences", " ", " "]}
+                tableData={this.state.popularPages}
+                firstColumn={["tp_item", "fk_item"]}
+                secondColumn={["n"]}
+                localLinkPath="/admin/page?"
+                localLinkIcon={<MenuBookIcon />}
+                externalLink={true}
+                externalLinkPath="link"
+                externalLinkIcon={<LinkIcon />}
               />
             </div>
           </div>

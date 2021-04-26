@@ -3,6 +3,8 @@ import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
 import TimelineIcon from "@material-ui/icons/Timeline";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import LinkIcon from "@material-ui/icons/LinkOff";
 
 import { runEvaluation } from "../../requests/requests.js";
 
@@ -41,6 +43,13 @@ class Run extends Component {
         n: "Loading...",
       },
     ],
+    popularPages: [
+      {
+        tp_item: 0,
+        fk_item: 0,
+        n: "Loading...",
+      },
+    ],
   };
 
   changeValue = (event) => {
@@ -64,11 +73,9 @@ class Run extends Component {
 
     this.setState({
       popularQueries: [{ search_string: "Loading...", n: "Loading..." }],
-    });
-    this.setState({
       unsuccessfulQueries: [{ search_string: "Loading...", n: "Loading..." }],
+      showResults: true
     });
-    this.setState({ showResults: true });
 
     let minute = 60000;
 
@@ -77,10 +84,11 @@ class Run extends Component {
 
     runEvaluation(name, evaluationType, period, referenceDate, currentDate)
       .then((res) => res.json())
-      .then((res) =>
+      .then((res) => 
         this.setState({
-          unsuccessfulQueries: res["unsuccessful"],
-          popularQueries: res["popular"],
+          unsuccessfulQueries: res["unsuccessfulQueries"],
+          popularQueries: res["popularQueries"],
+          popularPages: res["popularPages"],
         })
       );
   };
@@ -127,7 +135,7 @@ class Run extends Component {
             style={{
               display: "flex",
               flexDirection: "row",
-              width: "75%",
+              width: "90%",
               justifyContent: "space-between",
               marginTop: 20,
               marginLeft: 8,
@@ -155,6 +163,19 @@ class Run extends Component {
               localLinkIcon={<TimelineIcon />}
               externalLink={false}
             />
+            <Table
+                tableTitle="Popular pages"
+                tableHeaderColor="gray"
+                tableHead={["#", "IDs", "Occurrences", " ", " "]}
+                tableData={this.state.popularPages}
+                firstColumn={["tp_item", "fk_item"]}
+                secondColumn={["n"]}
+                localLinkPath="/admin/page?"
+                localLinkIcon={<MenuBookIcon />}
+                externalLink={true}
+                externalLinkPath="link"
+                externalLinkIcon={<LinkIcon />}
+              />
           </div>
         ) : null}
       </div>

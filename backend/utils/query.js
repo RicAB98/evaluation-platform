@@ -1,6 +1,6 @@
 const query = {
   getEvaluations() {
-    return `SELECT id, name FROM evaluation`;
+    return `SELECT id, name FROM evaluation2`;
   },
 
   //TODO change to main table AND use dates
@@ -61,7 +61,7 @@ const query = {
   },
 
   loadEvaluation(id) {
-    return `SELECT startDate, endDate, popular, unsuccessful FROM evaluation WHERE id = ${id}`;
+    return `SELECT startDate, endDate, popularQueries, unsuccessfulQueries, popularPages FROM evaluation2 WHERE id = ${id}`;
   },
 
   singleDayPopularQueries(date) {
@@ -126,11 +126,13 @@ const query = {
     GROUP BY tp_item, fk_item ORDER BY count(*) DESC LIMIT 10`;
   },
 
-  insertEvaluation(name, type, popular, unsuccessful, startDate, endDate) {
-    return `INSERT INTO evaluation (name, type, popular, unsuccessful, startDate, endDate) VALUES 
-              ('${name}', '${type}', '${JSON.stringify(
-      popular
-    )}', '${JSON.stringify(unsuccessful)}', '${startDate}', '${endDate}')`;
+  insertEvaluation(name, type, popularQueries, unsuccessfulQueries, popularPages, startDate, endDate) {
+    return `INSERT INTO evaluation2 (name, type, popularQueries, unsuccessfulQueries, popularPages, startDate, endDate) VALUES 
+              ('${name}', '${type}', 
+              '${JSON.stringify(popularQueries)}', 
+              '${JSON.stringify(unsuccessfulQueries)}', 
+              '${JSON.stringify(popularPages)}', 
+              '${startDate}', '${endDate}')`;
   },
 };
 

@@ -16,11 +16,13 @@ router.post("/runeval", function (req, res, next) {
   let startDate = new Date(req.body.startDate);
   let endDate = new Date(req.body.endDate);
 
-  popularQuery = queryUtil.rangePopular(startDate, endDate);
+  popularQueriesQuery = queryUtil.rangePopularQueries(startDate, endDate);
   unsuccessfulQuery = queryUtil.rangeUnsuccessful(startDate, endDate);
+  popularPagesQuery = queryUtil.rangePopularPages(startDate, endDate);
 
-  let popResponse;
-  let UnsResponse;
+  let popularQueriesResponse;
+  let unsuccessfulResponse;
+  let popularPagesResponse;
 
   startDate = new Date(
     startDate.getFullYear(),
@@ -85,35 +87,44 @@ router.post("/runeval", function (req, res, next) {
     endDate.getSeconds();
 
   db.getConnection((err, conn) => {
-    conn.query(popularQuery, (err, results, fields) => {
+    conn.query(popularQueriesQuery, (err, results, fields) => {
       if (err) throw err;
 
-      popResponse = results;
-
+      popularQueriesResponse = results;
+      
       conn.query(unsuccessfulQuery, (err, results, fields) => {
         if (err) throw err;
 
-        UnsResponse = results;
+        unsuccessfulResponse = results;
 
-        insertQuery = queryUtil.insertEvaluation(
-          name,
-          type,
-          popResponse,
-          UnsResponse,
-          startDate,
-          endDate
-        );
-
-        conn.query(insertQuery, (err, results, fields) => {
+        conn.query(popularPagesQuery, (err, results, fields) => {
           if (err) throw err;
 
-          let response = {
-            popular: popResponse,
-            unsuccessful: UnsResponse,
-          };
+          popularPagesResponse = results
 
-          res.send(response);
-        });
+          insertQuery = queryUtil.insertEvaluation(
+            name,
+            type,
+            popularQueriesResponse,
+            unsuccessfulResponse,
+            popularPagesResponse,
+            startDate,
+            endDate
+          );
+
+          conn.query(insertQuery, (err, results, fields) => {
+            if (err) throw err;
+  
+            let response = {
+              popularQueries: popularQueriesResponse,
+              unsuccessfulQueries: unsuccessfulResponse,
+              popularPages: popularPagesResponse
+            };
+  
+            res.send(response);
+          });
+
+        }); 
       });
     });
 
