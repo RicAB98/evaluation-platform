@@ -331,19 +331,20 @@ router.get("/pagesperrank", function (req, res, next) {
 
         if(row.tp_item == 18)
         {
-          if(row.link.search('https://www.zerozero.pt') == -1)
+          if(row.link.search('https://www.zerozero.pt/') == -1)
             link = "https://www.zerozero.pt/" + row.link;
           else
             link = row.link
         }
 
         results[r] = {
-          tp_item: row.tp_item + ", ",
+          tp_item: row.tp_item,
           fk_item: row.fk_item,
           n: row.n,
-          link: link,
+          partialUrl: link.replace('https://www.zerozero.pt/',''),
+          fullUrl: link,
         };
-      }
+        }
 
       res.send(results);
 

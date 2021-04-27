@@ -344,12 +344,12 @@ class QueryPerformance extends Component {
                   tableHeaderColor="gray"
                   tableHead={["#", "Ids", "Count", "", ""]}
                   tableData={this.state.pagesPerRank}
-                  firstColumn={["tp_item", "fk_item"]}
+                  firstColumn={["partialUrl"]}
                   secondColumn={["n"]}
                   localLinkPath="/admin/page?"
                   localLinkIcon={<MenuBookIcon />}
                   externalLink={true}
-                  externalLinkPath="link"
+                  externalLinkPath="fullUrl"
                   externalLinkIcon={<img width="25" src={ZzIcon}/>}
                 />
               ) : null}
