@@ -5,17 +5,15 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import LinkIcon from "@material-ui/icons/LinkOff";
+import ZzIcon from "../../assets/img/logo.png";
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
-import Calendar from "../../components/Calendar/Calendar.js";
+import Calendar from "../../components/Calendar/TimePicker.js";
 
 import {
-  topQueries,
-  unsuccessfulQueries,
-  topPages,
   runEvaluation,
 } from "../../requests/requests.js";
 
@@ -40,20 +38,24 @@ class Result extends Component {
         n: "Loading...",
       },
     ],
-    startDate: new Date("2021-01-20"),
-    endDate: null,
+    startDate: "2021-01-20T00:00",
+    endDate: "",
     calculatedStartDate: null,
     calculatedEndDate: null,
     checkbox: false,
   };
 
-  handleCheckbox = (event) => {
-    this.setState({ checkbox: event.target.checked });
-    this.setState({ endDate: null });
-  };
-
   componentDidMount() {
-    let search = window.location.search;
+    let endDate = new Date()
+    endDate.setHours(23)
+    endDate.setMinutes(59)
+    console.log(this.toISOString(endDate))
+    this.setState({ endDate: this.toISOString(endDate) })
+    
+    //endDate = endDate.getFullYear() + "-" + endDate.getMonth() + "-" + endDate.getDate() + "T23:59" 
+    //this.setState({ endDate: endDate })
+    
+    /*let search = window.location.search;
     let params = new URLSearchParams(search);
 
     let startDate = params.get("startDate");
@@ -63,36 +65,45 @@ class Result extends Component {
       this.setState({ startDate: new Date(startDate) }, () => {new Date(endDate) != 'Invalid Date' && this.submitEvaluation(startDate, endDate) });
 
     if(endDate !== null && new Date(endDate) != 'Invalid Date')
-      this.setState({ endDate: new Date(endDate), checkbox: true});
+      this.setState({ endDate: new Date(endDate), checkbox: true});*/
+  }
 
+  handleCheckbox = (event) => {
+    this.setState({ checkbox: event.target.checked });
+  };
+
+  toISOString(date) {
+
+    let month = date.getMonth() <= 9 ? "0" + this.addOne(date.getMonth()) : this.addOne(date.getMonth());
+    let day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
+    let minutes = date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes()
+
+    return date.getFullYear() + "-" + month + "-" + day + "T" + date.getHours() + ":" + minutes
+  }
+
+  toRegularDateFormat(date) {
+    
+    return date.replace("T", " ")
   }
 
   submitEvaluation(startDate, endDate) {
-    startDate = new Date(startDate);
+    let startDateRegularFormat = this.toRegularDateFormat(startDate)
 
-    this.setState({ calculatedStartDate: startDate });
+    this.setState({ calculatedStartDate: startDateRegularFormat });
     this.setState({ showTables: true }); 
 
-    if (endDate != null) {
+    if (this.state.checkbox == true) {
       
-      endDate = new Date(endDate);
+      let endDateRegularFormat = this.toRegularDateFormat(endDate)
 
-      startDate.setHours(0);
-      startDate.setMinutes(0);
-      startDate.setSeconds(0);
-
-      endDate.setHours(23);
-      endDate.setMinutes(59);
-      endDate.setSeconds(59);
-
-      this.setState({ calculatedEndDate: endDate });
+      this.setState({ calculatedEndDate: endDateRegularFormat });
 
       this.props.history.push({
         pathname: "/admin/daily",
-        search: "?startDate=" + startDate.toISOString().split('T')[0] + "&endDate=" + endDate.toISOString().split('T')[0],
+        search: "?startDate=" + startDateRegularFormat + "&endDate=" + endDateRegularFormat,
       });
 
-      runEvaluation("","","",startDate, endDate)
+      runEvaluation(startDateRegularFormat, endDateRegularFormat)
         .then((res) => res.json())
         .then((res) => this.setState(
             { popularQueries: res["popularQueries"],  
@@ -106,12 +117,12 @@ class Result extends Component {
 
       this.props.history.push({
         pathname: "/admin/daily",
-        search: "?startDate=" + startDate.toISOString().split('T')[0],
+        search: "?startDate=" + startDateRegularFormat,
       });
 
       this.setState({ calculatedEndDate: null });
 
-      runEvaluation("","","",startDate, endDate)
+      runEvaluation(startDateRegularFormat, null)
         .then((res) => res.json())
         .then((res) => this.setState(
             { popularQueries: res["popularQueries"],  
@@ -123,41 +134,12 @@ class Result extends Component {
     }
   }
 
-  getPopularQueries = (startDate, endDate) => {
-    this.setState({
-      popularQueries: [{ search_string: "Loading...", n: "Loading..." }],
-    });
-
-    topQueries(startDate, endDate)
-      .then((res) => res.json())
-      .then((res) => this.setState({ popularQueries: res }));
+  changeStartDate = (event) => {
+    this.setState({ startDate: event.target.value });
   };
 
-  getUnsuccessfulQueries = (startDate, endDate) => {
-    this.setState({
-      unsuccessfulQueries: [{ search_string: "Loading...", n: "Loading..." }],
-    });
-
-    unsuccessfulQueries(startDate, endDate)
-      .then((res) => res.json())
-      .then((res) => this.setState({ unsuccessfulQueries: res }));
-  };
-
-  getPopularPages = (startDate, endDate) => {
-    this.setState({
-      popularPages: [{tp_item: 0,fk_item: 0,n: "Loading...",},],});
-
-    topPages(startDate, endDate)
-      .then((res) => res.json())
-      .then((res) => this.setState({ popularPages: res }));
-  };
-
-  changeStartDate = (date) => {
-    this.setState({ startDate: date });
-  };
-
-  changeEndDate = (date) => {
-    this.setState({ endDate: date });
+  changeEndDate = (event) => {
+    this.setState({ endDate: event.target.value  });
   };
 
   addOne(value) {
@@ -213,7 +195,7 @@ class Result extends Component {
         {this.state.showTables === true ? (
           <div>
             <h3 style={{ marginTop: 20 }}>
-              {this.state.calculatedStartDate.getDate()}/
+              {/*this.state.calculatedStartDate.getDate()}/
               {this.addOne(this.state.calculatedStartDate.getMonth())}/
               {this.state.calculatedStartDate.getFullYear()}
               {this.state.calculatedEndDate !== null
@@ -223,7 +205,7 @@ class Result extends Component {
                   this.addOne(this.state.calculatedEndDate.getMonth()) +
                   "/" +
                   this.state.calculatedEndDate.getFullYear()
-                : null}
+              : null*/}
             </h3>
             <GridContainer
               /*style={{
@@ -245,7 +227,7 @@ class Result extends Component {
                 tableData={this.state.popularQueries}
                 firstColumn={["search_string"]}
                 secondColumn={["n"]}
-                localLinkPath="/admin/query?"
+                localLinkPath="url"
                 localLinkIcon={<TimelineIcon />}
                 externalLink={false}
               />
@@ -262,7 +244,7 @@ class Result extends Component {
                 tableData={this.state.unsuccessfulQueries}
                 firstColumn={["search_string"]}
                 secondColumn={["n"]}
-                localLinkPath="/admin/query?"
+                localLinkPath="url"
                 localLinkIcon={<TimelineIcon />}
                 externalLink={false}
               />
@@ -277,13 +259,13 @@ class Result extends Component {
                 tableHeaderColor="gray"
                 tableHead={["#", "IDs", "Occurrences", " ", " "]}
                 tableData={this.state.popularPages}
-                firstColumn={["tp_item", "fk_item"]}
+                firstColumn={["partialUrl"]}
                 secondColumn={["n"]}
-                localLinkPath="/admin/page?"
+                localLinkPath="localUrl"
                 localLinkIcon={<MenuBookIcon />}
                 externalLink={true}
-                externalLinkPath="link"
-                externalLinkIcon={<LinkIcon />}
+                externalLinkPath="fullUrl"
+                externalLinkIcon={<img width="25" src={ZzIcon}/>}
               />
               </GridItem>
             </GridContainer>

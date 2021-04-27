@@ -1,6 +1,6 @@
 const apiHost = "http://localhost:9000";
 
-export function runEvaluation(name, type, period, startDate, endDate) {
+export function runEvaluation(startDate, endDate) {
   return fetch(apiHost + "/runeval2", {
     method: "POST",
     headers: {
@@ -8,9 +8,6 @@ export function runEvaluation(name, type, period, startDate, endDate) {
       "Access-Control-Allow-Origin": "*",
     },
     body: JSON.stringify({
-      name: name,
-      type: type,
-      period: period,
       startDate: startDate,
       endDate: endDate,
     }),

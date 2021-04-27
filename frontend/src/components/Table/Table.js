@@ -76,14 +76,7 @@ export default function CustomTable(props) {
                     color="primary"
                     component="span"
                     onClick={() =>
-                      window.open(
-                        localLinkPath +
-                          String(
-                            firstColumn.map((field) => {
-                              return field + "=" + prop[field];
-                            })
-                          ).replace(", ,", "&")
-                      )
+                      window.open(prop[localLinkPath])
                     }
                   >
                     {localLinkIcon}

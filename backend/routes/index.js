@@ -2,6 +2,7 @@ var express = require("express");
 const db = require("../database/db.js");
 var router = express.Router();
 const queryUtil = require("../utils/query.js");
+const { buildPageInformation } = require("../utils/utils");
 const utils = require("../utils/utils");
 
 router.post("/runeval", function (req, res, next) {
@@ -132,15 +133,22 @@ router.post("/runeval", function (req, res, next) {
 });
 
 router.post("/runeval2", function (req, res, next) {
-
   let startDate = new Date(req.body.startDate);
   let endDate = new Date(req.body.endDate)
 
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(),
-                       startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
-
   let formatedStartDate = startDate.getFullYear() + "-" + startDate.getMonth() + "-" + startDate.getDate() + " " + 
                           startDate.getHours() + ":" + startDate.getMinutes() + ":" + startDate.getSeconds();
+
+  if (endDate.getFullYear() == 1970)
+  {           
+    startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), 0, 0, 0);
+
+    formatedStartDate = startDate.getFullYear() + "-" + startDate.getMonth() + "-" + startDate.getDate() + " 00:00:00";
+  }
+
+  else
+    startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(),
+                          startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());  
 
   endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(),
                      endDate.getHours(), endDate.getMinutes(), endDate.getSeconds());
@@ -148,12 +156,11 @@ router.post("/runeval2", function (req, res, next) {
   formatedEndDate = endDate.getFullYear() + "-" + endDate.getMonth() + "-" + endDate.getDate() + " " +
             endDate.getHours() + ":" + endDate.getMinutes() + ":" + endDate.getSeconds();
 
-
   let getEvaluationQuery = queryUtil.loadEvaluation(startDate, endDate)
   let popularQueriesQuery = queryUtil.popularQueries(startDate, endDate);
   let unsuccessfulQuery = queryUtil.unsuccessfulQueries(startDate, endDate);
   let popularPagesQuery = queryUtil.popularPages(startDate, endDate);
-  
+
   db.getConnection((err, conn) => {
     conn.query(getEvaluationQuery, (err, results, fields) => {
       if (err) throw err;
@@ -176,6 +183,14 @@ router.post("/runeval2", function (req, res, next) {
         let popularQueriesResponse = results[0]
         let unsuccessfulResponse = results[1]
         let popularPagesResponse = results[2]
+
+        let temporaryArray = new Array()
+
+        for(let r of popularPagesResponse)
+          temporaryArray.push(buildPageInformation(r))
+
+        popularPagesResponse = temporaryArray
+        console.log(popularPagesResponse)
 
         insertQuery = queryUtil.insertEvaluation(
           popularQueriesResponse,
@@ -391,26 +406,7 @@ router.get("/pagesperrank", function (req, res, next) {
       for (r in results) {
         let row = results[r];
 
-        let link =
-          "https://www.zerozero.pt/" +
-          utils.tp_item_list[row.tp_item] +
-          row.fk_item;
-
-        if(row.tp_item == 18)
-        {
-          if(row.link.search('https://www.zerozero.pt/') == -1)
-            link = "https://www.zerozero.pt/" + row.link;
-          else
-            link = row.link
-        }
-
-        results[r] = {
-          tp_item: row.tp_item,
-          fk_item: row.fk_item,
-          n: row.n,
-          partialUrl: link.replace('https://www.zerozero.pt/',''),
-          fullUrl: link,
-        };
+        results[r] = utils.buildPageInformation(row)
         }
 
       res.send(results);

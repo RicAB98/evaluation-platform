@@ -346,7 +346,7 @@ class QueryPerformance extends Component {
                   tableData={this.state.pagesPerRank}
                   firstColumn={["partialUrl"]}
                   secondColumn={["n"]}
-                  localLinkPath="/admin/page?"
+                  localLinkPath="localUrl"
                   localLinkIcon={<MenuBookIcon />}
                   externalLink={true}
                   externalLinkPath="fullUrl"
