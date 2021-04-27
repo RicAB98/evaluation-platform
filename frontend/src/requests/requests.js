@@ -1,7 +1,7 @@
 const apiHost = "http://localhost:9000";
 
 export function runEvaluation(name, type, period, startDate, endDate) {
-  return fetch(apiHost + "/runeval", {
+  return fetch(apiHost + "/runeval2", {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",

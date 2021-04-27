@@ -16,7 +16,7 @@ import {
   topQueries,
   unsuccessfulQueries,
   topPages,
-  loadDailyEvaluation,
+  runEvaluation,
 } from "../../requests/requests.js";
 
 class Result extends Component {
@@ -92,9 +92,15 @@ class Result extends Component {
         search: "?startDate=" + startDate.toISOString().split('T')[0] + "&endDate=" + endDate.toISOString().split('T')[0],
       });
 
-      this.getPopularQueries(startDate, endDate);
-      this.getUnsuccessfulQueries(startDate, endDate);
-      this.getPopularPages(startDate, endDate);
+      runEvaluation("","","",startDate, endDate)
+        .then((res) => res.json())
+        .then((res) => this.setState(
+            { popularQueries: res["popularQueries"],  
+              unsuccessfulQueries: res["unsuccessfulQueries"],
+              popularPages: res["popularPages"]
+            },
+          )
+        );
 
     } else {
 
@@ -105,13 +111,12 @@ class Result extends Component {
 
       this.setState({ calculatedEndDate: null });
 
-      loadDailyEvaluation(startDate)
+      runEvaluation("","","",startDate, endDate)
         .then((res) => res.json())
-        .then((res) =>
-          this.setState(
-            { popularQueries: JSON.parse(res[0]["popularQueries"]),  
-              unsuccessfulQueries: JSON.parse(res[0]["unsuccessful"]),
-              popularPages: JSON.parse(res[0]["popularPages"])
+        .then((res) => this.setState(
+            { popularQueries: res["popularQueries"],  
+              unsuccessfulQueries: res["unsuccessfulQueries"],
+              popularPages: res["popularPages"]
             },
           )
         );

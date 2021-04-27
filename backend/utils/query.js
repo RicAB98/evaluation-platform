@@ -57,23 +57,40 @@ const query = {
     return `SELECT page_number, mysql_id FROM fourdays WHERE tp_item = ${tp_item} AND fk_item = ${fk_item} AND search_string='${string} GROUP BY page_number, mysql_id ORDER BY page_number, mysql_id DESC;`;
   },
 
-  loadDailyEvaluation(date) {
-    return `SELECT popularQueries, unsuccessful, popularPages FROM daily_evaluation WHERE 
-                          date = '${date.getFullYear()}-${
-      date.getMonth() + 1
-    }-${date.getDate()}'`;
+  loadEvaluation(startDate, endDate) {
+    let timeConditions = `startDate = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`
+
+    if (endDate.getFullYear() != 1970)
+      timeConditions = `startDate = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
+                          ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
+                          AND endDate = '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
+                          ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`
+
+    return `SELECT popularQueries, unsuccessfulQueries, popularPages FROM evaluation WHERE 
+            ${timeConditions} limit 1`
   },
 
-  loadEvaluation(id) {
-    return `SELECT startDate, endDate, popularQueries, unsuccessfulQueries, popularPages FROM evaluation2 WHERE id = ${id}`;
+  /*loadEvaluation(id) {
+    return `SELECT popularQueries, unsuccessfulQueries, popularPages FROM evaluation2 WHERE id = ${id}`;
+  },*/
+
+  popularQueries(startDate, endDate) {
+    let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`
+
+    if (endDate.getFullYear() != 1970)
+      timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
+                          ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
+                          AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
+                          ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`
+
+    return `SELECT search_string, count(*) as n FROM fourdays WHERE search_string <> '' AND 
+              ${timeConditions} GROUP BY search_string ORDER BY count(*) DESC LIMIT 10`;
   },
 
-  singleDayPopularQueries(date) {
+ /* singleDayPopularQueries(date) {
     return `SELECT search_string, count(*) as n FROM fourdays WHERE 
                                    search_string <> '' AND
-                                   date = '${date.getFullYear()}-${
-      date.getMonth() + 1
-    }-${date.getDate()}' 
+                                   date = '${date.getFullYear()}-${date.getMonth()}-${date.getDate()}' 
                                    GROUP BY search_string ORDER BY count(*) DESC LIMIT 10`;
   },
 
@@ -87,15 +104,26 @@ const query = {
       endDate.getMonth() + 1
     }-${endDate.getDate()} ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}' 
                               GROUP BY search_string ORDER BY count(*) DESC LIMIT 10`;
+  },*/
+
+  unsuccessfulQueries(startDate, endDate) {
+    let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`
+
+    if (endDate.getFullYear() != 1970)
+      timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
+                          ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
+                          AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
+                          ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`
+
+    return `SELECT search_string, count(*) as n FROM fourdays WHERE search_string <> '' AND fk_item = 0 AND
+              ${timeConditions} GROUP BY search_string ORDER BY count(*) DESC LIMIT 10`;
   },
 
-  singleDayUnsuccessful(date) {
+  /*singleDayUnsuccessful(date) {
     return `SELECT search_string, count(*) as n FROM fourdays WHERE 
                          search_string <> '' AND
                          fk_item = 0 AND
-                         date = '${date.getFullYear()}-${
-      date.getMonth() + 1
-    }-${date.getDate()}' 
+                         date = '${date.getFullYear()}-${date.getMonth()}-${date.getDate()}' 
                          GROUP BY search_string ORDER BY count(*) DESC LIMIT 10`;
   },
 
@@ -109,12 +137,25 @@ const query = {
       endDate.getMonth() + 1
     }-${endDate.getDate()} ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}' 
                   GROUP BY search_string ORDER BY count(*) DESC LIMIT 10`;
+  },*/
+
+  popularPages(startDate, endDate) {
+    let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`
+
+    if (endDate.getFullYear() != 1970)
+      timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
+                          ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
+                          AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
+                          ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`
+
+    return `SELECT Concat(tp_item, ', ') as tp_item, fk_item, count(*) as n FROM fourdays WHERE fk_item <> 0 AND
+              ${timeConditions} GROUP BY tp_item, fk_item ORDER BY count(*) DESC LIMIT 10`;
   },
 
-  singleDayPopularPages(date) {
+  /*singleDayPopularPages(date) {
     return `SELECT Concat(tp_item, ', ') as tp_item, fk_item, count(*) as n FROM fourdays WHERE 
     fk_item <> 0 AND
-    date = '${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}' 
+    date = '${date.getFullYear()}-${date.getMonth()}-${date.getDate()}' 
     GROUP BY tp_item, fk_item ORDER BY count(*) DESC LIMIT 10`;
   },
 
@@ -128,12 +169,17 @@ const query = {
       endDate.getMonth() + 1
     }-${endDate.getDate()} ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}' 
     GROUP BY tp_item, fk_item ORDER BY count(*) DESC LIMIT 10`;
-  },
+  },*/
 
-  insertEvaluation(name, type, popularQueries, unsuccessfulQueries, popularPages, startDate, endDate) {
-    return `INSERT INTO evaluation2 (name, type, popularQueries, unsuccessfulQueries, popularPages, startDate, endDate) VALUES 
-              ('${name}', '${type}', 
-              '${JSON.stringify(popularQueries)}', 
+  insertEvaluation(
+    popularQueries,
+    unsuccessfulQueries,
+    popularPages,
+    startDate,
+    endDate
+  ) {
+    return `INSERT INTO evaluation (popularQueries, unsuccessfulQueries, popularPages, startDate, endDate) VALUES 
+              ('${JSON.stringify(popularQueries)}', 
               '${JSON.stringify(unsuccessfulQueries)}', 
               '${JSON.stringify(popularPages)}', 
               '${startDate}', '${endDate}')`;

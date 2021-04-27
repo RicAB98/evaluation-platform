@@ -2,7 +2,6 @@ var express = require("express");
 const db = require("../database/db.js");
 var router = express.Router();
 const queryUtil = require("../utils/query.js");
-const util = require("util");
 const utils = require("../utils/utils");
 
 router.post("/runeval", function (req, res, next) {
@@ -129,6 +128,74 @@ router.post("/runeval", function (req, res, next) {
     });
 
     conn.release();
+  });
+});
+
+router.post("/runeval2", function (req, res, next) {
+
+  let startDate = new Date(req.body.startDate);
+  let endDate = new Date(req.body.endDate)
+
+  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(),
+                       startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
+
+  let formatedStartDate = startDate.getFullYear() + "-" + startDate.getMonth() + "-" + startDate.getDate() + " " + 
+                          startDate.getHours() + ":" + startDate.getMinutes() + ":" + startDate.getSeconds();
+
+  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(),
+                     endDate.getHours(), endDate.getMinutes(), endDate.getSeconds());
+
+  formatedEndDate = endDate.getFullYear() + "-" + endDate.getMonth() + "-" + endDate.getDate() + " " +
+            endDate.getHours() + ":" + endDate.getMinutes() + ":" + endDate.getSeconds();
+
+
+  let getEvaluationQuery = queryUtil.loadEvaluation(startDate, endDate)
+  let popularQueriesQuery = queryUtil.popularQueries(startDate, endDate);
+  let unsuccessfulQuery = queryUtil.unsuccessfulQueries(startDate, endDate);
+  let popularPagesQuery = queryUtil.popularPages(startDate, endDate);
+  
+  db.getConnection((err, conn) => {
+    conn.query(getEvaluationQuery, (err, results, fields) => {
+      if (err) throw err;
+      
+      if(results.length != 0)
+      {
+        res.send(
+          {
+            popularQueries: JSON.parse(results[0].popularQueries),
+            unsuccessfulQueries: JSON.parse(results[0].unsuccessfulQueries),
+            popularPages: JSON.parse(results[0].popularPages),
+          }
+        )
+        return
+      }
+
+      conn.query(`${popularQueriesQuery}; ${unsuccessfulQuery}; ${popularPagesQuery}`, (err, results) => {
+        if (err) throw err;
+
+        let popularQueriesResponse = results[0]
+        let unsuccessfulResponse = results[1]
+        let popularPagesResponse = results[2]
+
+        insertQuery = queryUtil.insertEvaluation(
+          popularQueriesResponse,
+          unsuccessfulResponse,
+          popularPagesResponse,
+          formatedStartDate,
+          formatedEndDate
+        );
+
+        conn.query(insertQuery, (err, results) => {
+          if (err) throw err;
+
+          res.send({
+            popularQueries: popularQueriesResponse,
+            unsuccessfulQueries: unsuccessfulResponse,
+            popularPages: popularPagesResponse,
+          })
+        }) 
+      }) 
+    })
   });
 });
 
