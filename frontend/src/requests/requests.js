@@ -14,8 +14,8 @@ export function runEvaluation(startDate, endDate) {
   });
 }
 
-export function loadEvaluation(id) {
-  return fetch(apiHost + "/loadeval/?id=" + id, {
+export function loadEvaluation(id, type) {
+  return fetch(apiHost + "/loadeval/?id=" + id + "&type=" + type, {
     method: "GET",
     headers: {
       "Content-Type": "application/json;charset=utf-8",

@@ -150,16 +150,17 @@ router.post("/runeval2", function (req, res, next) {
     startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(),
                           startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());  
 
+                        
   endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(),
                      endDate.getHours(), endDate.getMinutes(), endDate.getSeconds());
 
   formatedEndDate = endDate.getFullYear() + "-" + endDate.getMonth() + "-" + endDate.getDate() + " " +
             endDate.getHours() + ":" + endDate.getMinutes() + ":" + endDate.getSeconds();
 
-  let getEvaluationQuery = queryUtil.loadEvaluation(startDate, endDate)
-  let popularQueriesQuery = queryUtil.popularQueries(startDate, endDate);
-  let unsuccessfulQuery = queryUtil.unsuccessfulQueries(startDate, endDate);
-  let popularPagesQuery = queryUtil.popularPages(startDate, endDate);
+  let getEvaluationQuery = queryUtil.loadEvaluationByDate(startDate, endDate)
+  let popularQueriesQuery = queryUtil.popularQueries(startDate, endDate, 10);
+  let unsuccessfulQuery = queryUtil.unsuccessfulQueries(startDate, endDate, 10);
+  let popularPagesQuery = queryUtil.popularPages(startDate, endDate, 10);
 
   db.getConnection((err, conn) => {
     conn.query(getEvaluationQuery, (err, results, fields) => {
@@ -169,6 +170,7 @@ router.post("/runeval2", function (req, res, next) {
       {
         res.send(
           {
+            id: results[0].id,
             popularQueries: JSON.parse(results[0].popularQueries),
             unsuccessfulQueries: JSON.parse(results[0].unsuccessfulQueries),
             popularPages: JSON.parse(results[0].popularPages),
@@ -190,7 +192,6 @@ router.post("/runeval2", function (req, res, next) {
           temporaryArray.push(buildPageInformation(r))
 
         popularPagesResponse = temporaryArray
-        console.log(popularPagesResponse)
 
         insertQuery = queryUtil.insertEvaluation(
           popularQueriesResponse,
@@ -204,6 +205,7 @@ router.post("/runeval2", function (req, res, next) {
           if (err) throw err;
 
           res.send({
+            id: results.insertedId,
             popularQueries: popularQueriesResponse,
             unsuccessfulQueries: unsuccessfulResponse,
             popularPages: popularPagesResponse,
@@ -231,15 +233,50 @@ router.get("/loaddailyeval", function (req, res, next) {
 
 router.get("/loadeval", function (req, res, next) {
   let id = req.query.id;
+  let type = req.query.type;
 
-  let query = queryUtil.loadEvaluation(id);
+  let loadEvaluationQuery = queryUtil.loadEvaluationById(id)
+  let getDataQuery
 
   db.getConnection((err, conn) => {
-    conn.query(query, (err, results, fields) => {
+    conn.query(loadEvaluationQuery, (err, results, fields) => {
       if (err) throw err;
 
-      res.send(results);
-      conn.release();
+      let startDate = utils.fromISOToRegularDate(results[0].startDate)
+      let endDate = utils.fromISOToRegularDate(results[0].endDate)
+
+      switch(type)
+      {
+        case '1':
+          getDataQuery = queryUtil.popularQueries(startDate, endDate, 10000000000)
+          break;
+
+        case '2':
+          getDataQuery = queryUtil.unsuccessfulQueries(startDate, endDate, 10000000000)
+          break;
+
+        case '3':
+          getDataQuery = queryUtil.popularPages(startDate, endDate, 10000000000)
+          break;
+      }
+
+      conn.query(getDataQuery, (err, results, fields) => {
+        if (err) throw err;
+
+        if(type == '3')
+        {
+          let temporaryArray = new Array()
+
+          for(let r of results)
+            temporaryArray.push(buildPageInformation(r))
+
+            results = temporaryArray
+        }
+
+        res.send(results)
+
+        conn.release();
+      });
     });
   });
 });

@@ -31,6 +31,15 @@ module.exports = {
         partialUrl: url.replace('https://www.zerozero.pt/',''),
         fullUrl: url,
       }
+    },
+
+    fromISOToRegularDate(date)
+    {
+      let string = JSON.stringify(date)
+
+      let newDate = new Date(string.substring(1,5), string.substring(6,8), string.substring(9,11), string.substring(12,14), string.substring(15,17) )
+
+      return newDate
     }
     
   };

@@ -1,17 +1,15 @@
 import React from "react";
 import {Bar} from 'react-chartjs-2';
 
-
-
 export default function BarChart (props) {
 
-    const { title, data, xVariable, yVariable, yLabel } = props;
+    const { title, data, xVariable, yVariable, yLabel, page, rowsPerPage } = props;
 
     const graphData = {
-        labels: data.map(element => element[xVariable]),
+        labels: page == -1 ? data.map(element => element[xVariable]) : data.slice(0, rowsPerPage).map(element => element[xVariable]),
         datasets: [{
 
-            data: data.map(element => element[yVariable]), 
+            data: page == -1 ? data.map(element => element[yVariable]) : data.slice(0, rowsPerPage).map(element => element[yVariable]), 
             backgroundColor: [
             'rgba(158,4,14)',
             'rgba(233,0,2)',
@@ -31,6 +29,7 @@ export default function BarChart (props) {
     return (
         
       <div>
+        {console.log(page === undefined)}
         <Bar
           type= 'bar'
           data={graphData}

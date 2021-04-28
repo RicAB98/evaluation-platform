@@ -57,7 +57,7 @@ const query = {
     return `SELECT page_number, mysql_id FROM fourdays WHERE tp_item = ${tp_item} AND fk_item = ${fk_item} AND search_string='${string} GROUP BY page_number, mysql_id ORDER BY page_number, mysql_id DESC;`;
   },
 
-  loadEvaluation(startDate, endDate) {
+  loadEvaluationByDate(startDate, endDate) {
     let timeConditions = `startDate = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
     ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}' `
 
@@ -67,11 +67,15 @@ const query = {
                           AND endDate = '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
                           ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`
 
-    return `SELECT popularQueries, unsuccessfulQueries, popularPages FROM evaluation WHERE 
+    return `SELECT id, popularQueries, unsuccessfulQueries, popularPages FROM evaluation WHERE 
             ${timeConditions} limit 1`
   },
 
-  popularQueries(startDate, endDate) {
+  loadEvaluationById(id) {
+    return `SELECT startDate, endDate FROM evaluation WHERE id = ${id}`
+  },
+
+  popularQueries(startDate, endDate, limit) {
     let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`
 
     if (endDate.getFullYear() != 1970)
@@ -81,10 +85,10 @@ const query = {
                           ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`
 
     return `SELECT search_string, count(*) as n, concat('/admin/query?search_string=', search_string) as url FROM fourdays WHERE search_string <> '' AND 
-              ${timeConditions} GROUP BY search_string ORDER BY count(*) DESC LIMIT 10`;
+              ${timeConditions} GROUP BY search_string ORDER BY count(*) DESC LIMIT ${limit}`;
   },
 
-  unsuccessfulQueries(startDate, endDate) {
+  unsuccessfulQueries(startDate, endDate, limit) {
     let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`
 
     if (endDate.getFullYear() != 1970)
@@ -94,10 +98,10 @@ const query = {
                           ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`
 
     return `SELECT search_string, count(*) as n, concat('/admin/query?search_string=', search_string) as url FROM fourdays WHERE search_string <> '' AND fk_item = 0 AND
-              ${timeConditions} GROUP BY search_string ORDER BY count(*) DESC LIMIT 10`;
+              ${timeConditions} GROUP BY search_string ORDER BY count(*) DESC LIMIT ${limit}`;
   },
 
-  popularPages(startDate, endDate) {
+  popularPages(startDate, endDate, limit) {
     let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`
 
     if (endDate.getFullYear() != 1970)
@@ -106,8 +110,8 @@ const query = {
                           AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
                           ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`
 
-    return `SELECT tp_item as tp_item, fk_item, count(*) as n FROM fourdays WHERE fk_item <> 0 AND
-              ${timeConditions} GROUP BY tp_item, fk_item ORDER BY count(*) DESC LIMIT 10`;
+    return `SELECT tp_item as tp_item, fk_item, count(*) as n, (select distinct page from fourdays f2 where f.tp_item=f2.tp_item and f.fk_item=f2.fk_item order by method desc limit 1) as link
+            FROM fourdays f WHERE fk_item <> 0 AND ${timeConditions} GROUP BY tp_item, fk_item ORDER BY count(*) DESC LIMIT ${limit}`;
   },
 
   insertEvaluation(

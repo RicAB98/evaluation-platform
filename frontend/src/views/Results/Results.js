@@ -4,7 +4,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
-import LinkIcon from "@material-ui/icons/LinkOff";
 import ZzIcon from "../../assets/img/logo.png";
 
 import GridItem from "../../components/Grid/GridItem.js";
@@ -37,6 +36,7 @@ class Result extends Component {
         n: "Loading...",
       },
     ],
+    evaluationId: -1,
     startDate: "2021-01-20T00:00",
     endDate: "",
     calculatedStartDate: null,
@@ -120,6 +120,7 @@ class Result extends Component {
         .then((res) => res.json())
         .then((res) =>
           this.setState({
+            evaluationId: res["id"],
             popularQueries: res["popularQueries"],
             unsuccessfulQueries: res["unsuccessfulQueries"],
             popularPages: res["popularPages"],
@@ -137,6 +138,7 @@ class Result extends Component {
         .then((res) => res.json())
         .then((res) =>
           this.setState({
+            evaluationId: res["id"],
             popularQueries: res["popularQueries"],
             unsuccessfulQueries: res["unsuccessfulQueries"],
             popularPages: res["popularPages"],
@@ -245,6 +247,7 @@ class Result extends Component {
                   xVariable="search_string"
                   yVariable="n"
                   yLabel="Queries"
+                  page={-1}
                 />
               </GridItem>
 
@@ -268,6 +271,7 @@ class Result extends Component {
                   xVariable="search_string"
                   yVariable="n"
                   yLabel="Queries"
+                  page={-1}
                 />
               </GridItem>
 
@@ -293,6 +297,7 @@ class Result extends Component {
                   xVariable="partialUrl"
                   yVariable="n"
                   yLabel="Pages"
+                  page={-1}
                 />
               </GridItem>
             </GridContainer>
