@@ -5,6 +5,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ZzIcon from "../../assets/img/logo.png";
+import OpenWithIcon from '@material-ui/icons/OpenWith';
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
@@ -232,6 +233,8 @@ class Result extends Component {
                   tableTitle="Popular queries"
                   tableHeaderColor="gray"
                   tableHead={["#", "Query", "Count", " "]}
+                  headerLinkIcon={<OpenWithIcon />}
+                  headerLinkPath={`expanded?id=${this.state.evaluationId}&type=1`}
                   tableData={this.state.popularQueries}
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}
@@ -256,6 +259,8 @@ class Result extends Component {
                   tableTitle="Unsuccessful queries"
                   tableHeaderColor="gray"
                   tableHead={["#", "Query", "Count", " "]}
+                  headerLinkIcon={<OpenWithIcon />}
+                  headerLinkPath={`expanded?id=${this.state.evaluationId}&type=2`}
                   tableData={this.state.unsuccessfulQueries}
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}
@@ -280,6 +285,8 @@ class Result extends Component {
                   tableTitle="Popular pages"
                   tableHeaderColor="gray"
                   tableHead={["#", "IDs", "Count", " ", " "]}
+                  headerLinkIcon={<OpenWithIcon />}
+                  headerLinkPath={`expanded?id=${this.state.evaluationId}&type=3`}
                   tableData={this.state.popularPages}
                   firstColumn={["partialUrl"]}
                   secondColumn={["n"]}
