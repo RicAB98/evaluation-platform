@@ -38,8 +38,8 @@ class Result extends Component {
       },
     ],
     evaluationId: -1,
-    startDate: "2021-01-20T00:00",
-    endDate: "",
+    startDate: new Date("2021-01-20 0:0"),
+    endDate: '',
     calculatedStartDate: null,
     calculatedEndDate: null,
     checkbox: false,
@@ -49,22 +49,19 @@ class Result extends Component {
     let endDate = new Date();
     endDate.setHours(23);
     endDate.setMinutes(59);
-    this.setState({ endDate: this.toISOString(endDate) });
+    this.setState({ endDate: endDate });
 
-    //endDate = endDate.getFullYear() + "-" + endDate.getMonth() + "-" + endDate.getDate() + "T23:59"
-    //this.setState({ endDate: endDate })
-
-    /*let search = window.location.search;
+    let search = window.location.search;
     let params = new URLSearchParams(search);
 
     let startDate = params.get("startDate");
-    let endDate = params.get("endDate"); 
+    endDate = params.get("endDate"); 
 
     if(startDate !== null && new Date(startDate) != 'Invalid Date')
-      this.setState({ startDate: new Date(startDate) }, () => {new Date(endDate) != 'Invalid Date' && this.submitEvaluation(startDate, endDate) });
+      this.setState({ startDate: new Date(startDate) }, () => {this.submitEvaluation(startDate, endDate, true) });
 
-    if(endDate !== null && new Date(endDate) != 'Invalid Date')
-      this.setState({ endDate: new Date(endDate), checkbox: true});*/
+    if(endDate !== null && new Date(startDate) != 'Invalid Date')
+      this.setState({ endDate: new Date(endDate), checkbox: true});
   }
 
   handleCheckbox = (event) => {
@@ -72,13 +69,11 @@ class Result extends Component {
   };
 
   toISOString(date) {
-    let month =
-      date.getMonth() <= 9
-        ? "0" + this.addOne(date.getMonth())
-        : this.addOne(date.getMonth());
+
+    let month = date.getMonth() <= 9 ? "0" + this.addOne(date.getMonth()) : this.addOne(date.getMonth());
     let day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
-    let minutes =
-      date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
+    let hours = date.getHours() <= 9 ? "0" + date.getHours() : date.getHours();
+    let minutes = date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
 
     return (
       date.getFullYear() +
@@ -87,37 +82,32 @@ class Result extends Component {
       "-" +
       day +
       "T" +
-      date.getHours() +
+      hours +
       ":" +
       minutes
     );
   }
 
-  toRegularDateFormat(date) {
-    return date.replace("T", " ");
+   toRegularDateFormat(date) {
+    return date != null ? date.replace("T", " ") : null;
   }
 
-  submitEvaluation(startDate, endDate) {
-    let startDateRegularFormat = this.toRegularDateFormat(startDate);
+  submitEvaluation(startDate, endDate, fromURL) {
 
-    this.setState({ calculatedStartDate: startDateRegularFormat });
+    this.setState({ calculatedStartDate: startDate });
     this.setState({ showTables: true });
 
     if (this.state.checkbox == true) {
-      let endDateRegularFormat = this.toRegularDateFormat(endDate);
 
-      this.setState({ calculatedEndDate: endDateRegularFormat });
+      this.setState({ calculatedEndDate: endDate });
 
-      this.props.history.push({
-        pathname: "/admin/daily",
-        search:
-          "?startDate=" +
-          startDateRegularFormat +
-          "&endDate=" +
-          endDateRegularFormat,
-      });
+      if(!fromURL)
+        this.props.history.push({
+          pathname: "/admin/daily",
+          search: "?startDate=" + this.toISOString(startDate) + "&endDate=" + this.toISOString(endDate)
+        });
 
-      runEvaluation(startDateRegularFormat, endDateRegularFormat)
+      runEvaluation(startDate, endDate)
         .then((res) => res.json())
         .then((res) =>
           this.setState({
@@ -128,14 +118,15 @@ class Result extends Component {
           })
         );
     } else {
-      this.props.history.push({
-        pathname: "/admin/daily",
-        search: "?startDate=" + startDateRegularFormat,
-      });
+      if(!fromURL)
+        this.props.history.push({
+          pathname: "/admin/daily",
+          search: "?startDate=" + this.toISOString(startDate),
+        });
 
       this.setState({ calculatedEndDate: null });
 
-      runEvaluation(startDateRegularFormat, null)
+      runEvaluation(startDate, null)
         .then((res) => res.json())
         .then((res) =>
           this.setState({
@@ -149,11 +140,11 @@ class Result extends Component {
   }
 
   changeStartDate = (event) => {
-    this.setState({ startDate: event.target.value });
+    this.setState({ startDate: new Date(event.target.value) });
   };
 
   changeEndDate = (event) => {
-    this.setState({ endDate: event.target.value });
+    this.setState({ endDate: new Date(event.target.value) });
   };
 
   addOne(value) {
@@ -205,7 +196,7 @@ class Result extends Component {
           <Button
             color="custom"
             onClick={() =>
-              this.submitEvaluation(this.state.startDate, this.state.endDate)
+              this.submitEvaluation(this.state.startDate, this.state.endDate, false)
             }
           >
             Submit

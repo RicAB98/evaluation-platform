@@ -29,7 +29,6 @@ export default function BarChart (props) {
     return (
         
       <div>
-        {console.log(page === undefined)}
         <Bar
           type= 'bar'
           data={graphData}

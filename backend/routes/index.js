@@ -133,11 +133,10 @@ router.post("/runeval", function (req, res, next) {
 });
 
 router.post("/runeval2", function (req, res, next) {
+
   let startDate = new Date(req.body.startDate);
   let endDate = new Date(req.body.endDate)
-
-  let formatedStartDate = startDate.getFullYear() + "-" + startDate.getMonth() + "-" + startDate.getDate() + " " + 
-                          startDate.getHours() + ":" + startDate.getMinutes() + ":" + startDate.getSeconds();
+  let formatedStartDate = null
 
   if (endDate.getFullYear() == 1970)
   {           
@@ -147,15 +146,21 @@ router.post("/runeval2", function (req, res, next) {
   }
 
   else
+  {
     startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(),
-                          startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());  
+                        startDate.getHours(), startDate.getMinutes(), 0); 
+
+    formatedStartDate = startDate.getFullYear() + "-" + startDate.getMonth() + "-" + startDate.getDate() + " " + 
+                        startDate.getHours() + ":" + startDate.getMinutes() + ":00";
+  }
+     
 
                         
   endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(),
-                     endDate.getHours(), endDate.getMinutes(), endDate.getSeconds());
+                     endDate.getHours(), endDate.getMinutes(), 0);
 
   formatedEndDate = endDate.getFullYear() + "-" + endDate.getMonth() + "-" + endDate.getDate() + " " +
-            endDate.getHours() + ":" + endDate.getMinutes() + ":" + endDate.getSeconds();
+            endDate.getHours() + ":" + endDate.getMinutes() + ":00";
 
   let getEvaluationQuery = queryUtil.loadEvaluationByDate(startDate, endDate)
   let popularQueriesQuery = queryUtil.popularQueries(startDate, endDate, 10);
