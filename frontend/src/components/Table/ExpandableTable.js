@@ -25,6 +25,7 @@ export default function ExpandableTable(props) {
     firstColumn,
     secondColumn,
     localLinkPath,
+    localLinkAditionalInfo,
     localLinkIcon,
     externalLink,
     externalLinkPath,
@@ -87,7 +88,7 @@ export default function ExpandableTable(props) {
                     color="primary"
                     component="span"
                     onClick={() =>
-                      window.open(prop[localLinkPath])
+                      window.open(prop[localLinkPath]  + localLinkAditionalInfo)
                     }
                   >
                     {localLinkIcon}

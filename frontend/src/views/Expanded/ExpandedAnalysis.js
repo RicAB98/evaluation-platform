@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // core components
 
-import TimelineIcon from "@material-ui/icons/Timeline";
+import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
@@ -26,7 +26,7 @@ class ExpandedAnalysis extends Component {
     rowsPerPage: 10
   };
 
-  handleChangePage = (event, newPage) => {
+  handleChangePage = (newPage) => {
     this.setState({ page: newPage });
   };
   
@@ -75,7 +75,7 @@ class ExpandedAnalysis extends Component {
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}
                   localLinkPath="url"
-                  localLinkIcon={<TimelineIcon/>}
+                  localLinkIcon={<TextRotationNoneIcon/>}
                   externalLink={false}
                   page={this.state.page}
                   rowsPerPage={this.state.rowsPerPage}
@@ -106,7 +106,7 @@ class ExpandedAnalysis extends Component {
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}
                   localLinkPath="url"
-                  localLinkIcon={<TimelineIcon />}
+                  localLinkIcon={<TextRotationNoneIcon />}
                   externalLink={false}
                   page={this.state.page}
                   rowsPerPage={this.state.rowsPerPage}

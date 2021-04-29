@@ -2,7 +2,6 @@ import React, { Component } from "react";
 
 // core components
 import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
-import IconButton from "@material-ui/core/IconButton";
 import ZzIcon from "../../assets/img/logo.png";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -10,7 +9,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
 import Button from "../../components/Button/Button.js";
-import Table from "../../components/Table/Table.js";
+import ExpandableTable from "../../components/Table/ExpandableTable";
+import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Table2 from "../../components/Table/Table2.js";
 import Calendar from "../../components/Calendar/Calendar.js";
 
@@ -18,6 +18,18 @@ import { getPagesRank, getStringsPerRank } from "../../requests/requests.js";
 
 class PageAnalysis extends Component {
   state = {
+    entityTypes: [
+      {id: 2, name: "Competition"},
+      {id: 3, name: "Team"},
+      {id: 4, name: "Player"},
+      {id: 8, name: "Stadium"},
+      {id: 9, name: "Coach"},
+      {id: 10, name:  "City"},
+      {id: 13, name:  "Referee"},
+      {id: 16, name:  "Director"},
+      {id: 17, name:  "Agent"},
+      {id: 18, name:  "Menu"},
+    ],
     tp_item: "",
     fk_item: "",
     startDate: new Date(),
@@ -33,6 +45,9 @@ class PageAnalysis extends Component {
     calculatedTp_Item: 0,
     calculatedFk_Item: 0,
     calculatedRank: null,
+
+    page: 0,
+    rowsPerPage: 10,
 
     tableData: [
       {
@@ -66,6 +81,14 @@ class PageAnalysis extends Component {
     });
   }
 
+  handleChangePage = (event, newPage) => {
+    this.setState({ page: newPage });
+  };
+  
+  handleChangeRowsPerPage = (event) => {
+    this.setState({ rowsPerPage: parseInt(event.target.value, 10), page: 0});
+  };
+
   toRegularFormat(date) {
     return (
       date.getFullYear() +
@@ -82,6 +105,10 @@ class PageAnalysis extends Component {
 
   changeValue = (event) => {
     this.setState({ [event.target.id]: event.target.value });
+  };
+
+  changeTpItem = (event) => {
+    this.setState({ tp_item: event.target.value });
   };
 
   submitStringsPerRank = (page, mysql_id) => {
@@ -186,23 +213,11 @@ class PageAnalysis extends Component {
             justifyContent: "space-around",
           }}
         >
-          <label
-            style={{ marginLeft: 8, marginTop: "auto", marginBottom: "auto" }}
-          >
-            Tp_item:
-            <input
-              value={this.state.tp_item}
-              onChange={this.changeValue}
-              id="tp_item"
-              type="text"
-              style={{
-                marginLeft: 8,
-                marginTop: "auto",
-                marginBottom: "auto",
-                width: 110,
-              }}
-            />
-          </label>
+          <Dropdown
+            list={this.state.entityTypes}
+            name="Tp_item"
+            onChange={this.changeTpItem}
+          />
           <label
             style={{ marginLeft: 8, marginTop: "auto", marginBottom: "auto" }}
           >
@@ -284,25 +299,27 @@ class PageAnalysis extends Component {
             </GridItem>
             <GridItem xs={12} sm={12} md={4}>
               {this.state.showStringsPerRank === true ? (
-                <Table
+                <ExpandableTable
                   tableTitle={
                     "Searched strings for rank " + this.state.calculatedRank
                   }
                   tableHeaderColor="gray"
-                  tableHead={["#", "String", "Count", ""]}
+                  tableHead={["#", "Query", "Count", " "]}
                   tableData={this.state.stringsPerRank}
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}
                   localLinkPath="localLink"
-                  localLinkIcon={<TextRotationNoneIcon />}
                   localLinkAditionalInfo={
                     "&startDate=" + this.toRegularFormat(this.state.calculatedStartDate) + 
                     (this.state.calculatedEndDate !== null ? "&endDate=" + this.toRegularFormat(this.state.calculatedEndDate) : "")
                     }
+                  localLinkIcon={<TextRotationNoneIcon />}
                   externalLink={false}
-                  externalLinkPath="link"
-                  externalLinkIcon={<img width="25" src={ZzIcon} />}
-                />
+                  page={this.state.page}
+                  rowsPerPage={this.state.rowsPerPage}
+                  onChangePage={this.handleChangePage}
+                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+              />
               ) : null}
             </GridItem>
           </GridContainer>

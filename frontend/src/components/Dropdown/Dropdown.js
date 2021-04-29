@@ -23,7 +23,7 @@ export default function Dropdown(props) {
   return (
     <div>
       <FormControl  className={classes.formControl}>
-        <InputLabel  style = {{ top: "-15px"}}  htmlFor="age-native-simple">{name}</InputLabel>
+        <InputLabel style = {{ marginTop:"auto", marginBottom:"auto"}}   htmlFor="age-native-simple">{name}</InputLabel>
         <Select
           native
           value={selectedEvaluation}
@@ -31,9 +31,7 @@ export default function Dropdown(props) {
           inputProps={{
             name: "evaluations",
             id: "age-native-simple",
-          }}
-          style = {{ marginTop:"auto", marginBottom:"auto"}} 
-          
+          }}  
         >
           <option key="0" aria-label="None" value="" />
           {list.map((item) => (
