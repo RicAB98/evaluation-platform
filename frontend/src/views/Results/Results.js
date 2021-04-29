@@ -2,11 +2,11 @@ import React, { Component } from "react";
 // core components
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import TextRotationNoneIcon from '@material-ui/icons/TextRotationNone';
+import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ZzIcon from "../../assets/img/logo.png";
-import OpenWithIcon from '@material-ui/icons/OpenWith';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
+import OpenWithIcon from "@material-ui/icons/OpenWith";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
@@ -40,7 +40,7 @@ class Result extends Component {
     ],
     evaluationId: -1,
     startDate: new Date("2021-01-20 0:0"),
-    endDate: '',
+    endDate: "",
     calculatedStartDate: null,
     calculatedEndDate: null,
     checkbox: false,
@@ -56,13 +56,15 @@ class Result extends Component {
     let params = new URLSearchParams(search);
 
     let startDate = params.get("startDate");
-    endDate = params.get("endDate"); 
+    endDate = params.get("endDate");
 
-    if(startDate !== null && new Date(startDate) != 'Invalid Date')
-      this.setState({ startDate: new Date(startDate) }, () => {this.submitEvaluation(startDate, endDate, true) });
+    if (startDate !== null && new Date(startDate) != "Invalid Date")
+      this.setState({ startDate: new Date(startDate) }, () => {
+        this.submitEvaluation(startDate, endDate, true);
+      });
 
-    if(endDate !== null && new Date(startDate) != 'Invalid Date')
-      this.setState({ endDate: new Date(endDate), checkbox: true});
+    if (endDate !== null && new Date(startDate) != "Invalid Date")
+      this.setState({ endDate: new Date(endDate), checkbox: true });
   }
 
   handleCheckbox = (event) => {
@@ -70,42 +72,39 @@ class Result extends Component {
   };
 
   toISOString(date) {
-
-    let month = date.getMonth() <= 9 ? "0" + this.addOne(date.getMonth()) : this.addOne(date.getMonth());
+    let month =
+      date.getMonth() <= 9
+        ? "0" + this.addOne(date.getMonth())
+        : this.addOne(date.getMonth());
     let day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
     let hours = date.getHours() <= 9 ? "0" + date.getHours() : date.getHours();
-    let minutes = date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
+    let minutes =
+      date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
 
     return (
-      date.getFullYear() +
-      "-" +
-      month +
-      "-" +
-      day +
-      "T" +
-      hours +
-      ":" +
-      minutes
+      date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
     );
   }
 
-   toRegularDateFormat(date) {
+  toRegularDateFormat(date) {
     return date != null ? date.replace("T", " ") : null;
   }
 
   submitEvaluation(startDate, endDate, fromURL) {
-
     this.setState({ calculatedStartDate: startDate });
     this.setState({ showTables: true });
 
     if (this.state.checkbox == true) {
-
       this.setState({ calculatedEndDate: endDate });
 
-      if(!fromURL)
+      if (!fromURL)
         this.props.history.push({
           pathname: "/admin/daily",
-          search: "?startDate=" + this.toISOString(startDate) + "&endDate=" + this.toISOString(endDate)
+          search:
+            "?startDate=" +
+            this.toISOString(startDate) +
+            "&endDate=" +
+            this.toISOString(endDate),
         });
 
       runEvaluation(startDate, endDate)
@@ -119,7 +118,7 @@ class Result extends Component {
           })
         );
     } else {
-      if(!fromURL)
+      if (!fromURL)
         this.props.history.push({
           pathname: "/admin/daily",
           search: "?startDate=" + this.toISOString(startDate),
@@ -149,27 +148,27 @@ class Result extends Component {
   };
 
   last30min() {
-
-    this.setState({ 
+    this.setState({
       startDate: new Date(this.state.startDate - 60000 * 30),
-      endDate: this.state.startDate, 
-      checkbox: true });
-    
+      endDate: this.state.startDate,
+      checkbox: true,
+    });
   }
 
   last60min() {
-
-    this.setState({ 
+    this.setState({
       startDate: new Date(this.state.startDate - 60000 * 60),
-      endDate: this.state.startDate, 
-      checkbox: true });
+      endDate: this.state.startDate,
+      checkbox: true,
+    });
   }
 
   last24hours() {
-    this.setState({ 
+    this.setState({
       startDate: new Date(this.state.startDate - 60000 * 60 * 24),
-      endDate: this.state.startDate, 
-      checkbox: true });
+      endDate: this.state.startDate,
+      checkbox: true,
+    });
   }
 
   addOne(value) {
@@ -203,7 +202,7 @@ class Result extends Component {
                 <Checkbox
                   checked={this.state.checkbox}
                   onChange={this.handleCheckbox}
-                  style = {{color: "#2c3e50"}}
+                  style={{ color: "#2c3e50" }}
                   name="checkbox"
                 />
               }
@@ -218,19 +217,54 @@ class Result extends Component {
               label="End date"
               margin="20px"
             />
-          ) : 
-          <ButtonGroup
-            orientation="vertical"
-            aria-label="vertical outlined primary button group"
-          >
-            <Button onClick={() => this.last30min() } style= {{color: "#2c3e50", backgroundColor: "white", border: "1px solid #2c3e50", textTransform: "capitalize"}}>Last 30 min</Button>
-            <Button onClick={() => this.last60min() } style= {{color: "#2c3e50", backgroundColor: "white", border: "1px solid #2c3e50", textTransform: "capitalize"}}>Last 60 min</Button>
-            <Button onClick={() => this.last24hours() } style= {{color: "#2c3e50", backgroundColor: "white", border: "1px solid #2c3e50", textTransform: "capitalize"}}>Last 24 hours</Button>
-          </ButtonGroup>}
+          ) : (
+            <ButtonGroup
+              orientation="vertical"
+              aria-label="vertical outlined primary button group"
+            >
+              <Button
+                onClick={() => this.last30min()}
+                style={{
+                  color: "#2c3e50",
+                  backgroundColor: "white",
+                  border: "1px solid #2c3e50",
+                  textTransform: "capitalize",
+                }}
+              >
+                Last 30 min
+              </Button>
+              <Button
+                onClick={() => this.last60min()}
+                style={{
+                  color: "#2c3e50",
+                  backgroundColor: "white",
+                  border: "1px solid #2c3e50",
+                  textTransform: "capitalize",
+                }}
+              >
+                Last 60 min
+              </Button>
+              <Button
+                onClick={() => this.last24hours()}
+                style={{
+                  color: "#2c3e50",
+                  backgroundColor: "white",
+                  border: "1px solid #2c3e50",
+                  textTransform: "capitalize",
+                }}
+              >
+                Last 24 hours
+              </Button>
+            </ButtonGroup>
+          )}
           <Button
             color="custom"
             onClick={() =>
-              this.submitEvaluation(this.state.startDate, this.state.endDate, false)
+              this.submitEvaluation(
+                this.state.startDate,
+                this.state.endDate,
+                false
+              )
             }
           >
             Submit
@@ -268,7 +302,12 @@ class Result extends Component {
                   externalLink={false}
                 />
               </GridItem>
-              <GridItem xs={12} sm={12} md={8} style={{ marginTop: 20, marginLeft: 10 }}>
+              <GridItem
+                xs={12}
+                sm={12}
+                md={8}
+                style={{ marginTop: 20, marginLeft: 10 }}
+              >
                 <BarChart
                   title="Popular queries"
                   data={this.state.popularQueries}
@@ -294,7 +333,12 @@ class Result extends Component {
                   externalLink={false}
                 />
               </GridItem>
-              <GridItem xs={12} sm={12} md={8} style={{ marginTop: 40, marginLeft: 10 }}>
+              <GridItem
+                xs={12}
+                sm={12}
+                md={8}
+                style={{ marginTop: 40, marginLeft: 10 }}
+              >
                 <BarChart
                   title="Unsuccessful queries"
                   data={this.state.unsuccessfulQueries}
@@ -322,7 +366,12 @@ class Result extends Component {
                   externalLinkIcon={<img width="25" src={ZzIcon} />}
                 />
               </GridItem>
-              <GridItem xs={12} sm={12} md={8} style={{ marginTop: 40, marginLeft: 10 }}>
+              <GridItem
+                xs={12}
+                sm={12}
+                md={8}
+                style={{ marginTop: 40, marginLeft: 10 }}
+              >
                 <BarChart
                   title="Popular pages"
                   data={this.state.popularPages}

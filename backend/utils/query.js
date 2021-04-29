@@ -4,13 +4,29 @@ const query = {
   },
 
   //TODO change to main table AND use dates
-  getSearchesPerDay(string) {
-    return `SELECT date_format(date, "%Y-%c-%d") as x, count(*) as y FROM fourdays GROUP BY search_string, date HAVING search_string = '${string}'`;
+  getSearchesPerDay(string, startDate, endDate) {
+    timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
+                    ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
+                    AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
+                    ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`
+
+    return `SELECT date_format(date, "%Y-%c-%d") as x, count(*) as y FROM fourdays
+            WHERE ${timeConditions} GROUP BY search_string, date HAVING search_string = '${string}'`;
   },
 
   //Returns list of the rank of the clicked options
-  getClickRanks(string) {
-    return `SELECT page_number, mysql_id, count(*) as n FROM fourdays WHERE mysql_id <> 0 AND fk_item <> 0 AND search_string = '${string}' GROUP BY page_number, mysql_id ORDER BY page_number, mysql_id`;
+  getClickRanks(string, startDate, endDate) {
+    let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`
+
+    if (endDate != "Invalid Date")
+    timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
+                      ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
+                      AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
+                      ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`
+
+    return `SELECT page_number, mysql_id, count(*) as n FROM fourdays 
+            WHERE mysql_id <> 0 AND fk_item <> 0 AND search_string = '${string}' 
+            AND ${timeConditions} GROUP BY page_number, mysql_id ORDER BY page_number, mysql_id`;
   },
 
   //Returns list of position clicked to reach a certain page
@@ -20,16 +36,28 @@ const query = {
   },
 
   //Returns list of pages where user clicked on a specific rank
-  getPagesPerRank(page, mysql_id, string) {
+  getPagesByStringRank(page, mysql_id, string, startDate, endDate) {
+
+    let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`
+
+    if (endDate != "Invalid Date")
+      timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
+                    ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
+                    AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
+                    ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`
+
     if (page == 1)
       return `SELECT tp_item, fk_item, count(*) as n, (select distinct page from fourdays f2 where f.tp_item=f2.tp_item and f.fk_item=f2.fk_item order by method desc limit 1) as link
-      FROM fourdays f WHERE (page_number = ${page} OR page_number = 0 ) AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
+      FROM fourdays f WHERE (page_number = ${page} OR page_number = 0 ) AND mysql_id = ${mysql_id} AND fk_item <> 0 
+      AND ${timeConditions} AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
     else if (page == 2)
       return `SELECT tp_item, fk_item, count(*) as n, (select distinct page from fourdays f2 where f.tp_item=f2.tp_item and f.fk_item=f2.fk_item order by method desc limit 1) as link
-      FROM fourdays WHERE page_number = ${page} AND mysql_id = ${mysql_id} AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
+      FROM fourdays WHERE page_number = ${page} AND mysql_id = ${mysql_id} AND fk_item <> 0 
+      AND ${timeConditions} AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
     else
       return `SELECT tp_item, fk_item, count(*) as n, (select distinct page from fourdays f2 where f.tp_item=f2.tp_item and f.fk_item=f2.fk_item order by method desc limit 1) as link   
-      FROM fourdays WHERE page_number > 2 AND fk_item <> 0 AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
+      FROM fourdays WHERE page_number > 2 AND fk_item <> 0 
+      AND ${timeConditions} AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
   },
 
   //Returns list of pages where user clicked on a specific rank
@@ -43,8 +71,16 @@ const query = {
   },
 
   //Returns number of search sessions that resulted in no further click
-  getUnsuccessfulSessions(string) {
-    return `SELECT count(*) as n FROM fourdays WHERE fk_item = 0 AND search_string='${string}'`;
+  getUnsuccessfulSessions(string, startDate, endDate) {
+    let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`
+
+    if (endDate != "Invalid Date")
+      timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
+                    ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
+                    AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
+                    ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`
+
+    return `SELECT count(*) as n FROM fourdays WHERE fk_item = 0 AND search_string='${string}' AND ${timeConditions}`;
   },
 
   //Returns list of strings that were more used to reach a certain page PODE SER APAGADO?

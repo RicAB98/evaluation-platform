@@ -44,7 +44,10 @@ class ExpandedAnalysis extends Component {
 
   submitEvaluation() {
 
-    if(this.state.id == -1 || this.state.type == -1)
+    if(this.state.id == -1 ||
+       this.state.id == null ||
+       this.state.type == -1 ||
+       this.state.type == null)
       return
 
     loadEvaluation(this.state.id, this.state.type)

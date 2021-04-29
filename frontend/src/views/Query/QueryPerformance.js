@@ -4,6 +4,8 @@ import React, { Component } from "react";
 import LinkIcon from "@material-ui/icons/Link";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ZzIcon from "../../assets/img/logo.png";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
@@ -21,10 +23,13 @@ import {
 
 class QueryPerformance extends Component {
   state = {
-    startDate: new Date("2021-01-29"),
-    endDate: null,
+    startDate: new Date(),
+    endDate: new Date(),
+    calculatedStartDate: null,
+    calculatedEndDate: null,
 
-    string:"",
+    string: "",
+    checkbox: false,
 
     showGraph: false,
     graphStartDate: null,
@@ -63,16 +68,38 @@ class QueryPerformance extends Component {
 
   componentDidMount() {
     let search = window.location.search;
-    let params = new URLSearchParams(search);     
+    let params = new URLSearchParams(search);
 
     let string = params.get("search_string");
-    
-    if (string !== null)
-      this.setState({ string: string }, () => this.submitEvaluation());     
+    let startDate = params.get("startDate");
+    let endDate = params.get("endDate");
+
+    this.setState({
+      string: string != null ? string : "",
+      startDate: startDate != null ? new Date(startDate) : new Date(),
+      endDate: endDate != null ? new Date(endDate) : new Date(),
+    },
+    () => {if(string != null && startDate != null)
+            this.submitEvaluation()
+    });
+  }
+
+  toRegularFormat(date) {
+    return (
+      date.getFullYear() +
+      "-" +
+      this.addOne(date.getMonth()) +
+      "-" +
+      date.getDate()
+    );
   }
 
   changeValue = (event) => {
     this.setState({ string: event.target.value });
+  };
+
+  handleCheckbox = (event) => {
+    this.setState({ checkbox: event.target.checked });
   };
 
   submitPagesPerRank = (page, mysql_id) => {
@@ -89,7 +116,13 @@ class QueryPerformance extends Component {
       ],
     });
 
-    getPagesPerRank(page, mysql_id, this.state.calculatedString)
+    getPagesPerRank(
+      page,
+      mysql_id,
+      this.state.calculatedString,
+      this.state.calculatedStartDate,
+      this.state.calculatedEndDate
+    )
       .then((res) => res.json())
       .then(
         (res) => this.setState({ pagesPerRank: res }),
@@ -98,16 +131,29 @@ class QueryPerformance extends Component {
   };
 
   submitEvaluation = () => {
+
+    let urlSearch =
+      "?search_string=" +
+      this.state.string +
+      "&startDate=" +
+      this.toRegularFormat(this.state.startDate);
+
+    urlSearch +=
+      this.state.checkbox == true
+        ? "&endDate=" + this.toRegularFormat(this.state.endDate)
+        : "";
+
     this.props.history.push({
       pathname: "/admin/query",
-      search: "?search_string=" + this.state.string,
+      search: urlSearch,
     });
 
-    this.setState({ calculatedString: this.state.string });
-    this.setState({ showPagesPerRank: false });
-    this.setState({ unsuccessfulSessions: "" });
-
     this.setState({
+      calculatedString: this.state.string,
+      calculatedStartDate: this.state.startDate,
+      calculatedEndDate: this.state.checkbox == true ? this.state.endDate : null,
+      showPagesPerRank: false,
+      unsuccessfulSessions: "",
       clickRank: [
         {
           page_number: 1,
@@ -125,29 +171,48 @@ class QueryPerformance extends Component {
       graphEndDate: null,
     });
 
-    queryGraph(this.state.string)
-      .then((res) => res.json())
-      .then((res) =>
-        this.setState({
-          graphData: res,
-          showedGraphData: res,
-          graphStartDate: new Date(res["dates"][0]),
-          graphEndDate: new Date(res["dates"][res["dates"].length - 1]),
-        }),
-        this.setState({ showGraph: true })
-      );
-    getClicksRanks(this.state.string)
+    if (this.state.checkbox == true)
+      queryGraph(this.state.string, this.state.startDate, this.state.endDate)
+        .then((res) => res.json())
+        .then(
+          (res) =>
+            this.setState({
+              graphData: res,
+              showedGraphData: res,
+              graphStartDate: new Date(res["dates"][0]),
+              graphEndDate: new Date(res["dates"][res["dates"].length - 1]),
+            }),
+          this.setState({ showGraph: true })
+        );
+
+    getClicksRanks(
+      this.state.string,
+      this.state.startDate,
+      this.state.checkbox == true ? this.state.endDate : null
+    )
       .then((res) => res.json())
       .then(
         (res) => this.setState({ clickRank: res }),
         this.setState({ showClickRank: true })
       );
-    getUnsuccessfulSessions(this.state.string)
+    getUnsuccessfulSessions(
+      this.state.string,
+      this.state.startDate,
+      this.state.checkbox == true ? this.state.endDate : null
+    )
       .then((res) => res.json())
       .then((res) => this.setState({ unsuccessfulSessions: res["n"] }));
   };
 
-  changeStartDate = (newDate) => {
+  changeStartDate = (date) => {
+    this.setState({ startDate: new Date(date) });
+  };
+
+  changeEndDate = (date) => {
+    this.setState({ endDate: new Date(date) });
+  };
+
+  changeGraphStartDate = (newDate) => {
     let formatedDate =
       newDate.getFullYear() +
       "-" +
@@ -170,7 +235,7 @@ class QueryPerformance extends Component {
     this.changeGraphRange(closerDateInArray, this.state.graphEndDate);
   };
 
-  changeEndDate = (newDate) => {
+  changeGraphEndDate = (newDate) => {
     let formatedDate =
       newDate.getFullYear() +
       "-" +
@@ -254,7 +319,7 @@ class QueryPerformance extends Component {
           style={{
             display: "flex",
             flexDirection: "row",
-            width: 400,
+            width: 900,
             justifyContent: "space-around",
           }}
         >
@@ -269,6 +334,40 @@ class QueryPerformance extends Component {
               style={{ marginLeft: 8, marginTop: "auto", marginBottom: "auto" }}
             />
           </label>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "start",
+            }}
+          >
+            <Calendar
+              selectedDate={this.state.startDate}
+              onChange={this.changeStartDate}
+              label={this.state.checkbox === true ? "Start date" : "Date"}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.checkbox}
+                  onChange={this.handleCheckbox}
+                  style={{ color: "#2c3e50" }}
+                  name="checkbox"
+                />
+              }
+              label="Date range"
+              style={{ marginTop: "auto", marginBottom: "auto" }}
+            />
+          </div>
+          {this.state.checkbox === true ? (
+            <Calendar
+              selectedDate={this.state.endDate}
+              onChange={this.changeEndDate}
+              label="End date"
+              margin="20px"
+            />
+          ) : null}
+
           <Button color="custom" onClick={() => this.submitEvaluation()}>
             Submit
           </Button>
@@ -280,7 +379,7 @@ class QueryPerformance extends Component {
               xs={this.state.showPagesPerRank === true ? 12 : 18}
               sm={this.state.showPagesPerRank === true ? 12 : 18}
               md={this.state.showPagesPerRank === true ? 4 : 6}
-              style ={{backgroundColor: "#E8E8E8"}}
+              style={{ backgroundColor: this.state.showGraph === true ? "#E8E8E8": "inherit" }}
             >
               {this.state.showGraph === true ? (
                 <div>
@@ -299,13 +398,13 @@ class QueryPerformance extends Component {
                     <Calendar
                       id="startDate"
                       selectedDate={this.state.graphStartDate}
-                      onChange={this.changeStartDate}
+                      onChange={this.changeGraphStartDate}
                       label="Start date"
                     />
                     <Calendar
                       id="endDate"
                       selectedDate={this.state.graphEndDate}
-                      onChange={this.changeEndDate}
+                      onChange={this.changeGraphEndDate}
                       label="End date"
                       margin="20px"
                     />
@@ -335,7 +434,7 @@ class QueryPerformance extends Component {
                 </h6>
               </GridItem>
             ) : null}
-            <GridItem xs={12} sm={12} md={4} >
+            <GridItem xs={12} sm={12} md={4}>
               {this.state.showPagesPerRank === true ? (
                 <Table
                   tableTitle={
@@ -350,7 +449,7 @@ class QueryPerformance extends Component {
                   localLinkIcon={<MenuBookIcon />}
                   externalLink={true}
                   externalLinkPath="fullUrl"
-                  externalLinkIcon={<img width="25" src={ZzIcon}/>}
+                  externalLinkIcon={<img width="25" src={ZzIcon} />}
                 />
               ) : null}
             </GridItem>
