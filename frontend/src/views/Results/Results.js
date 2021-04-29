@@ -60,7 +60,7 @@ class Result extends Component {
 
     if (startDate !== null && new Date(startDate) != "Invalid Date")
       this.setState({ startDate: new Date(startDate) }, () => {
-        this.submitEvaluation(startDate, endDate, true);
+        this.submitEvaluation(new Date(startDate), new Date(endDate), true);
       });
 
     if (endDate !== null && new Date(startDate) != "Invalid Date")
@@ -92,6 +92,7 @@ class Result extends Component {
 
   submitEvaluation(startDate, endDate, fromURL) {
     this.setState({ calculatedStartDate: startDate });
+    this.setState({ calculatedEndDate: null });
     this.setState({ showTables: true });
 
     if (this.state.checkbox == true) {
@@ -294,6 +295,10 @@ class Result extends Component {
                   tableHead={["#", "Query", "Count", " "]}
                   headerLinkIcon={<OpenWithIcon />}
                   headerLinkPath={`expanded?id=${this.state.evaluationId}&type=1`}
+                  localLinkAditionalInfo={
+                  "&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
+                  (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")
+                  }
                   tableData={this.state.popularQueries}
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}
@@ -329,6 +334,10 @@ class Result extends Component {
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}
                   localLinkPath="url"
+                  localLinkAditionalInfo={
+                    "&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
+                    (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")
+                    }
                   localLinkIcon={<TextRotationNoneIcon />}
                   externalLink={false}
                 />
@@ -360,6 +369,10 @@ class Result extends Component {
                   firstColumn={["partialUrl"]}
                   secondColumn={["n"]}
                   localLinkPath="localUrl"
+                  localLinkAditionalInfo={
+                    "&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
+                    (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")
+                    }
                   localLinkIcon={<MenuBookIcon />}
                   externalLink={true}
                   externalLinkPath="fullUrl"

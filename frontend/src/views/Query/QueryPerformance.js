@@ -77,6 +77,7 @@ class QueryPerformance extends Component {
       string: string != null ? string : "",
       startDate: startDate != null ? new Date(startDate) : new Date(),
       endDate: endDate != null ? new Date(endDate) : new Date(),
+      checkbox: endDate != null ? true : false,
     },
     () => {if(string != null && startDate != null)
             this.submitEvaluation()
@@ -445,6 +446,10 @@ class QueryPerformance extends Component {
                   firstColumn={["partialUrl"]}
                   secondColumn={["n"]}
                   localLinkPath="localUrl"
+                  localLinkAditionalInfo={
+                    "&startDate=" + this.toRegularFormat(this.state.calculatedStartDate) + 
+                    (this.state.calculatedEndDate !== null ? "&endDate=" + this.toRegularFormat(this.state.calculatedEndDate) : "")
+                    }
                   localLinkIcon={<MenuBookIcon />}
                   externalLink={true}
                   externalLinkPath="fullUrl"

@@ -59,6 +59,7 @@ class PageAnalysis extends Component {
       fk_item: fk_item != null ? fk_item : "",
       startDate: startDate != null ? new Date(startDate) : new Date(),
       endDate: endDate != null ? new Date(endDate) : new Date(),
+      checkbox: endDate != null ? true : false,
     },
     () => {if(tp_item != null && fk_item != null && startDate != null)
             this.submitEvaluation()
@@ -292,8 +293,12 @@ class PageAnalysis extends Component {
                   tableData={this.state.stringsPerRank}
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}
-                  localLinkPath="/admin/query?"
+                  localLinkPath="localLink"
                   localLinkIcon={<TextRotationNoneIcon />}
+                  localLinkAditionalInfo={
+                    "&startDate=" + this.toRegularFormat(this.state.calculatedStartDate) + 
+                    (this.state.calculatedEndDate !== null ? "&endDate=" + this.toRegularFormat(this.state.calculatedEndDate) : "")
+                    }
                   externalLink={false}
                   externalLinkPath="link"
                   externalLinkIcon={<img width="25" src={ZzIcon} />}

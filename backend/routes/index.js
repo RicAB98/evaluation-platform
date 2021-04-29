@@ -576,6 +576,7 @@ router.get("/stringsperrank", function (req, res, next) {
         results[r] = {
           search_string: row.search_string,
           n: row.n,
+          localLink: "/admin/query?search_string=" + row.search_string,
           link:
             "https://www.zerozero.pt/search.php?search_string=" +
             row.search_string,

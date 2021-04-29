@@ -54,6 +54,10 @@ export default function Table2(props) {
                   <TableCell
                     className={classes.tableCell + " " + classes.tableHeadCell}
                     key={key}
+                    style = 
+                    {{
+                      textAlign: key == 1 && "end" 
+                    }}
                   >
                     {prop}
                   </TableCell>
@@ -73,7 +77,7 @@ export default function Table2(props) {
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
-                  style={{ textAlign: "center" }}
+                  style={{ textAlign: "right" }}
                 >
                   {prop["n"]}
                 </TableCell>

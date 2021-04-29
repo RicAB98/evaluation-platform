@@ -46,6 +46,11 @@ export default function ExpandableTable(props) {
                 return (
                   <TableCell
                     className={classes.tableCell + " " + classes.tableHeadCell}
+                    style = 
+                    {{
+                      width: key == 0 ? "15%" : key == 2 && "20%",
+                      textAlign: key == 2 ? "end" : "start"
+                    }}
                     key={key}
                   >
                     {prop}
@@ -59,15 +64,17 @@ export default function ExpandableTable(props) {
           {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((prop, key) => {
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
-                <TableCell className={classes.tableCell}>{key  + 1 + page * rowsPerPage}</TableCell>
-                <TableCell className={classes.tableCell}>
+                <TableCell className={classes.tableCell} style={{textAlign: "start"}}>
+                  {key  + 1 + page * rowsPerPage}
+                  </TableCell>
+                <TableCell className={classes.tableCell} style={{textAlign: "start"}}>
                   {firstColumn.map((field) => {
                     return prop[field];
                   })}
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
-                  style={{ textAlign: "center" }}
+                  style={{ textAlign: "end" }}
                 >
                   {secondColumn.map((field) => {
                     return prop[field];
@@ -75,7 +82,6 @@ export default function ExpandableTable(props) {
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
-                  style={{ textAlign: "center" }}
                 >
                   <IconButton
                     color="primary"

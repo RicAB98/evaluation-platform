@@ -26,6 +26,7 @@ export default function CustomTable(props) {
     firstColumn,
     secondColumn,
     localLinkPath,
+    localLinkAditionalInfo,
     localLinkIcon,
     externalLink,
     externalLinkPath,
@@ -54,12 +55,17 @@ export default function CustomTable(props) {
       </div>}
       <Table className={classes.table}>
         {tableHead !== undefined ? (
-          <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
+          <TableHead className={classes[tableHeaderColor + "TableHeader"]}> 
             <TableRow className={classes.tableHeadRow}>
               {tableHead.map((prop, key) => {
                 return (
                   <TableCell
                     className={classes.tableCell + " " + classes.tableHeadCell}
+                    style = 
+                    {{
+                      width: key == 0 ? "15%" : key == 2 && "20%",
+                      textAlign: key == 2 ? "end" : "start"
+                    }}
                     key={key}
                   >
                     {prop}
@@ -73,15 +79,15 @@ export default function CustomTable(props) {
           {tableData.map((prop, key) => {
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
-                <TableCell className={classes.tableCell}>{key + 1}</TableCell>
-                <TableCell className={classes.tableCell}>
+                <TableCell className={classes.tableCell} style={{textAlign: "start"}}>{key + 1}</TableCell>
+                <TableCell className={classes.tableCell} style={{textAlign: "start"}}>
                   {firstColumn.map((field) => {
                     return prop[field];
                   })}
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
-                  style={{ textAlign: "center" }}
+                  style={{textAlign: "end"}}
                 >
                   {secondColumn.map((field) => {
                     return prop[field];
@@ -89,13 +95,13 @@ export default function CustomTable(props) {
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
-                  style={{ textAlign: "center" }}
+                  style={{ textAlign: "end" }}
                 >
                   <IconButton
                     color="primary"
                     component="span"
                     onClick={() =>
-                      window.open(prop[localLinkPath])
+                      window.open(prop[localLinkPath] + localLinkAditionalInfo)
                     }
                   >
                     {localLinkIcon}
