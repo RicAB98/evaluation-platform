@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 
 // core components
-import TimelineIcon from "@material-ui/icons/Timeline";
-import LinkIcon from "@material-ui/icons/Link";
+import TextRotationNoneIcon from '@material-ui/icons/TextRotationNone';
 import IconButton from "@material-ui/core/IconButton";
 import ZzIcon from "../../assets/img/logo.png";
 
@@ -201,7 +200,7 @@ class PageAnalysis extends Component {
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}
                   localLinkPath="/admin/query?"
-                  localLinkIcon={<TimelineIcon />}
+                  localLinkIcon={<TextRotationNoneIcon />}
                   externalLink={false}
                   externalLinkPath="link"
                   externalLinkIcon={<img width="25" src={ZzIcon}/>}

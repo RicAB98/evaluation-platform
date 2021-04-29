@@ -2,8 +2,8 @@
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import PublishOutlinedIcon from '@material-ui/icons/PublishOutlined';
 import CompareArrowsOutlinedIcon from '@material-ui/icons/CompareArrowsOutlined';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import TimelineIcon from '@material-ui/icons/Timeline';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
+import TextRotationNoneIcon from '@material-ui/icons/TextRotationNone';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
 // core components/views for Admin layout
@@ -18,7 +18,7 @@ import ComparePage from "./views/Compare/Compare.js";
 
 const dashboardRoutes = [
 
-  {
+  /*{
     path: "/run",
     name: "Run Evaluation",
     icon: AddCircleOutlineOutlinedIcon,
@@ -32,18 +32,18 @@ const dashboardRoutes = [
     icon: PublishOutlinedIcon,
     component: LoadPage,
     layout: "/admin"
-  },
+  },*/
   {
     path: "/daily",
-    name: "Daily Evaluation",
-    icon: AccessTimeIcon,
+    name: "Evaluation",
+    icon: EqualizerIcon,
     component: ResultsPage,
     layout: "/admin"
   },
   {
     path: "/query",
     name: "Query Analysis",
-    icon: TimelineIcon,
+    icon: TextRotationNoneIcon,
     component: QueryPage,
     layout: "/admin"
   },

@@ -2,10 +2,11 @@ import React, { Component } from "react";
 // core components
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import TimelineIcon from "@material-ui/icons/Timeline";
+import TextRotationNoneIcon from '@material-ui/icons/TextRotationNone';
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ZzIcon from "../../assets/img/logo.png";
 import OpenWithIcon from '@material-ui/icons/OpenWith';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
@@ -147,6 +148,30 @@ class Result extends Component {
     this.setState({ endDate: new Date(event.target.value) });
   };
 
+  last30min() {
+
+    this.setState({ 
+      startDate: new Date(this.state.startDate - 60000 * 30),
+      endDate: this.state.startDate, 
+      checkbox: true });
+    
+  }
+
+  last60min() {
+
+    this.setState({ 
+      startDate: new Date(this.state.startDate - 60000 * 60),
+      endDate: this.state.startDate, 
+      checkbox: true });
+  }
+
+  last24hours() {
+    this.setState({ 
+      startDate: new Date(this.state.startDate - 60000 * 60 * 24),
+      endDate: this.state.startDate, 
+      checkbox: true });
+  }
+
   addOne(value) {
     return value + 1;
   }
@@ -178,6 +203,7 @@ class Result extends Component {
                 <Checkbox
                   checked={this.state.checkbox}
                   onChange={this.handleCheckbox}
+                  style = {{color: "#2c3e50"}}
                   name="checkbox"
                 />
               }
@@ -192,7 +218,15 @@ class Result extends Component {
               label="End date"
               margin="20px"
             />
-          ) : null}
+          ) : 
+          <ButtonGroup
+            orientation="vertical"
+            aria-label="vertical outlined primary button group"
+          >
+            <Button onClick={() => this.last30min() } style= {{color: "#2c3e50", backgroundColor: "white", border: "1px solid #2c3e50", textTransform: "capitalize"}}>Last 30 min</Button>
+            <Button onClick={() => this.last60min() } style= {{color: "#2c3e50", backgroundColor: "white", border: "1px solid #2c3e50", textTransform: "capitalize"}}>Last 60 min</Button>
+            <Button onClick={() => this.last24hours() } style= {{color: "#2c3e50", backgroundColor: "white", border: "1px solid #2c3e50", textTransform: "capitalize"}}>Last 24 hours</Button>
+          </ButtonGroup>}
           <Button
             color="custom"
             onClick={() =>
@@ -230,7 +264,7 @@ class Result extends Component {
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}
                   localLinkPath="url"
-                  localLinkIcon={<TimelineIcon />}
+                  localLinkIcon={<TextRotationNoneIcon />}
                   externalLink={false}
                 />
               </GridItem>
@@ -256,7 +290,7 @@ class Result extends Component {
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}
                   localLinkPath="url"
-                  localLinkIcon={<TimelineIcon />}
+                  localLinkIcon={<TextRotationNoneIcon />}
                   externalLink={false}
                 />
               </GridItem>
