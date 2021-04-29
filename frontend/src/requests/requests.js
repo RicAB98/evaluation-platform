@@ -164,26 +164,17 @@ export function getUnsuccessfulSessions(string, startDate, endDate) {
   });
 }
 
-/*export function getSearchStringsPerPage(tp_item, fk_item) {
-    let query = apiHost + "/stringsperpage?tp_item=" + tp_item + "&fk_item=" + fk_item;
-  
-    /*if(endDate != null)
-          query = query + "&endDate=" + endDate
-  
-    return fetch(query, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-  }*/
+export function getPagesRank(tp_item, fk_item, startDate, endDate) {
+  let query =
+    apiHost +
+    "/pagesrank?tp_item=" +
+    tp_item +
+    "&fk_item=" +
+    fk_item +
+    "&startDate=" +
+    startDate;
 
-export function getPagesRank(tp_item, fk_item) {
-  let query = apiHost + "/pagesrank?tp_item=" + tp_item + "&fk_item=" + fk_item;
-
-  /*if(endDate != null)
-          query = query + "&endDate=" + endDate*/
+  if (endDate != null) query = query + "&endDate=" + endDate;
 
   return fetch(query, {
     method: "GET",
@@ -194,7 +185,7 @@ export function getPagesRank(tp_item, fk_item) {
   });
 }
 
-export function getStringsPerRank(page, mysql_id, tp_item, fk_item) {
+export function getStringsPerRank(page, mysql_id, tp_item, fk_item, startDate, endDate) {
   let query =
     apiHost +
     "/stringsperrank?tp_item=" +
@@ -204,10 +195,12 @@ export function getStringsPerRank(page, mysql_id, tp_item, fk_item) {
     "&page=" +
     page +
     "&mysql_id=" +
-    mysql_id;
+    mysql_id +
+    "&startDate=" +
+    startDate;
 
-  /*if(endDate != null)
-          query = query + "&endDate=" + endDate*/
+  if(endDate != null)
+        query = query + "&endDate=" + endDate
 
   return fetch(query, {
     method: "GET",

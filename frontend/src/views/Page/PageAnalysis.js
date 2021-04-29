@@ -1,15 +1,18 @@
 import React, { Component } from "react";
 
 // core components
-import TextRotationNoneIcon from '@material-ui/icons/TextRotationNone';
+import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
 import IconButton from "@material-ui/core/IconButton";
 import ZzIcon from "../../assets/img/logo.png";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
 import Table2 from "../../components/Table/Table2.js";
+import Calendar from "../../components/Calendar/Calendar.js";
 
 import { getPagesRank, getStringsPerRank } from "../../requests/requests.js";
 
@@ -17,11 +20,16 @@ class PageAnalysis extends Component {
   state = {
     tp_item: "",
     fk_item: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    checkbox: false,
+    calculatedStartDate: null,
+    calculatedEndDate: null,
 
     showPagesRank: false,
     showStringsPerRank: false,
 
-    pageLink:"",
+    pageLink: "",
     calculatedTp_Item: 0,
     calculatedFk_Item: 0,
     calculatedRank: null,
@@ -43,14 +51,33 @@ class PageAnalysis extends Component {
 
     let tp_item = params.get("tp_item");
     let fk_item = params.get("fk_item");
+    let startDate = params.get("startDate");
+    let endDate = params.get("endDate");
 
-    tp_item !== null && this.setState({ tp_item: tp_item });
-    fk_item !== null && this.setState({ fk_item: fk_item });
-
-    tp_item !== null &&
-      fk_item !== null &&
-      this.submitEvaluation(tp_item, fk_item);
+    this.setState({
+      tp_item: tp_item != null ? tp_item : "",
+      fk_item: fk_item != null ? fk_item : "",
+      startDate: startDate != null ? new Date(startDate) : new Date(),
+      endDate: endDate != null ? new Date(endDate) : new Date(),
+    },
+    () => {if(tp_item != null && fk_item != null && startDate != null)
+            this.submitEvaluation()
+    });
   }
+
+  toRegularFormat(date) {
+    return (
+      date.getFullYear() +
+      "-" +
+      this.addOne(date.getMonth()) +
+      "-" +
+      date.getDate()
+    );
+  }
+
+  handleCheckbox = (event) => {
+    this.setState({ checkbox: event.target.checked });
+  };
 
   changeValue = (event) => {
     this.setState({ [event.target.id]: event.target.value });
@@ -74,7 +101,9 @@ class PageAnalysis extends Component {
       page,
       mysql_id,
       this.state.calculatedTp_Item,
-      this.state.calculatedFk_Item
+      this.state.calculatedFk_Item,
+      this.state.calculatedStartDate,
+      this.state.calculatedEndDate
     )
       .then((res) => res.json())
       .then(
@@ -83,10 +112,23 @@ class PageAnalysis extends Component {
       );
   };
 
-  submitEvaluation = (tp_item, fk_item) => {
+  submitEvaluation = () => {
+    let urlSearch =
+      "?tp_item=" +
+      this.state.tp_item +
+      "&fk_item=" +
+      this.state.fk_item +
+      "&startDate=" +
+      this.toRegularFormat(this.state.startDate);
+
+    urlSearch +=
+      this.state.checkbox == true
+        ? "&endDate=" + this.toRegularFormat(this.state.endDate)
+        : "";
+
     this.props.history.push({
       pathname: "/admin/page",
-      search: "?tp_item=" + tp_item + "&fk_item=" + fk_item,
+      search: urlSearch,
     });
 
     this.setState({
@@ -96,21 +138,41 @@ class PageAnalysis extends Component {
           mysql_id: 0,
           n: "Loading...",
         },
-        
       ],
       pageLink: "",
       showPagesRank: false,
-      calculatedTp_Item: tp_item,
-      calculatedFk_Item: fk_item,
+      calculatedTp_Item: this.state.tp_item ,
+      calculatedFk_Item: this.state.fk_item,
+      calculatedStartDate: this.state.startDate,
+      calculatedEndDate:
+        this.state.checkbox == true ? this.state.endDate : null,
     });
 
-    getPagesRank(tp_item, fk_item)
+    getPagesRank(
+      this.state.tp_item ,
+      this.state.fk_item,
+      this.state.startDate,
+      this.state.checkbox == true ? this.state.endDate : null
+    )
       .then((res) => res.json())
       .then(
-        (res) => this.setState({ tableData: res["rank"], pageLink: res["link"] }),
+        (res) =>
+          this.setState({ tableData: res["rank"], pageLink: res["link"] }),
         this.setState({ showPagesRank: true })
       );
   };
+
+  changeStartDate = (date) => {
+    this.setState({ startDate: new Date(date) });
+  };
+
+  changeEndDate = (date) => {
+    this.setState({ endDate: new Date(date) });
+  };
+
+  addOne(value) {
+    return value + 1;
+  }
 
   render() {
     return (
@@ -119,7 +181,7 @@ class PageAnalysis extends Component {
           style={{
             display: "flex",
             flexDirection: "row",
-            width: 550,
+            width: 900,
             justifyContent: "space-around",
           }}
         >
@@ -157,6 +219,39 @@ class PageAnalysis extends Component {
               }}
             />
           </label>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "start",
+            }}
+          >
+            <Calendar
+              selectedDate={this.state.startDate}
+              onChange={this.changeStartDate}
+              label={this.state.checkbox === true ? "Start date" : "Date"}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.checkbox}
+                  onChange={this.handleCheckbox}
+                  style={{ color: "#2c3e50" }}
+                  name="checkbox"
+                />
+              }
+              label="Date range"
+              style={{ marginTop: "auto", marginBottom: "auto" }}
+            />
+          </div>
+          {this.state.checkbox === true ? (
+            <Calendar
+              selectedDate={this.state.endDate}
+              onChange={this.changeEndDate}
+              label="End date"
+              margin="20px"
+            />
+          ) : null}
           <Button
             color="custom"
             onClick={() =>
@@ -168,10 +263,6 @@ class PageAnalysis extends Component {
         </div>
 
         <div style={{ marginTop: 20, marginLeft: 16 }}>
-        {this.state.pageLink !== "" ? (
-          <IconButton style={{marginTop:20, marginBottom:20}} onClick={() => window.open(this.state.pageLink)}>
-            <img width="40" src={ZzIcon}/>
-          </IconButton>) : null}
           <GridContainer>
             <GridItem
               xs={this.state.showPagesRank === true ? 12 : 18}
@@ -183,6 +274,8 @@ class PageAnalysis extends Component {
                   tableTitle={"Page's ranks"}
                   tableHeaderColor="gray"
                   tableHead={["Rank", "Clicks", ""]}
+                  headerLinkIcon={this.state.pageLink != "" ? <img width="35" src={ZzIcon} /> : ""}
+                  headerLinkPath={this.state.pageLink}
                   tableData={this.state.tableData}
                   onClick={this.submitStringsPerRank}
                 />
@@ -203,7 +296,7 @@ class PageAnalysis extends Component {
                   localLinkIcon={<TextRotationNoneIcon />}
                   externalLink={false}
                   externalLinkPath="link"
-                  externalLinkIcon={<img width="25" src={ZzIcon}/>}
+                  externalLinkIcon={<img width="25" src={ZzIcon} />}
                 />
               ) : null}
             </GridItem>

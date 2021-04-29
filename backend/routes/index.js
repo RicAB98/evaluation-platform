@@ -497,8 +497,13 @@ router.get("/unsuccessfulsessions", function (req, res, next) {
 router.get("/pagesrank", function (req, res, next) {
   let tp_item = req.query.tp_item;
   let fk_item = req.query.fk_item;
+  let startDate = new Date(req.query.startDate)
+  let endDate = new Date(req.query.endDate)
 
-  let query = queryUtil.getPagesRank(tp_item, fk_item);
+  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), 0, 0, 0)
+  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), 23, 59, 59)
+
+  let query = queryUtil.getPagesRank(tp_item, fk_item, startDate, endDate);
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
@@ -553,8 +558,13 @@ router.get("/stringsperrank", function (req, res, next) {
   let mysql_id = req.query.mysql_id;
   let tp_item = req.query.tp_item;
   let fk_item = req.query.fk_item;
+  let startDate = new Date(req.query.startDate)
+  let endDate = new Date(req.query.endDate)
 
-  let query = queryUtil.getStringsPerRank(page, mysql_id, tp_item, fk_item);
+  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), 0, 0, 0)
+  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), 23, 59, 59)
+
+  let query = queryUtil.getStringsPerRank(page, mysql_id, tp_item, fk_item, startDate, endDate);
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {

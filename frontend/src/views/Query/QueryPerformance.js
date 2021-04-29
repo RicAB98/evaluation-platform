@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
 // core components
-import LinkIcon from "@material-ui/icons/Link";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ZzIcon from "../../assets/img/logo.png";
 import Checkbox from "@material-ui/core/Checkbox";

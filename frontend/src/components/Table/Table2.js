@@ -17,11 +17,34 @@ const useStyles = makeStyles(styles);
 
 export default function Table2(props) {
   const classes = useStyles();
-  const { tableTitle, tableHead, tableData, tableHeaderColor, onClick } = props;
+  const { tableTitle, 
+          tableHead, 
+          headerLinkPath,
+          headerLinkIcon, 
+          tableData, 
+          tableHeaderColor, 
+          onClick } = props;
 
   return (
     <div className={classes.tableResponsive} style={{ marginTop: 0 }}>
-      <h5 style={{ marginBottom: 30 }}> {tableTitle} </h5>
+      {<div
+        style={{
+        display: "flex",
+        flexDirection: "row",
+        width: 300,
+        marginBottom:20
+        }}
+       >
+        <h5 style = {{ marginTop: "auto", marginBottom: "auto"}}> {tableTitle} </h5>
+        <IconButton
+          color="primary"
+          component="span"
+          onClick={() => window.open(headerLinkPath)}
+          style={{marginLeft: 10}}
+        >
+          {headerLinkIcon}
+        </IconButton>
+      </div>}
       <Table className={classes.table}>
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
