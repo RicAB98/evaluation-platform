@@ -11,6 +11,7 @@ import GridContainer from "../../components/Grid/GridContainer.js";
 import Button from "../../components/Button/Button.js";
 import Table from "../../components/Table/Table.js";
 import Table2 from "../../components/Table/Table2.js";
+import TimePicker from "../../components/Calendar/TimePicker.js";
 import Calendar from "../../components/Calendar/Calendar.js";
 import Chart from "../../components/Chart/Chart";
 import {
@@ -94,6 +95,21 @@ class QueryPerformance extends Component {
     );
   }
 
+  toISOString(date) {
+    let month =
+      date.getMonth() <= 9
+        ? "0" + this.addOne(date.getMonth())
+        : this.addOne(date.getMonth());
+    let day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
+    let hours = date.getHours() <= 9 ? "0" + date.getHours() : date.getHours();
+    let minutes =
+      date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
+
+    return (
+      date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
+    );
+  }
+
   changeValue = (event) => {
     this.setState({ string: event.target.value });
   };
@@ -136,11 +152,11 @@ class QueryPerformance extends Component {
       "?search_string=" +
       this.state.string +
       "&startDate=" +
-      this.toRegularFormat(this.state.startDate);
+      this.toISOString(this.state.startDate);
 
     urlSearch +=
       this.state.checkbox == true
-        ? "&endDate=" + this.toRegularFormat(this.state.endDate)
+        ? "&endDate=" + this.toISOString(this.state.endDate)
         : "";
 
     this.props.history.push({
@@ -152,6 +168,7 @@ class QueryPerformance extends Component {
       calculatedString: this.state.string,
       calculatedStartDate: this.state.startDate,
       calculatedEndDate: this.state.checkbox == true ? this.state.endDate : null,
+      showGraph: false,
       showPagesPerRank: false,
       unsuccessfulSessions: "",
       clickRank: [
@@ -204,12 +221,12 @@ class QueryPerformance extends Component {
       .then((res) => this.setState({ unsuccessfulSessions: res["n"] }));
   };
 
-  changeStartDate = (date) => {
-    this.setState({ startDate: new Date(date) });
+  changeStartDate = (event) => {
+    this.setState({ startDate: new Date(event.target.value) });
   };
 
-  changeEndDate = (date) => {
-    this.setState({ endDate: new Date(date) });
+  changeEndDate = (event) => {
+    this.setState({ endDate: new Date(event.target.value) });
   };
 
   changeGraphStartDate = (newDate) => {
@@ -341,7 +358,7 @@ class QueryPerformance extends Component {
               justifyContent: "start",
             }}
           >
-            <Calendar
+            <TimePicker
               selectedDate={this.state.startDate}
               onChange={this.changeStartDate}
               label={this.state.checkbox === true ? "Start date" : "Date"}
@@ -360,7 +377,7 @@ class QueryPerformance extends Component {
             />
           </div>
           {this.state.checkbox === true ? (
-            <Calendar
+            <TimePicker
               selectedDate={this.state.endDate}
               onChange={this.changeEndDate}
               label="End date"

@@ -17,8 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dropdown(props) {
   const classes = useStyles();
-  const { list, name, onChange } = props;
-  const [selectedEvaluation] = useState();
+  const { list, name, onChange, value } = props;
 
   return (
     <div>
@@ -26,7 +25,7 @@ export default function Dropdown(props) {
         <InputLabel style = {{ marginTop:"auto", marginBottom:"auto"}}   htmlFor="age-native-simple">{name}</InputLabel>
         <Select
           native
-          value={selectedEvaluation}
+          value={value}
           onChange={onChange}
           inputProps={{
             name: "evaluations",

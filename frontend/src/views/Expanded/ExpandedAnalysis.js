@@ -26,7 +26,7 @@ class ExpandedAnalysis extends Component {
     rowsPerPage: 10
   };
 
-  handleChangePage = (newPage) => {
+  handleChangePage = (event, newPage) => {
     this.setState({ page: newPage });
   };
   

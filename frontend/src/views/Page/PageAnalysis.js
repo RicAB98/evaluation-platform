@@ -216,6 +216,7 @@ class PageAnalysis extends Component {
           <Dropdown
             list={this.state.entityTypes}
             name="Tp_item"
+            value={this.state.tp_item}
             onChange={this.changeTpItem}
           />
           <label
