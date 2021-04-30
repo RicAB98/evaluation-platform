@@ -500,8 +500,8 @@ router.get("/pagesrank", function (req, res, next) {
   let startDate = new Date(req.query.startDate)
   let endDate = new Date(req.query.endDate)
 
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), 0, 0, 0)
-  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), 23, 59, 59)
+  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
+  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), endDate.getHours() - 1, endDate.getMinutes(), 0)
 
   let query = queryUtil.getPagesRank(tp_item, fk_item, startDate, endDate);
 
@@ -561,8 +561,8 @@ router.get("/stringsperrank", function (req, res, next) {
   let startDate = new Date(req.query.startDate)
   let endDate = new Date(req.query.endDate)
 
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), 0, 0, 0)
-  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), 23, 59, 59)
+  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
+  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), endDate.getHours() - 1, endDate.getMinutes(), 0)
 
   let query = queryUtil.getStringsPerRank(page, mysql_id, tp_item, fk_item, startDate, endDate);
 

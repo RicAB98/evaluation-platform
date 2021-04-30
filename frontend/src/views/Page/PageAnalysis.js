@@ -12,7 +12,7 @@ import Button from "../../components/Button/Button.js";
 import ExpandableTable from "../../components/Table/ExpandableTable";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Table2 from "../../components/Table/Table2.js";
-import Calendar from "../../components/Calendar/Calendar.js";
+import TimePicker from "../../components/Calendar/TimePicker.js";
 
 import { getPagesRank, getStringsPerRank } from "../../requests/requests.js";
 
@@ -89,6 +89,21 @@ class PageAnalysis extends Component {
     this.setState({ rowsPerPage: parseInt(event.target.value, 10), page: 0});
   };
 
+  toISOString(date) {
+    let month =
+      date.getMonth() <= 9
+        ? "0" + this.addOne(date.getMonth())
+        : this.addOne(date.getMonth());
+    let day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
+    let hours = date.getHours() <= 9 ? "0" + date.getHours() : date.getHours();
+    let minutes =
+      date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
+
+    return (
+      date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
+    );
+  }
+
   toRegularFormat(date) {
     return (
       date.getFullYear() +
@@ -147,11 +162,11 @@ class PageAnalysis extends Component {
       "&fk_item=" +
       this.state.fk_item +
       "&startDate=" +
-      this.toRegularFormat(this.state.startDate);
+      this.toISOString(this.state.startDate);
 
     urlSearch +=
       this.state.checkbox == true
-        ? "&endDate=" + this.toRegularFormat(this.state.endDate)
+        ? "&endDate=" + this.toISOString(this.state.endDate)
         : "";
 
     this.props.history.push({
@@ -190,12 +205,12 @@ class PageAnalysis extends Component {
       );
   };
 
-  changeStartDate = (date) => {
-    this.setState({ startDate: new Date(date) });
+  changeStartDate = (event) => {
+    this.setState({ startDate: new Date(event.target.value) });
   };
 
-  changeEndDate = (date) => {
-    this.setState({ endDate: new Date(date) });
+  changeEndDate = (event) => {
+    this.setState({ endDate: new Date(event.target.value) });
   };
 
   addOne(value) {
@@ -243,7 +258,7 @@ class PageAnalysis extends Component {
               justifyContent: "start",
             }}
           >
-            <Calendar
+            <TimePicker
               selectedDate={this.state.startDate}
               onChange={this.changeStartDate}
               label={this.state.checkbox === true ? "Start date" : "Date"}
@@ -262,7 +277,7 @@ class PageAnalysis extends Component {
             />
           </div>
           {this.state.checkbox === true ? (
-            <Calendar
+            <TimePicker
               selectedDate={this.state.endDate}
               onChange={this.changeEndDate}
               label="End date"
