@@ -85,6 +85,21 @@ class QueryPerformance extends Component {
     });
   }
 
+  toISOString(date) {
+    let month =
+      date.getMonth() <= 9
+        ? "0" + this.addOne(date.getMonth())
+        : this.addOne(date.getMonth());
+    let day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
+    let hours = date.getHours() <= 9 ? "0" + date.getHours() : date.getHours();
+    let minutes =
+      date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
+
+    return (
+      date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
+    );
+  }
+  
   toRegularFormat(date) {
     return (
       date.getFullYear() +
@@ -464,8 +479,8 @@ class QueryPerformance extends Component {
                   secondColumn={["n"]}
                   localLinkPath="localUrl"
                   localLinkAditionalInfo={
-                    "&startDate=" + this.toRegularFormat(this.state.calculatedStartDate) + 
-                    (this.state.calculatedEndDate !== null ? "&endDate=" + this.toRegularFormat(this.state.calculatedEndDate) : "")
+                    "&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
+                    (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")
                     }
                   localLinkIcon={<MenuBookIcon />}
                   externalLink={true}

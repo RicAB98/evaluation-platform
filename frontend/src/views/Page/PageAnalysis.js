@@ -326,8 +326,8 @@ class PageAnalysis extends Component {
                   secondColumn={["n"]}
                   localLinkPath="localLink"
                   localLinkAditionalInfo={
-                    "&startDate=" + this.toRegularFormat(this.state.calculatedStartDate) + 
-                    (this.state.calculatedEndDate !== null ? "&endDate=" + this.toRegularFormat(this.state.calculatedEndDate) : "")
+                    "&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
+                    (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")
                     }
                   localLinkIcon={<TextRotationNoneIcon />}
                   externalLink={false}

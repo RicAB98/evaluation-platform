@@ -294,7 +294,8 @@ class Result extends Component {
                   tableHeaderColor="gray"
                   tableHead={["#", "Query", "Count", " "]}
                   headerLinkIcon={<OpenWithIcon />}
-                  headerLinkPath={`expanded?id=${this.state.evaluationId}&type=1`}
+                  headerLinkPath={"expanded?type=1&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
+                  (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")}
                   localLinkAditionalInfo={
                   "&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
                   (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")
@@ -329,7 +330,8 @@ class Result extends Component {
                   tableHeaderColor="gray"
                   tableHead={["#", "Query", "Count", " "]}
                   headerLinkIcon={<OpenWithIcon />}
-                  headerLinkPath={`expanded?id=${this.state.evaluationId}&type=2`}
+                  headerLinkPath={"expanded?type=2&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
+                  (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")}
                   tableData={this.state.unsuccessfulQueries}
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}
@@ -364,7 +366,8 @@ class Result extends Component {
                   tableHeaderColor="gray"
                   tableHead={["#", "IDs", "Count", " ", " "]}
                   headerLinkIcon={<OpenWithIcon />}
-                  headerLinkPath={`expanded?id=${this.state.evaluationId}&type=3`}
+                  headerLinkPath={"expanded?type=3&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
+                  (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")}
                   tableData={this.state.popularPages}
                   firstColumn={["partialUrl"]}
                   secondColumn={["n"]}

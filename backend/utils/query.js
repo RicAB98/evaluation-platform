@@ -130,7 +130,7 @@ const query = {
   popularQueries(startDate, endDate, limit) {
     let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`;
 
-    if (endDate.getFullYear() != 1970)
+    if (endDate != "Invalid Date" && endDate.getFullYear() != 1970)
       timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
                           ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
                           AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
@@ -143,7 +143,7 @@ const query = {
   unsuccessfulQueries(startDate, endDate, limit) {
     let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`;
 
-    if (endDate.getFullYear() != 1970)
+    if (endDate != "Invalid Date" && endDate.getFullYear() != 1970)
       timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
                           ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
                           AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
@@ -156,7 +156,7 @@ const query = {
   popularPages(startDate, endDate, limit) {
     let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`;
 
-    if (endDate.getFullYear() != 1970)
+    if (endDate != "Invalid Date" && endDate.getFullYear() != 1970)
       timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
                           ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
                           AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
