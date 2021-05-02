@@ -3,6 +3,7 @@ import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOut
 import PublishOutlinedIcon from '@material-ui/icons/PublishOutlined';
 import CompareArrowsOutlinedIcon from '@material-ui/icons/CompareArrowsOutlined';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import TextRotationNoneIcon from '@material-ui/icons/TextRotationNone';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
@@ -11,6 +12,7 @@ import OpenWithIcon from '@material-ui/icons/OpenWith';
 import RunPage from "./views/Run/Run.js";
 import LoadPage from "./views/Load/Load.js";
 import ResultsPage from "./views/Results/Results.js";
+import HotQueriesPage from "./views/HotQueries/HotQueries";
 import QueryPage from "./views/Query/QueryPerformance.js";
 import PageAnalysisPage from "./views/Page/PageAnalysis";
 import ExpandedAnalysisPage from "./views/Expanded/ExpandedAnalysis";
@@ -38,6 +40,13 @@ const dashboardRoutes = [
     name: "Evaluation",
     icon: EqualizerIcon,
     component: ResultsPage,
+    layout: "/admin"
+  },
+  {
+    path: "/hot",
+    name: "Hot Queries",
+    icon: TrendingUpIcon,
+    component: HotQueriesPage,
     layout: "/admin"
   },
   {

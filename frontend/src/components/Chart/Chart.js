@@ -3,7 +3,7 @@ import {Line} from 'react-chartjs-2';
 
 export default function Chart (props) {
 
-    const { string, labels, data } = props;
+    const { string, labels, data, displayLegend, displayTitle, displayX, displayXLegend, displayYLegend, smaller } = props;
 
     const queryData = 
     {
@@ -23,18 +23,18 @@ export default function Chart (props) {
       }      
 
     return (
-      <div>
+      <div style ={{width: smaller && 250}}>
         <Line
           data={queryData}
           options= {{
             plugins: {
                 title:{
-                  display:true,
+                  display: displayTitle,
                   text:'Searches per day',
                   fontSize:20
                 },
                 legend:{
-                  display:true,
+                  display:displayLegend,
                   position:'right'
                 }
               },
@@ -42,16 +42,17 @@ export default function Chart (props) {
                 x: {
                     title:
                     {
-                        display: true,
+                        display: displayXLegend,
                         text: 'Date'
-                    }
+                    },
+                    display: displayX
                 },
                 y: {
                     title:
                     {
-                        display: true,
+                        display: displayYLegend,
                         text: 'Number of searches'
-                    }
+                    },
                 }
               }
             }

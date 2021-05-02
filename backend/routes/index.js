@@ -585,4 +585,44 @@ router.get("/stringsperrank", function (req, res, next) {
   });
 });
 
+router.get("/hotqueries", function (req, res, next) {
+
+  let startDate = new Date(req.query.startDate)
+  let endDate = new Date(req.query.endDate)
+
+  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
+  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), 0)
+
+  let query = queryUtil.getHotQueries(startDate);
+
+  db.getConnection((err, conn) => {
+    conn.query(query, (err, results, fields) => {
+      if (err) throw err;
+
+      res.send(results);
+      conn.release();
+    });
+  });
+});
+
+router.get("/hotpages", function (req, res, next) {
+
+  let startDate = new Date(req.query.startDate)
+  let endDate = new Date(req.query.endDate)
+
+  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
+  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), 0)
+
+  let query = queryUtil.getHotPages(startDate);
+
+  db.getConnection((err, conn) => {
+    conn.query(query, (err, results, fields) => {
+      if (err) throw err;
+
+      res.send(results);
+      conn.release();
+    });
+  });
+});
+
 module.exports = router;

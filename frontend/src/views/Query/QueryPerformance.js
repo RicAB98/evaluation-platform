@@ -419,6 +419,12 @@ class QueryPerformance extends Component {
                     string={this.state.showedGraphData["string"]}
                     labels={this.state.showedGraphData["dates"]}
                     data={this.state.showedGraphData["clicks"]}
+                    smaller = {false}
+                    displayLegend = {true}
+                    displayTitle = {true}
+                    displayX = {true}
+                    displayXLegend = {true}
+                    displayYLegend = {true}
                   />
                   <div
                     style={{

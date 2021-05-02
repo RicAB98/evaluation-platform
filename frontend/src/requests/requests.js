@@ -215,3 +215,28 @@ export function getStringsPerRank(page, mysql_id, tp_item, fk_item, startDate, e
     },
   });
 }
+
+export function getHotQueries(startDate) {
+  let query = apiHost + "/hotqueries?startDate=" +  startDate;
+
+  return fetch(query, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+}
+
+export function getHotPages(startDate) {
+  let query = apiHost + "/hotpages?startDate=" +  startDate;
+  
+  return fetch(query, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+}
+

@@ -166,6 +166,23 @@ const query = {
             FROM fourdays f WHERE fk_item <> 0 AND ${timeConditions} GROUP BY tp_item, fk_item ORDER BY count(*) DESC LIMIT ${limit}`;
   },
 
+
+  getHotQueries(startDate) {
+    return `select search_string as id, avgRank, totalLast24h, totalLast4days, ((totalLast24h-totalPrevious24h)/totalPrevious24h  * 100) as GrowthLast24h, ((totalLast24h-average4days)/average4days * 100) as GrowthLast4d  from  
+    (select search_string, count(*) as totalLast4days, count(*)/4 as average4days from fourdays group by search_string) as 4days natural join 
+    (select search_string, count(*) as totalPrevious24h from fourdays where date = '2021-01-20' group by search_string) as 24hours natural join  
+    (select search_string, count(*) as totalLast24h from fourdays where date = '2021-01-21' and search_string <> '' group by search_string having count(*) >= 5) as day natural join  
+    (select search_string, cast(avg((page_number - 1) * 10 + mysql_id) as decimal(10,2)) as avgRank from fourdays where date <> '2021-01-21' and mysql_id <> 0 group by search_string)  as ranking order by GrowthLast4d DESC;`
+  },
+
+  getHotPages(startDate) {
+    return `select concat(tp_item,', ', fk_item) as id, avgRank, totalLast24h, totalLast4days, ((totalLast24h-totalPrevious24h)/totalPrevious24h  * 100) as GrowthLast24h, ((totalLast24h-average4days)/average4days * 100) as GrowthLast4d  from  
+    (select tp_item, fk_item, count(*) as totalLast4days, count(*)/4 as average4days from fourdays where mysql_id <> 0 group by tp_item, fk_item) as 4days natural join 
+    (select tp_item, fk_item, count(*) as totalPrevious24h from fourdays where date = '2021-01-20' and mysql_id <> 0 group by tp_item, fk_item) as 24hours natural join  
+    (select tp_item, fk_item, count(*) as totalLast24h from fourdays where date = '2021-01-21' and mysql_id <> 0 group by tp_item, fk_item having count(*) >= 5) as day natural join  
+    (select tp_item, fk_item, cast(avg((page_number - 1) * 10 + mysql_id) as decimal(10,2)) as avgRank from fourdays where date <> '2021-01-21' and mysql_id <> 0 group by tp_item, fk_item)  as ranking order by GrowthLast4d DESC;`
+  },
+
   insertEvaluation(
     popularQueries,
     unsuccessfulQueries,
