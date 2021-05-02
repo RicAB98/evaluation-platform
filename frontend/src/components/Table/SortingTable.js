@@ -67,6 +67,7 @@ const headCells = [
   { id: 'query', numeric: false, disablePadding: true, label: 'Query' },
   { id: 'avgRank', numeric: true, disablePadding: false, label: 'Average rank' },
   { id: 'totalLast24h', numeric: true, disablePadding: false, label: 'Last 24 hours searches' },
+  { id: 'totalPrevious24h', numeric: true, disablePadding: false, label: 'Previous 24 hours searches' },
   { id: 'totalLast4days', numeric: true, disablePadding: false, label: 'Last 7 days searches' },
   { id: 'GrowthLast24h', numeric: true, disablePadding: false, label: 'Last 24 hours growth' },
   { id: 'GrowthLast4d', numeric: true, disablePadding: false, label: 'Last 7 days growth' },
@@ -76,8 +77,6 @@ const headCells = [
 function EnhancedTableHead(props) {
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler =  (property) => (event) => {
-    console.log(event)
-    console.log(property)
     onRequestSort(event, property);
   };
 
@@ -98,17 +97,19 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'default'}
             sortDirection={orderBy === headCell.id ? order : false}
-            style = {{backgroundColor: "#2c3e50", color: "white", paddingLeft: 20}}
+            style = {{backgroundColor: "#2c3e50", paddingLeft: 20}}
             
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
+              style = {{color: "white"}}
+              className = {classes.sortLabel}
             >
-              <b>{headCell.label}</b>
+              <b style = {{color: "white"}}>{headCell.label}</b>
               {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
+                <span style = {{color: "white"}} className={classes.visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </span>
               ) : null}
@@ -163,7 +164,7 @@ const useStyles = makeStyles((theme) => ({
   },
   visuallyHidden: {
     border: 0,
-    clip: 'rect(0 0 0 0)',
+    clip: 'rect(90 90 0 0)',
     height: 1,
     margin: -1,
     overflow: 'hidden',
@@ -171,7 +172,26 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: 20,
     width: 1,
+    color: 'white',
+
+    
   },
+
+  sortLabel: {
+    root: {
+      color: 'white',
+      "&:hover": {
+        color: 'white',
+      },
+      '&$active': {
+        color: 'white',
+      },
+    },
+    active: {},
+    icon: {
+      color: 'inherit !important'
+    },
+  }
 }));
 
 export default function EnhancedTable(props) {
@@ -267,7 +287,6 @@ export default function EnhancedTable(props) {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -280,14 +299,15 @@ export default function EnhancedTable(props) {
                       </TableCell>
                       <TableCell align="right"><b>{row.avgRank}</b></TableCell>
                       <TableCell align="right"><b>{row.totalLast24h}</b></TableCell>
+                      <TableCell align="right"><b>{row.totalPrevious24h}</b></TableCell>
                       <TableCell align="right"><b>{row.totalLast4days}</b></TableCell>
                       <TableCell align="right" style={{color: row.GrowthLast24h > 0 ? "#00cc00" :  "red" }}><b>{row.GrowthLast24h}%</b></TableCell>
                       <TableCell align="right" style={{color: row.GrowthLast4d > 0 ? "#00cc00" : "red" }}><b>{row.GrowthLast4d}%</b></TableCell>
                       <TableCell align="right">
                         <Chart
                           string={row.search_string}
-                          data={[20,25,30,35,40,45,50]}
-                          labels={["2021-01-20","2021-01-21","2021-01-22","2021-01-23","2021-01-24","2021-01-25","2021-01-26"]}
+                          data={ row.searches !== undefined ? row.searches.split(",") : row.searches}
+                          labels={row.dates !== undefined ? row.dates.split(",") : row.dates}
                           smaller = {true}
                           displayLegend= {false}
                           displayTitle= {false}

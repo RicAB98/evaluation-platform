@@ -23,7 +23,7 @@ export default function Chart (props) {
       }      
 
     return (
-      <div style ={{width: smaller && 250}}>
+      <div style ={{width: smaller && 150}}>
         <Line
           data={queryData}
           options= {{
