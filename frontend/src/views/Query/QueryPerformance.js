@@ -411,10 +411,9 @@ class QueryPerformance extends Component {
               xs={this.state.showPagesPerRank === true ? 12 : 18}
               sm={this.state.showPagesPerRank === true ? 12 : 18}
               md={this.state.showPagesPerRank === true ? 4 : 6}
-              style={{ backgroundColor: this.state.showGraph === true ? "#E8E8E8": "inherit" }}
             >
               {this.state.showGraph === true ? (
-                <div>
+                <div style={{ backgroundColor: this.state.showGraph === true ? "#E8E8E8": "inherit" }}>
                   <Chart
                     string={this.state.showedGraphData["string"]}
                     labels={this.state.showedGraphData["dates"]}

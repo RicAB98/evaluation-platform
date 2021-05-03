@@ -123,7 +123,7 @@ class Result extends Component {
 
       if (!fromURL)
         this.props.history.push({
-          pathname: "/admin/daily",
+          pathname: "/admin/evaluation",
           search:
             "?startDate=" +
             this.toISOString(startDate) +
@@ -144,7 +144,7 @@ class Result extends Component {
     } else {
       if (!fromURL)
         this.props.history.push({
-          pathname: "/admin/daily",
+          pathname: "/admin/evaluation",
           search: "?startDate=" + this.toISOString(startDate),
         });
 
@@ -308,21 +308,14 @@ class Result extends Component {
         {this.state.showTables === true ? (
           <div>
             <h3 style={{ marginTop: 20 }}>
-              {/*this.state.calculatedStartDate.getDate()}/
-              {this.addOne(this.state.calculatedStartDate.getMonth())}/
-              {this.state.calculatedStartDate.getFullYear()}
-              {this.state.calculatedEndDate !== null
-                ? "   -   " +
-                  this.state.calculatedEndDate.getDate() +
-                  "/" +
-                  this.addOne(this.state.calculatedEndDate.getMonth()) +
-                  "/" +
-                  this.state.calculatedEndDate.getFullYear()
-              : null*/}
+              {this.toRegularDateFormat(this.toISOString(this.state.calculatedStartDate))}
+              {this.state.calculatedEndDate !== null ?
+                 "   -   " + this.toRegularDateFormat(this.toISOString(this.state.calculatedEndDate))
+              : null}
             </h3>
             {this.state.viewTables === true ? (
               <GridContainer spacing={2}>
-                <GridItem xs={12} sm={12} md={3}>
+                <GridItem xs={12} sm={12} xl={3}>
                   <Table
                     tableTitle="Popular queries"
                     tableHeaderColor="gray"
@@ -355,7 +348,7 @@ class Result extends Component {
                 <GridItem
                   xs={12}
                   sm={12}
-                  md={8}
+                  xl={8}
                   style={{ marginTop: 20, marginLeft: 10 }}
                 >
                   <BarChart
@@ -368,7 +361,7 @@ class Result extends Component {
                   />
                 </GridItem>
 
-                <GridItem xs={12} sm={12} md={3} style={{ marginTop: 20 }}>
+                <GridItem xs={12} sm={12} xl={3} style={{ marginTop: 20 }}>
                   <Table
                     tableTitle="Unsuccessful queries"
                     tableHeaderColor="gray"
@@ -401,7 +394,7 @@ class Result extends Component {
                 <GridItem
                   xs={12}
                   sm={12}
-                  md={8}
+                  xl={8}
                   style={{ marginTop: 40, marginLeft: 10 }}
                 >
                   <BarChart
@@ -414,7 +407,7 @@ class Result extends Component {
                   />
                 </GridItem>
 
-                <GridItem xs={12} sm={12} md={3} style={{ marginTop: 20 }}>
+                <GridItem xs={12} sm={12} xl={3} style={{ marginTop: 20 }}>
                   <Table
                     tableTitle="Popular pages"
                     tableHeaderColor="gray"
@@ -449,7 +442,7 @@ class Result extends Component {
                 <GridItem
                   xs={12}
                   sm={12}
-                  md={8}
+                  xl={8}
                   style={{ marginTop: 40, marginLeft: 10 }}
                 >
                   <BarChart
@@ -462,10 +455,9 @@ class Result extends Component {
                   />
                 </GridItem>
               </GridContainer>
-            ) : 
-            (
+            ) : (
               <GridContainer spacing={0}>
-                <GridItem xs={12} sm={12} md={4} xl={6}>
+                <GridItem md={12} lg={6}>
                   <BarChart
                     title="Popular queries"
                     data={this.state.popularQueries}
@@ -475,7 +467,7 @@ class Result extends Component {
                     page={-1}
                   />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={4} xl={6}>
+                <GridItem md={12} lg={6}>
                   <BarChart
                     title="Unsuccessful queries"
                     data={this.state.unsuccessfulQueries}
@@ -485,7 +477,7 @@ class Result extends Component {
                     page={-1}
                   />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={4} xl={6}>
+                <GridItem md={12} lg={6}>
                   <BarChart
                     title="Popular pages"
                     data={this.state.popularPages}

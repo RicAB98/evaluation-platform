@@ -14,11 +14,10 @@ import { loadEvaluation } from "../../requests/requests.js";
 
 class ExpandedAnalysis extends Component {
   state = {
-    id: -1,
     type: -1,
 
-    startDate: new Date (),
-    endDate: new Date (),
+    startDate: new Date(),
+    endDate: new Date(),
 
     tableData: [
       {
@@ -27,15 +26,15 @@ class ExpandedAnalysis extends Component {
       },
     ],
     page: 0,
-    rowsPerPage: 10
+    rowsPerPage: 10,
   };
 
   handleChangePage = (event, newPage) => {
     this.setState({ page: newPage });
   };
-  
+
   handleChangeRowsPerPage = (event) => {
-    this.setState({ rowsPerPage: parseInt(event.target.value, 10), page: 0});
+    this.setState({ rowsPerPage: parseInt(event.target.value, 10), page: 0 });
   };
 
   toISOString(date) {
@@ -70,23 +69,27 @@ class ExpandedAnalysis extends Component {
     let startDate = params.get("startDate");
     let endDate = params.get("endDate");
 
-    this.setState({ 
-        type: params.get("type"), 
+    this.setState(
+      {
+        type: params.get("type"),
         startDate: startDate != null ? new Date(startDate) : null,
-        endDate: endDate != null ? new Date(endDate) : null
-      } ,() => this.submitEvaluation())
-
+        endDate: endDate != null ? new Date(endDate) : null,
+      },
+      () => this.submitEvaluation()
+    );
   }
 
   submitEvaluation() {
-
-    if(this.state.type == -1 || this.state.type == null || this.state.startDate == null)
-      return
+    if (
+      this.state.type == -1 ||
+      this.state.type == null ||
+      this.state.startDate == null
+    )
+      return;
 
     loadEvaluation(this.state.type, this.state.startDate, this.state.endDate)
       .then((res) => res.json())
-      .then((res) => this.setState({tableData: res}));
-
+      .then((res) => this.setState({ tableData: res }));
   }
 
   addOne(value) {
@@ -96,9 +99,9 @@ class ExpandedAnalysis extends Component {
   render() {
     return (
       <div style={{ marginLeft: 16 }}>
-          <div>
-            {this.state.type == 1 ?
-              <GridContainer spacing={2}>
+        <div>
+          {this.state.type == 1 ? (
+            <GridContainer spacing={2}>
               <GridItem xs={12}>
                 <Table
                   tableTitle="Popular queries"
@@ -109,10 +112,13 @@ class ExpandedAnalysis extends Component {
                   secondColumn={["n"]}
                   localLinkPath="url"
                   localLinkAditionalInfo={
-                    "&startDate=" + this.toISOString(this.state.startDate) + 
-                    (this.state.endDate !== null ? "&endDate=" + this.toISOString(this.state.endDate) : "")
-                    }
-                  localLinkIcon={<TextRotationNoneIcon/>}
+                    "&startDate=" +
+                    this.toISOString(this.state.startDate) +
+                    (this.state.endDate !== null
+                      ? "&endDate=" + this.toISOString(this.state.endDate)
+                      : "")
+                  }
+                  localLinkIcon={<TextRotationNoneIcon />}
                   externalLink={false}
                   page={this.state.page}
                   rowsPerPage={this.state.rowsPerPage}
@@ -130,10 +136,11 @@ class ExpandedAnalysis extends Component {
                   page={this.state.page}
                   rowsPerPage={this.state.rowsPerPage}
                 />
-              </GridItem> 
-            </GridContainer> : null} 
-            {this.state.type == 2 ?
-              <GridContainer spacing={2}>
+              </GridItem>
+            </GridContainer>
+          ) : null}
+          {this.state.type == 2 ? (
+            <GridContainer spacing={2}>
               <GridItem xs={12}>
                 <Table
                   tableTitle="Unsuccessful queries"
@@ -144,9 +151,12 @@ class ExpandedAnalysis extends Component {
                   secondColumn={["n"]}
                   localLinkPath="url"
                   localLinkAditionalInfo={
-                    "&startDate=" + this.toISOString(this.state.startDate) + 
-                    (this.state.endDate !== null ? "&endDate=" + this.toISOString(this.state.endDate) : "")
-                    }
+                    "&startDate=" +
+                    this.toISOString(this.state.startDate) +
+                    (this.state.endDate !== null
+                      ? "&endDate=" + this.toISOString(this.state.endDate)
+                      : "")
+                  }
                   localLinkIcon={<TextRotationNoneIcon />}
                   externalLink={false}
                   page={this.state.page}
@@ -165,10 +175,11 @@ class ExpandedAnalysis extends Component {
                   page={this.state.page}
                   rowsPerPage={this.state.rowsPerPage}
                 />
-              </GridItem> 
-            </GridContainer> : null} 
-            {this.state.type == 3 ?
-              <GridContainer spacing={2}>
+              </GridItem>
+            </GridContainer>
+          ) : null}
+          {this.state.type == 3 ? (
+            <GridContainer spacing={2}>
               <GridItem xs={12}>
                 <Table
                   tableTitle="Popular pages"
@@ -179,9 +190,12 @@ class ExpandedAnalysis extends Component {
                   secondColumn={["n"]}
                   localLinkPath="localUrl"
                   localLinkAditionalInfo={
-                    "&startDate=" + this.toISOString(this.state.startDate) + 
-                    (this.state.endDate !== null ? "&endDate=" + this.toISOString(this.state.endDate) : "")
-                    }
+                    "&startDate=" +
+                    this.toISOString(this.state.startDate) +
+                    (this.state.endDate !== null
+                      ? "&endDate=" + this.toISOString(this.state.endDate)
+                      : "")
+                  }
                   localLinkIcon={<MenuBookIcon />}
                   externalLink={true}
                   externalLinkPath="fullUrl"
@@ -202,10 +216,10 @@ class ExpandedAnalysis extends Component {
                   page={this.state.page}
                   rowsPerPage={this.state.rowsPerPage}
                 />
-              </GridItem> 
-            </GridContainer> : null} 
-          </div>
-
+              </GridItem>
+            </GridContainer>
+          ) : null}
+        </div>
       </div>
     );
   }

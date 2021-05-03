@@ -133,34 +133,72 @@ router.post("/runeval", function (req, res, next) {
 });
 
 router.post("/runeval2", function (req, res, next) {
-
   let startDate = new Date(req.body.startDate);
-  let endDate = new Date(req.body.endDate)
-  let formatedStartDate = null
+  let endDate = new Date(req.body.endDate);
+  let formatedStartDate = null;
 
-  if (endDate.getFullYear() == 1970)
-  {           
-    startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), 0, 0, 0);
+  if (endDate.getFullYear() == 1970) {
+    startDate = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth() + 1,
+      startDate.getDate(),
+      0,
+      0,
+      0
+    );
 
-    formatedStartDate = startDate.getFullYear() + "-" + startDate.getMonth() + "-" + startDate.getDate() + " 00:00:00";
+    formatedStartDate =
+      startDate.getFullYear() +
+      "-" +
+      startDate.getMonth() +
+      "-" +
+      startDate.getDate() +
+      " 00:00:00";
+  } else {
+    startDate = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth() + 1,
+      startDate.getDate(),
+      startDate.getHours(),
+      startDate.getMinutes(),
+      0
+    );
+
+    formatedStartDate =
+      startDate.getFullYear() +
+      "-" +
+      startDate.getMonth() +
+      "-" +
+      startDate.getDate() +
+      " " +
+      startDate.getHours() +
+      ":" +
+      startDate.getMinutes() +
+      ":00";
   }
 
-  else
-  {
-    startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(),
-                        startDate.getHours(), startDate.getMinutes(), 0); 
+  endDate = new Date(
+    endDate.getFullYear(),
+    endDate.getMonth() + 1,
+    endDate.getDate(),
+    endDate.getHours(),
+    endDate.getMinutes(),
+    0
+  );
 
-    formatedStartDate = startDate.getFullYear() + "-" + startDate.getMonth() + "-" + startDate.getDate() + " " + 
-                        startDate.getHours() + ":" + startDate.getMinutes() + ":00";
-  }
-                            
-  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(),
-                     endDate.getHours(), endDate.getMinutes(), 0);
+  formatedEndDate =
+    endDate.getFullYear() +
+    "-" +
+    endDate.getMonth() +
+    "-" +
+    endDate.getDate() +
+    " " +
+    endDate.getHours() +
+    ":" +
+    endDate.getMinutes() +
+    ":00";
 
-  formatedEndDate = endDate.getFullYear() + "-" + endDate.getMonth() + "-" + endDate.getDate() + " " +
-            endDate.getHours() + ":" + endDate.getMinutes() + ":00";
-
-  let getEvaluationQuery = queryUtil.loadEvaluationByDate(startDate, endDate)
+  let getEvaluationQuery = queryUtil.loadEvaluationByDate(startDate, endDate);
   let popularQueriesQuery = queryUtil.popularQueries(startDate, endDate, 10);
   let unsuccessfulQuery = queryUtil.unsuccessfulQueries(startDate, endDate, 10);
   let popularPagesQuery = queryUtil.popularPages(startDate, endDate, 10);
@@ -168,54 +206,54 @@ router.post("/runeval2", function (req, res, next) {
   db.getConnection((err, conn) => {
     conn.query(getEvaluationQuery, (err, results, fields) => {
       if (err) throw err;
-      
-      if(results.length != 0)
-      {
-        res.send(
-          {
-            id: results[0].id,
-            popularQueries: JSON.parse(results[0].popularQueries),
-            unsuccessfulQueries: JSON.parse(results[0].unsuccessfulQueries),
-            popularPages: JSON.parse(results[0].popularPages),
-          }
-        )
-        return
+
+      if (results.length != 0) {
+        res.send({
+          id: results[0].id,
+          popularQueries: JSON.parse(results[0].popularQueries),
+          unsuccessfulQueries: JSON.parse(results[0].unsuccessfulQueries),
+          popularPages: JSON.parse(results[0].popularPages),
+        });
+        return;
       }
 
-      conn.query(`${popularQueriesQuery}; ${unsuccessfulQuery}; ${popularPagesQuery}`, (err, results) => {
-        if (err) throw err;
-
-        let popularQueriesResponse = results[0]
-        let unsuccessfulResponse = results[1]
-        let popularPagesResponse = results[2]
-
-        let temporaryArray = new Array()
-
-        for(let r of popularPagesResponse)
-          temporaryArray.push(buildPageInformation(r))
-
-        popularPagesResponse = temporaryArray
-
-        insertQuery = queryUtil.insertEvaluation(
-          popularQueriesResponse,
-          unsuccessfulResponse,
-          popularPagesResponse,
-          formatedStartDate,
-          formatedEndDate
-        );
-
-        conn.query(insertQuery, (err, results) => {
+      conn.query(
+        `${popularQueriesQuery}; ${unsuccessfulQuery}; ${popularPagesQuery}`,
+        (err, results) => {
           if (err) throw err;
 
-          res.send({
-            id: results.insertedId,
-            popularQueries: popularQueriesResponse,
-            unsuccessfulQueries: unsuccessfulResponse,
-            popularPages: popularPagesResponse,
-          })
-        }) 
-      }) 
-    })
+          let popularQueriesResponse = results[0];
+          let unsuccessfulResponse = results[1];
+          let popularPagesResponse = results[2];
+
+          let temporaryArray = new Array();
+
+          for (let r of popularPagesResponse)
+            temporaryArray.push(buildPageInformation(r));
+
+          popularPagesResponse = temporaryArray;
+
+          insertQuery = queryUtil.insertEvaluation(
+            popularQueriesResponse,
+            unsuccessfulResponse,
+            popularPagesResponse,
+            formatedStartDate,
+            formatedEndDate
+          );
+
+          conn.query(insertQuery, (err, results) => {
+            if (err) throw err;
+
+            res.send({
+              id: results.insertedId,
+              popularQueries: popularQueriesResponse,
+              unsuccessfulQueries: unsuccessfulResponse,
+              popularPages: popularPagesResponse,
+            });
+          });
+        }
+      );
+    });
   });
 });
 
@@ -235,26 +273,42 @@ router.get("/loaddailyeval", function (req, res, next) {
 });
 
 router.get("/loadeval", function (req, res, next) {
-
   let type = req.query.type;
-  let startDate = new Date(req.query.startDate)
-  let endDate = new Date(req.query.endDate)
+  let startDate = new Date(req.query.startDate);
+  let endDate = new Date(req.query.endDate);
 
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
-  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), 0)
+  startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate(),
+    startDate.getHours(),
+    startDate.getMinutes(),
+    0
+  );
+  endDate = new Date(
+    endDate.getFullYear(),
+    endDate.getMonth() + 1,
+    endDate.getDate(),
+    endDate.getHours(),
+    endDate.getMinutes(),
+    0
+  );
 
-  switch(type)
-  {
-    case '1':
-      getDataQuery = queryUtil.popularQueries(startDate, endDate, 10000000000)
+  switch (type) {
+    case "1":
+      getDataQuery = queryUtil.popularQueries(startDate, endDate, 10000000000);
       break;
 
-    case '2':
-      getDataQuery = queryUtil.unsuccessfulQueries(startDate, endDate, 10000000000)
+    case "2":
+      getDataQuery = queryUtil.unsuccessfulQueries(
+        startDate,
+        endDate,
+        10000000000
+      );
       break;
 
-    case '3':
-      getDataQuery = queryUtil.popularPages(startDate, endDate, 10000000000)
+    case "3":
+      getDataQuery = queryUtil.popularPages(startDate, endDate, 10000000000);
       break;
   }
 
@@ -262,20 +316,17 @@ router.get("/loadeval", function (req, res, next) {
     conn.query(getDataQuery, (err, results, fields) => {
       if (err) throw err;
 
-      if(type == '3')
-        {
-          let temporaryArray = new Array()
+      if (type == "3") {
+        let temporaryArray = new Array();
 
-            for(let r of results)
-              temporaryArray.push(buildPageInformation(r))
+        for (let r of results) temporaryArray.push(buildPageInformation(r));
 
-              results = temporaryArray
-        }
+        results = temporaryArray;
+      }
 
-      res.send(results)
+      res.send(results);
 
       conn.release();
-
     });
   });
 });
@@ -356,11 +407,25 @@ router.get("/toppages", function (req, res, next) {
 
 router.get("/queryGraph", function (req, res, next) {
   let string = req.query.string;
-  let startDate = new Date(req.query.startDate)
-  let endDate = new Date(req.query.endDate)
+  let startDate = new Date(req.query.startDate);
+  let endDate = new Date(req.query.endDate);
 
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
-  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), 0)
+  startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate(),
+    startDate.getHours(),
+    startDate.getMinutes(),
+    0
+  );
+  endDate = new Date(
+    endDate.getFullYear(),
+    endDate.getMonth() + 1,
+    endDate.getDate(),
+    endDate.getHours(),
+    endDate.getMinutes(),
+    0
+  );
 
   let query = queryUtil.getSearchesPerDay(string, startDate, endDate);
 
@@ -390,13 +455,26 @@ router.get("/queryGraph", function (req, res, next) {
 });
 
 router.get("/clicksranks", function (req, res, next) {
-  
   let string = req.query.string;
-  let startDate = new Date(req.query.startDate)
-  let endDate = new Date(req.query.endDate)
+  let startDate = new Date(req.query.startDate);
+  let endDate = new Date(req.query.endDate);
 
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
-  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), 0)
+  startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate(),
+    startDate.getHours(),
+    startDate.getMinutes(),
+    0
+  );
+  endDate = new Date(
+    endDate.getFullYear(),
+    endDate.getMonth() + 1,
+    endDate.getDate(),
+    endDate.getHours(),
+    endDate.getMinutes(),
+    0
+  );
 
   query = queryUtil.getClickRanks(string, startDate, endDate);
 
@@ -443,13 +521,33 @@ router.get("/pagesperrank", function (req, res, next) {
   let page = req.query.page;
   let mysql_id = req.query.mysql_id;
   let string = req.query.string;
-  let startDate = new Date(req.query.startDate)
-  let endDate = new Date(req.query.endDate)
+  let startDate = new Date(req.query.startDate);
+  let endDate = new Date(req.query.endDate);
 
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
-  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), 0)
+  startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate(),
+    startDate.getHours(),
+    startDate.getMinutes(),
+    0
+  );
+  endDate = new Date(
+    endDate.getFullYear(),
+    endDate.getMonth() + 1,
+    endDate.getDate(),
+    endDate.getHours(),
+    endDate.getMinutes(),
+    0
+  );
 
-  let query = queryUtil.getPagesByStringRank(page, mysql_id, string, startDate, endDate);
+  let query = queryUtil.getPagesByStringRank(
+    page,
+    mysql_id,
+    string,
+    startDate,
+    endDate
+  );
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
@@ -458,8 +556,8 @@ router.get("/pagesperrank", function (req, res, next) {
       for (r in results) {
         let row = results[r];
 
-        results[r] = utils.buildPageInformation(row)
-        }
+        results[r] = utils.buildPageInformation(row);
+      }
 
       res.send(results);
 
@@ -470,11 +568,25 @@ router.get("/pagesperrank", function (req, res, next) {
 
 router.get("/unsuccessfulsessions", function (req, res, next) {
   let string = req.query.string;
-  let startDate = new Date(req.query.startDate)
-  let endDate = new Date(req.query.endDate)
+  let startDate = new Date(req.query.startDate);
+  let endDate = new Date(req.query.endDate);
 
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
-  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), 0)
+  startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate(),
+    startDate.getHours(),
+    startDate.getMinutes(),
+    0
+  );
+  endDate = new Date(
+    endDate.getFullYear(),
+    endDate.getMonth() + 1,
+    endDate.getDate(),
+    endDate.getHours(),
+    endDate.getMinutes(),
+    0
+  );
 
   let query = queryUtil.getUnsuccessfulSessions(string, startDate, endDate);
 
@@ -491,11 +603,25 @@ router.get("/unsuccessfulsessions", function (req, res, next) {
 router.get("/pagesrank", function (req, res, next) {
   let tp_item = req.query.tp_item;
   let fk_item = req.query.fk_item;
-  let startDate = new Date(req.query.startDate)
-  let endDate = new Date(req.query.endDate)
+  let startDate = new Date(req.query.startDate);
+  let endDate = new Date(req.query.endDate);
 
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
-  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), 0)
+  startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate(),
+    startDate.getHours(),
+    startDate.getMinutes(),
+    0
+  );
+  endDate = new Date(
+    endDate.getFullYear(),
+    endDate.getMonth() + 1,
+    endDate.getDate(),
+    endDate.getHours(),
+    endDate.getMinutes(),
+    0
+  );
 
   let query = queryUtil.getPagesRank(tp_item, fk_item, startDate, endDate);
 
@@ -503,7 +629,8 @@ router.get("/pagesrank", function (req, res, next) {
     conn.query(query, (err, results, fields) => {
       if (err) throw err;
 
-      let link = "https://www.zerozero.pt/" + utils.tp_item_list[tp_item] + fk_item;
+      let link =
+        "https://www.zerozero.pt/" + utils.tp_item_list[tp_item] + fk_item;
 
       let processedResults = [];
       let firstPage = new Array(10).fill(0);
@@ -534,7 +661,7 @@ router.get("/pagesrank", function (req, res, next) {
           n: otherPagesClicks,
         });
 
-      (tp_item == 18 && results.length != 0) && (link = results[0].link)
+      tp_item == 18 && results.length != 0 && (link = results[0].link);
 
       let response = {
         link: link,
@@ -552,13 +679,34 @@ router.get("/stringsperrank", function (req, res, next) {
   let mysql_id = req.query.mysql_id;
   let tp_item = req.query.tp_item;
   let fk_item = req.query.fk_item;
-  let startDate = new Date(req.query.startDate)
-  let endDate = new Date(req.query.endDate)
+  let startDate = new Date(req.query.startDate);
+  let endDate = new Date(req.query.endDate);
 
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
-  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), 0)
+  startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate(),
+    startDate.getHours(),
+    startDate.getMinutes(),
+    0
+  );
+  endDate = new Date(
+    endDate.getFullYear(),
+    endDate.getMonth() + 1,
+    endDate.getDate(),
+    endDate.getHours(),
+    endDate.getMinutes(),
+    0
+  );
 
-  let query = queryUtil.getStringsPerRank(page, mysql_id, tp_item, fk_item, startDate, endDate);
+  let query = queryUtil.getStringsPerRank(
+    page,
+    mysql_id,
+    tp_item,
+    fk_item,
+    startDate,
+    endDate
+  );
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
@@ -584,16 +732,28 @@ router.get("/stringsperrank", function (req, res, next) {
 });
 
 router.get("/hotqueries", function (req, res, next) {
+  let startDate = new Date(req.query.startDate);
 
-  let startDate = new Date(req.query.startDate)
-
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate())
-  let nextDay = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate())
+  startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate()
+  );
+  let nextDay = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate()
+  );
   nextDay.setDate(startDate.getDate() + 1);
-  let last24Hours = new Date(startDate - 60000 * 60 * 24)
-  let last7Days = new Date(startDate - 60000 * 60 * 24 * 8)
+  let last24Hours = new Date(startDate - 60000 * 60 * 24);
+  let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
 
-  let query = queryUtil.getHotQueries(startDate, nextDay, last24Hours, last7Days);
+  let query = queryUtil.getHotQueries(
+    startDate,
+    nextDay,
+    last24Hours,
+    last7Days
+  );
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
@@ -606,14 +766,24 @@ router.get("/hotqueries", function (req, res, next) {
 });
 
 router.get("/hotpages", function (req, res, next) {
+  let startDate = new Date(req.query.startDate);
 
-  let startDate = new Date(req.query.startDate)
-
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
-  let nextDay = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate())
+  startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate(),
+    startDate.getHours(),
+    startDate.getMinutes(),
+    0
+  );
+  let nextDay = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate()
+  );
   nextDay.setDate(startDate.getDate() + 1);
-  let last24Hours = new Date(startDate - 60000 * 60 * 24)
-  let last7Days = new Date(startDate - 60000 * 60 * 24 * 8)
+  let last24Hours = new Date(startDate - 60000 * 60 * 24);
+  let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
 
   let query = queryUtil.getHotPages(startDate, nextDay, last24Hours, last7Days);
 

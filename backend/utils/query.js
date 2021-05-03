@@ -168,13 +168,11 @@ const query = {
             FROM fourdays f WHERE fk_item <> 0 AND ${timeConditions} GROUP BY tp_item, fk_item ORDER BY count(*) DESC LIMIT ${limit}`;
   },
 
-
   getHotQueries(startDate, nextDay, last24Hours, last7Days) {
-
-    startDate = `'${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`
-    nextDay = `'${nextDay.getFullYear()}-${nextDay.getMonth()}-${nextDay.getDate()}'`
-    last24Hours = `'${last24Hours.getFullYear()}-${last24Hours.getMonth()}-${last24Hours.getDate()}'`
-    last7Days = `'${last7Days.getFullYear()}-${last7Days.getMonth()}-${last7Days.getDate()}'`
+    startDate = `'${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`;
+    nextDay = `'${nextDay.getFullYear()}-${nextDay.getMonth()}-${nextDay.getDate()}'`;
+    last24Hours = `'${last24Hours.getFullYear()}-${last24Hours.getMonth()}-${last24Hours.getDate()}'`;
+    last7Days = `'${last7Days.getFullYear()}-${last7Days.getMonth()}-${last7Days.getDate()}'`;
 
     return `select search_string, avgRank, oneCount, totalClicks, totalLast24h, totalPrevious24h, totalLast7days, cast(((totalLast24h-totalPrevious24h)/totalPrevious24h  * 100) as decimal(10,2)) as GrowthLast24h, cast(((totalLast24h-average7days)/average7days * 100) as decimal(10,2)) as GrowthLast7d, dates, searches from  
     (select search_string, count(*) as totalLast7days, count(*)/7 as average7days from fourdays where date > ${last7Days} and date < ${nextDay} group by search_string) as 7days natural join 
@@ -183,14 +181,14 @@ const query = {
     (select search_string, cast(avg((page_number - 1) * 10 + mysql_id) as decimal(10,2)) as avgRank, count(*) as totalClicks from fourdays where date > ${last7Days} and date < ${nextDay} and mysql_id <> 0 group by search_string) as ranking natural join
     (select search_string, count(*) as oneCount from fourdays where date > ${last7Days} and date < ${nextDay} and mysql_id = 1 and page_number = 1 and fk_item <> 0 group by search_string) as firstOption natural join
     (select search_string, group_concat(date order by date) as dates, group_concat (count order by date) as searches from (select search_string, date, count(*) as count from fourdays where date > ${last7Days} and date < ${nextDay} group by search_string, date order by date) as aux group by search_string) as searchesPerDay
-    order by GrowthLast7d DESC;`
+    order by GrowthLast7d DESC;`;
   },
 
   getHotPages(startDate, nextDay, last24Hours, last7Days) {
-    startDate = `'${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`
-    nextDay = `'${nextDay.getFullYear()}-${nextDay.getMonth()}-${nextDay.getDate()}'`
-    last24Hours = `'${last24Hours.getFullYear()}-${last24Hours.getMonth()}-${last24Hours.getDate()}'`
-    last7Days = `'${last7Days.getFullYear()}-${last7Days.getMonth()}-${last7Days.getDate()}'`
+    startDate = `'${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`;
+    nextDay = `'${nextDay.getFullYear()}-${nextDay.getMonth()}-${nextDay.getDate()}'`;
+    last24Hours = `'${last24Hours.getFullYear()}-${last24Hours.getMonth()}-${last24Hours.getDate()}'`;
+    last7Days = `'${last7Days.getFullYear()}-${last7Days.getMonth()}-${last7Days.getDate()}'`;
 
     return `select tp_item, fk_item, avgRank, oneCount, totalClicks, totalLast24h, totalPrevious24h, totalLast7days, cast(((totalLast24h-totalPrevious24h)/totalPrevious24h  * 100) as decimal(10,2)) as GrowthLast24h, cast(((totalLast24h-average7days)/average7days * 100) as decimal(10,2)) as GrowthLast7d, dates, searches from  
     (select tp_item, fk_item, count(*) as totalLast7days, count(*)/7 as average7days from fourdays where date > ${last7Days} and date < ${nextDay} and mysql_id <> 0 and fk_item <> 0 group by tp_item, fk_item) as 7days natural join 
@@ -199,7 +197,7 @@ const query = {
     (select tp_item, fk_item, cast(avg((page_number - 1) * 10 + mysql_id) as decimal(10,2)) as avgRank, count(*) as totalClicks from fourdays where date > ${last7Days} and date < ${nextDay} and mysql_id <> 0 group by tp_item, fk_item) as ranking natural join
     (select tp_item, fk_item, count(*) as oneCount from fourdays where date > ${last7Days} and date < ${nextDay} and mysql_id = 1 and page_number = 1 and fk_item <> 0 group by tp_item, fk_item) as firstOption natural join
     (select tp_item, fk_item, group_concat(date order by date) as dates, group_concat (count order by date) as searches from (select tp_item, fk_item, date, count(*) as count from fourdays where date > ${last7Days} and date < ${nextDay} group by tp_item, fk_item, date order by date) as aux group by tp_item, fk_item) as searchesPerDay
-    order by GrowthLast7d DESC;`
+    order by GrowthLast7d DESC;`;
   },
 
   insertEvaluation(

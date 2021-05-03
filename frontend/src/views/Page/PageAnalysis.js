@@ -19,32 +19,35 @@ import { getPagesRank, getStringsPerRank } from "../../requests/requests.js";
 class PageAnalysis extends Component {
   state = {
     entityTypes: [
-      {id: 2, name: "Competition"},
-      {id: 3, name: "Team"},
-      {id: 4, name: "Player"},
-      {id: 8, name: "Stadium"},
-      {id: 9, name: "Coach"},
-      {id: 10, name:  "City"},
-      {id: 13, name:  "Referee"},
-      {id: 16, name:  "Director"},
-      {id: 17, name:  "Agent"},
-      {id: 18, name:  "Menu"},
+      { id: 2, name: "Competition" },
+      { id: 3, name: "Team" },
+      { id: 4, name: "Player" },
+      { id: 8, name: "Stadium" },
+      { id: 9, name: "Coach" },
+      { id: 10, name: "City" },
+      { id: 13, name: "Referee" },
+      { id: 16, name: "Director" },
+      { id: 17, name: "Agent" },
+      { id: 18, name: "Menu" },
     ],
     tp_item: "",
     fk_item: "",
+
     startDate: new Date(),
     endDate: new Date(),
+
     checkbox: false,
+
+    calculatedTp_Item: 0,
+    calculatedFk_Item: 0,
     calculatedStartDate: null,
     calculatedEndDate: null,
 
+    calculatedRank: null,
     showPagesRank: false,
     showStringsPerRank: false,
 
     pageLink: "",
-    calculatedTp_Item: 0,
-    calculatedFk_Item: 0,
-    calculatedRank: null,
 
     page: 0,
     rowsPerPage: 10,
@@ -69,24 +72,27 @@ class PageAnalysis extends Component {
     let startDate = params.get("startDate");
     let endDate = params.get("endDate");
 
-    this.setState({
-      tp_item: tp_item != null ? tp_item : "",
-      fk_item: fk_item != null ? fk_item : "",
-      startDate: startDate != null ? new Date(startDate) : new Date(),
-      endDate: endDate != null ? new Date(endDate) : new Date(),
-      checkbox: endDate != null ? true : false,
-    },
-    () => {if(tp_item != null && fk_item != null && startDate != null)
-            this.submitEvaluation()
-    });
+    this.setState(
+      {
+        tp_item: tp_item != null ? tp_item : "",
+        fk_item: fk_item != null ? fk_item : "",
+        startDate: startDate != null ? new Date(startDate) : new Date(),
+        endDate: endDate != null ? new Date(endDate) : new Date(),
+        checkbox: endDate != null ? true : false,
+      },
+      () => {
+        if (tp_item != null && fk_item != null && startDate != null)
+          this.submitEvaluation();
+      }
+    );
   }
 
   handleChangePage = (event, newPage) => {
     this.setState({ page: newPage });
   };
-  
+
   handleChangeRowsPerPage = (event) => {
-    this.setState({ rowsPerPage: parseInt(event.target.value, 10), page: 0});
+    this.setState({ rowsPerPage: parseInt(event.target.value, 10), page: 0 });
   };
 
   toISOString(date) {
@@ -184,7 +190,7 @@ class PageAnalysis extends Component {
       ],
       pageLink: "",
       showPagesRank: false,
-      calculatedTp_Item: this.state.tp_item ,
+      calculatedTp_Item: this.state.tp_item,
       calculatedFk_Item: this.state.fk_item,
       calculatedStartDate: this.state.startDate,
       calculatedEndDate:
@@ -192,7 +198,7 @@ class PageAnalysis extends Component {
     });
 
     getPagesRank(
-      this.state.tp_item ,
+      this.state.tp_item,
       this.state.fk_item,
       this.state.startDate,
       this.state.checkbox == true ? this.state.endDate : null
@@ -224,7 +230,7 @@ class PageAnalysis extends Component {
           style={{
             display: "flex",
             flexDirection: "row",
-            width: this.state.checkbox === false ? 750: 950,
+            width: this.state.checkbox === false ? 750 : 950,
             justifyContent: "space-around",
           }}
         >
@@ -306,7 +312,13 @@ class PageAnalysis extends Component {
                   tableTitle={"Page's ranks"}
                   tableHeaderColor="gray"
                   tableHead={["Rank", "Clicks", ""]}
-                  headerLinkIcon={this.state.pageLink != "" ? <img width="35" src={ZzIcon} /> : ""}
+                  headerLinkIcon={
+                    this.state.pageLink != "" ? (
+                      <img width="35" src={ZzIcon} />
+                    ) : (
+                      ""
+                    )
+                  }
                   headerLinkPath={this.state.pageLink}
                   tableData={this.state.tableData}
                   onClick={this.submitStringsPerRank}
@@ -326,16 +338,20 @@ class PageAnalysis extends Component {
                   secondColumn={["n"]}
                   localLinkPath="localLink"
                   localLinkAditionalInfo={
-                    "&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
-                    (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")
-                    }
+                    "&startDate=" +
+                    this.toISOString(this.state.calculatedStartDate) +
+                    (this.state.calculatedEndDate !== null
+                      ? "&endDate=" +
+                        this.toISOString(this.state.calculatedEndDate)
+                      : "")
+                  }
                   localLinkIcon={<TextRotationNoneIcon />}
                   externalLink={false}
                   page={this.state.page}
                   rowsPerPage={this.state.rowsPerPage}
                   onChangePage={this.handleChangePage}
                   onChangeRowsPerPage={this.handleChangeRowsPerPage}
-              />
+                />
               ) : null}
             </GridItem>
           </GridContainer>

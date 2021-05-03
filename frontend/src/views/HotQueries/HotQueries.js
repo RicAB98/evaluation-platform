@@ -9,36 +9,38 @@ import { getHotQueries, getHotPages } from "../../requests/requests.js";
 
 class HotQueries extends Component {
   state = {
-    hotQueries:[{
-      tp_item: 1,
-      fk_item: 2,
-      avgRank: 1,
-      totalLast24h: 2121,
-      totalLast4days: 21344,
-      GrowthLast24h: "2",
-      GrowthLast4d: "-5"
-    }],
+    hotQueries: [
+      {
+        search_string: "Loading",
+        avgRank: 0,
+        totalLast24h: 0,
+        totalPrevious24h: 0,
+        totalLast7days: 0,
+        GrowthLast24h: 0,
+        GrowthLast7d: 0,
+      },
+    ],
 
-    hotPages:[{
-      tp_item: 1,
-      fk_item: 2,
-      avgRank: 1,
-      totalLast24h: 2121,
-      totalLast4days: 21344,
-      GrowthLast24h: "2",
-      GrowthLast4d: "-5"
-    }],
+    hotPages: [
+      {
+        search_string: "Loading",
+        avgRank: 0,
+        totalLast24h: 0,
+        totalPrevious24h: 0,
+        totalLast7days: 0,
+        GrowthLast24h: 0,
+        GrowthLast7d: 0,
+      },
+    ],
 
-    startDate: new Date("2021-1-23")
+    startDate: new Date("2021-1-23"),
   };
 
   componentDidMount() {
-    this.submitEvaluation()
+    this.submitEvaluation();
   }
 
-  getDate(date)
-  {
-
+  getDate(date) {
     let month =
       date.getMonth() <= 9
         ? "0" + this.addOne(date.getMonth())
@@ -48,45 +50,48 @@ class HotQueries extends Component {
     let minutes =
       date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
 
-    console.log(date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes)
+    console.log(
+      date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
+    );
 
     return (
       date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
-    ); 
+    );
   }
-  
+
   addOne(value) {
     return value + 1;
   }
 
   submitEvaluation = () => {
-
     getHotQueries(this.state.startDate)
       .then((res) => res.json())
-      .then(
-        (res) => this.setState({ hotQueries: res }));
+      .then((res) => this.setState({ hotQueries: res }));
     getHotPages(this.state.startDate)
       .then((res) => res.json())
-      .then(
-        (res) => this.setState({ hotPages: res }));
+      .then((res) => this.setState({ hotPages: res }));
   };
 
   render() {
     return (
       <div style={{ marginTop: 20, marginLeft: 16 }}>
         <SortingTable
-          rows = {this.state.hotQueries}
+          rows={this.state.hotQueries}
           localLinkPath="/admin/query?"
           localLinkFields={["search_string"]}
-          localLinkAdditional={"&startDate=" + this.getDate(this.state.startDate)}
-          iconButton = {<TextRotationNoneIcon/>}
+          localLinkAdditional={
+            "&startDate=" + this.getDate(this.state.startDate)
+          }
+          iconButton={<TextRotationNoneIcon />}
         />
         <SortingTable
-          rows = {this.state.hotPages}
+          rows={this.state.hotPages}
           localLinkPath="/admin/page?"
           localLinkFields={["tp_item", "fk_item"]}
-          localLinkAdditional={"&startDate=" + this.getDate(this.state.startDate)}
-          iconButton = {<MenuBookIcon/>}
+          localLinkAdditional={
+            "&startDate=" + this.getDate(this.state.startDate)
+          }
+          iconButton={<MenuBookIcon />}
         />
       </div>
     );

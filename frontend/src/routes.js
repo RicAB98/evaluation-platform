@@ -1,6 +1,4 @@
 // @material-ui/icons
-import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
-import PublishOutlinedIcon from '@material-ui/icons/PublishOutlined';
 import CompareArrowsOutlinedIcon from '@material-ui/icons/CompareArrowsOutlined';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
@@ -9,8 +7,6 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
 // core components/views for Admin layout
 
-import RunPage from "./views/Run/Run.js";
-import LoadPage from "./views/Load/Load.js";
 import ResultsPage from "./views/Results/Results.js";
 import HotQueriesPage from "./views/HotQueries/HotQueries";
 import QueryPage from "./views/Query/QueryPerformance.js";
@@ -43,7 +39,7 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/daily",
+    path: "/evaluation",
     name: "Evaluation",
     icon: EqualizerIcon,
     component: ResultsPage,
