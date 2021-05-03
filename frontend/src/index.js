@@ -19,7 +19,7 @@ ReactDOM.render(
   <Router history={hist}>
     <Switch>
       <Route path="/admin" component={Admin} />
-      <Redirect from="/" to="/admin/daily" />
+      <Redirect from="/" to="/admin/trending" />
     </Switch>
   </Router>
   </div>,

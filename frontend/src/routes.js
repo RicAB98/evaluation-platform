@@ -36,17 +36,17 @@ const dashboardRoutes = [
     layout: "/admin"
   },*/
   {
+    path: "/trending",
+    name: "Trending",
+    icon: TrendingUpIcon,
+    component: HotQueriesPage,
+    layout: "/admin"
+  },
+  {
     path: "/daily",
     name: "Evaluation",
     icon: EqualizerIcon,
     component: ResultsPage,
-    layout: "/admin"
-  },
-  {
-    path: "/hot",
-    name: "Hot Queries",
-    icon: TrendingUpIcon,
-    component: HotQueriesPage,
     layout: "/admin"
   },
   {

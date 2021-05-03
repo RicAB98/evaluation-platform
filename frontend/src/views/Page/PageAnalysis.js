@@ -224,7 +224,7 @@ class PageAnalysis extends Component {
           style={{
             display: "flex",
             flexDirection: "row",
-            width: 900,
+            width: this.state.checkbox === false ? 750: 950,
             justifyContent: "space-around",
           }}
         >

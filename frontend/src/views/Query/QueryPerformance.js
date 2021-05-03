@@ -351,7 +351,7 @@ class QueryPerformance extends Component {
           style={{
             display: "flex",
             flexDirection: "row",
-            width: 900,
+            width: this.state.checkbox === false ? 650: 850,
             justifyContent: "space-around",
           }}
         >

@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
+
 // core components
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -7,6 +9,7 @@ import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ZzIcon from "../../assets/img/logo.png";
 import OpenWithIcon from "@material-ui/icons/OpenWith";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Switch from "@material-ui/core/Switch";
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
@@ -16,6 +19,20 @@ import Calendar from "../../components/Calendar/TimePicker.js";
 import BarChart from "../../components/Chart/BarChart.js";
 
 import { runEvaluation } from "../../requests/requests.js";
+
+const CustomSwitch = withStyles({
+  switchBase: {
+    color: "#2c3e50",
+    "&$checked": {
+      color: "#2c3e50",
+    },
+    "&$checked + $track": {
+      backgroundColor: "#2c3e50",
+    },
+  },
+  checked: {},
+  track: {},
+})(Switch);
 
 class Result extends Component {
   state = {
@@ -44,6 +61,7 @@ class Result extends Component {
     calculatedStartDate: null,
     calculatedEndDate: null,
     checkbox: false,
+    viewTables: false,
   };
 
   componentDidMount() {
@@ -69,6 +87,11 @@ class Result extends Component {
 
   handleCheckbox = (event) => {
     this.setState({ checkbox: event.target.checked });
+  };
+
+  handleChangeView = (event) => {
+    console.log(event);
+    this.setState({ viewTables: event.target.checked });
   };
 
   toISOString(date) {
@@ -270,6 +293,17 @@ class Result extends Component {
           >
             Submit
           </Button>
+          <FormControlLabel
+            style={{ marginLeft: 10 }}
+            control={
+              <CustomSwitch
+                checked={this.state.viewTables}
+                onChange={this.handleChangeView}
+                style={{ color: "#2c3e50" }}
+              />
+            }
+            label="Show tables"
+          />
         </div>
         {this.state.showTables === true ? (
           <div>
@@ -286,118 +320,183 @@ class Result extends Component {
                   this.state.calculatedEndDate.getFullYear()
               : null*/}
             </h3>
-
-            <GridContainer spacing={2}>
-              <GridItem xs={12} sm={12} md={3}>
-                <Table
-                  tableTitle="Popular queries"
-                  tableHeaderColor="gray"
-                  tableHead={["#", "Query", "Count", " "]}
-                  headerLinkIcon={<OpenWithIcon />}
-                  headerLinkPath={"expanded?type=1&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
-                  (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")}
-                  localLinkAditionalInfo={
-                  "&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
-                  (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")
-                  }
-                  tableData={this.state.popularQueries}
-                  firstColumn={["search_string"]}
-                  secondColumn={["n"]}
-                  localLinkPath="url"
-                  localLinkIcon={<TextRotationNoneIcon />}
-                  externalLink={false}
-                />
-              </GridItem>
-              <GridItem
-                xs={12}
-                sm={12}
-                md={8}
-                style={{ marginTop: 20, marginLeft: 10 }}
-              >
-                <BarChart
-                  title="Popular queries"
-                  data={this.state.popularQueries}
-                  xVariable="search_string"
-                  yVariable="n"
-                  yLabel="Queries"
-                  page={-1}
-                />
-              </GridItem>
-
-              <GridItem xs={12} sm={12} md={3} style={{ marginTop: 20 }}>
-                <Table
-                  tableTitle="Unsuccessful queries"
-                  tableHeaderColor="gray"
-                  tableHead={["#", "Query", "Count", " "]}
-                  headerLinkIcon={<OpenWithIcon />}
-                  headerLinkPath={"expanded?type=2&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
-                  (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")}
-                  tableData={this.state.unsuccessfulQueries}
-                  firstColumn={["search_string"]}
-                  secondColumn={["n"]}
-                  localLinkPath="url"
-                  localLinkAditionalInfo={
-                    "&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
-                    (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")
+            {this.state.viewTables === true ? (
+              <GridContainer spacing={2}>
+                <GridItem xs={12} sm={12} md={3}>
+                  <Table
+                    tableTitle="Popular queries"
+                    tableHeaderColor="gray"
+                    tableHead={["#", "Query", "Count", " "]}
+                    headerLinkIcon={<OpenWithIcon />}
+                    headerLinkPath={
+                      "expanded?type=1&startDate=" +
+                      this.toISOString(this.state.calculatedStartDate) +
+                      (this.state.calculatedEndDate !== null
+                        ? "&endDate=" +
+                          this.toISOString(this.state.calculatedEndDate)
+                        : "")
                     }
-                  localLinkIcon={<TextRotationNoneIcon />}
-                  externalLink={false}
-                />
-              </GridItem>
-              <GridItem
-                xs={12}
-                sm={12}
-                md={8}
-                style={{ marginTop: 40, marginLeft: 10 }}
-              >
-                <BarChart
-                  title="Unsuccessful queries"
-                  data={this.state.unsuccessfulQueries}
-                  xVariable="search_string"
-                  yVariable="n"
-                  yLabel="Queries"
-                  page={-1}
-                />
-              </GridItem>
-
-              <GridItem xs={12} sm={12} md={3} style={{ marginTop: 20 }}>
-                <Table
-                  tableTitle="Popular pages"
-                  tableHeaderColor="gray"
-                  tableHead={["#", "IDs", "Count", " ", " "]}
-                  headerLinkIcon={<OpenWithIcon />}
-                  headerLinkPath={"expanded?type=3&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
-                  (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")}
-                  tableData={this.state.popularPages}
-                  firstColumn={["partialUrl"]}
-                  secondColumn={["n"]}
-                  localLinkPath="localUrl"
-                  localLinkAditionalInfo={
-                    "&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
-                    (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")
+                    localLinkAditionalInfo={
+                      "&startDate=" +
+                      this.toISOString(this.state.calculatedStartDate) +
+                      (this.state.calculatedEndDate !== null
+                        ? "&endDate=" +
+                          this.toISOString(this.state.calculatedEndDate)
+                        : "")
                     }
-                  localLinkIcon={<MenuBookIcon />}
-                  externalLink={true}
-                  externalLinkPath="fullUrl"
-                  externalLinkIcon={<img width="25" src={ZzIcon} />}
-                />
-              </GridItem>
-              <GridItem
-                xs={12}
-                sm={12}
-                md={8}
-                style={{ marginTop: 40, marginLeft: 10 }}
-              >
-                <BarChart
-                  title="Popular pages"
-                  data={this.state.popularPages}
-                  xVariable="partialUrl"
-                  yVariable="n"
-                  yLabel="Pages"
-                  page={-1}
-                />
-              </GridItem>
-            </GridContainer>
+                    tableData={this.state.popularQueries}
+                    firstColumn={["search_string"]}
+                    secondColumn={["n"]}
+                    localLinkPath="url"
+                    localLinkIcon={<TextRotationNoneIcon />}
+                    externalLink={false}
+                  />
+                </GridItem>
+                <GridItem
+                  xs={12}
+                  sm={12}
+                  md={8}
+                  style={{ marginTop: 20, marginLeft: 10 }}
+                >
+                  <BarChart
+                    title="Popular queries"
+                    data={this.state.popularQueries}
+                    xVariable="search_string"
+                    yVariable="n"
+                    yLabel="Queries"
+                    page={-1}
+                  />
+                </GridItem>
+
+                <GridItem xs={12} sm={12} md={3} style={{ marginTop: 20 }}>
+                  <Table
+                    tableTitle="Unsuccessful queries"
+                    tableHeaderColor="gray"
+                    tableHead={["#", "Query", "Count", " "]}
+                    headerLinkIcon={<OpenWithIcon />}
+                    headerLinkPath={
+                      "expanded?type=2&startDate=" +
+                      this.toISOString(this.state.calculatedStartDate) +
+                      (this.state.calculatedEndDate !== null
+                        ? "&endDate=" +
+                          this.toISOString(this.state.calculatedEndDate)
+                        : "")
+                    }
+                    tableData={this.state.unsuccessfulQueries}
+                    firstColumn={["search_string"]}
+                    secondColumn={["n"]}
+                    localLinkPath="url"
+                    localLinkAditionalInfo={
+                      "&startDate=" +
+                      this.toISOString(this.state.calculatedStartDate) +
+                      (this.state.calculatedEndDate !== null
+                        ? "&endDate=" +
+                          this.toISOString(this.state.calculatedEndDate)
+                        : "")
+                    }
+                    localLinkIcon={<TextRotationNoneIcon />}
+                    externalLink={false}
+                  />
+                </GridItem>
+                <GridItem
+                  xs={12}
+                  sm={12}
+                  md={8}
+                  style={{ marginTop: 40, marginLeft: 10 }}
+                >
+                  <BarChart
+                    title="Unsuccessful queries"
+                    data={this.state.unsuccessfulQueries}
+                    xVariable="search_string"
+                    yVariable="n"
+                    yLabel="Queries"
+                    page={-1}
+                  />
+                </GridItem>
+
+                <GridItem xs={12} sm={12} md={3} style={{ marginTop: 20 }}>
+                  <Table
+                    tableTitle="Popular pages"
+                    tableHeaderColor="gray"
+                    tableHead={["#", "IDs", "Count", " ", " "]}
+                    headerLinkIcon={<OpenWithIcon />}
+                    headerLinkPath={
+                      "expanded?type=3&startDate=" +
+                      this.toISOString(this.state.calculatedStartDate) +
+                      (this.state.calculatedEndDate !== null
+                        ? "&endDate=" +
+                          this.toISOString(this.state.calculatedEndDate)
+                        : "")
+                    }
+                    tableData={this.state.popularPages}
+                    firstColumn={["partialUrl"]}
+                    secondColumn={["n"]}
+                    localLinkPath="localUrl"
+                    localLinkAditionalInfo={
+                      "&startDate=" +
+                      this.toISOString(this.state.calculatedStartDate) +
+                      (this.state.calculatedEndDate !== null
+                        ? "&endDate=" +
+                          this.toISOString(this.state.calculatedEndDate)
+                        : "")
+                    }
+                    localLinkIcon={<MenuBookIcon />}
+                    externalLink={true}
+                    externalLinkPath="fullUrl"
+                    externalLinkIcon={<img width="25" src={ZzIcon} />}
+                  />
+                </GridItem>
+                <GridItem
+                  xs={12}
+                  sm={12}
+                  md={8}
+                  style={{ marginTop: 40, marginLeft: 10 }}
+                >
+                  <BarChart
+                    title="Popular pages"
+                    data={this.state.popularPages}
+                    xVariable="partialUrl"
+                    yVariable="n"
+                    yLabel="Pages"
+                    page={-1}
+                  />
+                </GridItem>
+              </GridContainer>
+            ) : 
+            (
+              <GridContainer spacing={0}>
+                <GridItem xs={12} sm={12} md={4} xl={6}>
+                  <BarChart
+                    title="Popular queries"
+                    data={this.state.popularQueries}
+                    xVariable="search_string"
+                    yVariable="n"
+                    yLabel="Queries"
+                    page={-1}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={4} xl={6}>
+                  <BarChart
+                    title="Unsuccessful queries"
+                    data={this.state.unsuccessfulQueries}
+                    xVariable="search_string"
+                    yVariable="n"
+                    yLabel="Queries"
+                    page={-1}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={4} xl={6}>
+                  <BarChart
+                    title="Popular pages"
+                    data={this.state.popularPages}
+                    xVariable="partialUrl"
+                    yVariable="n"
+                    yLabel="Pages"
+                    page={-1}
+                  />
+                </GridItem>
+              </GridContainer>
+            )}
           </div>
         ) : null}
       </div>
