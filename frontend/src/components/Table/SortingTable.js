@@ -12,6 +12,11 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import IconButton from "@material-ui/core/IconButton";
+import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
 
 import Chart from "../../components/Chart/Chart";
 
@@ -34,6 +39,33 @@ const rows = [
   createData('Nougat', 360, 19.0, 9, 37.0),
   createData('Oreo', 437, 18.0, 63, 4.0),*/
 ];
+
+const tp_item_list = {
+  2: "competition.php?id_comp=",
+  3: "equipa.php?id=",
+  4: "jogador.php?id=",
+  8: "estadio.php?id=",
+  9: "coach.php?id=",
+  10: "local.php?id=",
+  13: "arbitro.php?id=",
+  16: "dirigente.php?id=",
+  17: "agent.php?id=",
+}
+
+function LinearProgressWithLabel(props) {
+  return (
+    <Box display="flex" alignItems="center">
+      <Box width="100%" mr={1}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box minWidth={35}>
+        <Typography variant="body2" color="textSecondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -64,7 +96,7 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'query', numeric: false, disablePadding: true, label: 'Query' },
+  { id: 'search_string', numeric: false, disablePadding: true, label: 'Id' },
   { id: 'avgRank', numeric: true, disablePadding: false, label: 'Average rank' },
   { id: 'totalLast24h', numeric: true, disablePadding: false, label: 'Last 24 hours searches' },
   { id: 'totalPrevious24h', numeric: true, disablePadding: false, label: 'Previous 24 hours searches' },
@@ -72,6 +104,7 @@ const headCells = [
   { id: 'GrowthLast24h', numeric: true, disablePadding: false, label: 'Last 24 hours growth' },
   { id: 'GrowthLast4d', numeric: true, disablePadding: false, label: 'Last 7 days growth' },
   { id: 'weekgraph', numeric: false, disablePadding: false, label: '7 days graph' },
+  { id: 'icon', numeric: false, disablePadding: false, label: '' },
 ];
 
 function EnhancedTableHead(props) {
@@ -83,14 +116,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead >
       <TableRow>
-        {/*<TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
-          />
-  </TableCell>*/}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -171,10 +196,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     position: 'absolute',
     top: 20,
-    width: 1,
-    color: 'white',
-
-    
+    width: 1,    
   },
 
   sortLabel: {
@@ -202,7 +224,7 @@ export default function EnhancedTable(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const { rows } = props;
+  const { rows, iconButton, localLinkPath, localLinkFields } = props;
 
 
   const handleRequestSort = (event, property) => {
@@ -295,9 +317,9 @@ export default function EnhancedTable(props) {
                       style={{border: "2px solid grey"}}
                     >
                       <TableCell style = {{paddingLeft: 20}} component="th" id={labelId} scope="row" padding="none">
-                      <b>{row.id}</b>
+                        <b>{row.tp_item == null? row.search_string : tp_item_list[row.tp_item] + row.fk_item}</b>
                       </TableCell>
-                      <TableCell align="right"><b>{row.avgRank}</b></TableCell>
+                      <TableCell align="right"><b>{row.avgRank}</b> <LinearProgress variant="determinate" value={100 * row.oneCount/row.totalLast4days} /></TableCell>
                       <TableCell align="right"><b>{row.totalLast24h}</b></TableCell>
                       <TableCell align="right"><b>{row.totalPrevious24h}</b></TableCell>
                       <TableCell align="right"><b>{row.totalLast4days}</b></TableCell>
@@ -315,7 +337,16 @@ export default function EnhancedTable(props) {
                           displayXLegend= {false}
                           displayYLegend= {false}
                         />
-                  </TableCell>
+                      </TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          color="primary"
+                          component="span"
+                          onClick={() => window.open(localLinkPath + new String(localLinkFields.map((field) => { return field + "=" + row[field] })).replace(',','&') )}
+                        >
+                          {iconButton}
+                        </IconButton>  
+                      </TableCell>
                     </TableRow>
                   );
                 })}

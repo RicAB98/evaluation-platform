@@ -2,6 +2,8 @@ import React, { Component } from "react";
 
 // core components
 import SortingTable from "../../components/Table/SortingTable";
+import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 
 import { getHotQueries, getHotPages } from "../../requests/requests.js";
 
@@ -51,9 +53,15 @@ class HotQueries extends Component {
       <div style={{ marginTop: 20, marginLeft: 16 }}>
         <SortingTable
           rows = {this.state.hotQueries}
+          localLinkPath="/admin/query?"
+          localLinkFields={["search_string"]}
+          iconButton = {<TextRotationNoneIcon/>}
         />
         <SortingTable
           rows = {this.state.hotPages}
+          localLinkPath="/admin/page?"
+          localLinkFields={["tp_item", "fk_item"]}
+          iconButton = {<MenuBookIcon/>}
         />
       </div>
     );
