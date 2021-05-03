@@ -61,11 +61,11 @@ const query = {
       AND ${timeConditions} AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
     else if (page == 2)
       return `SELECT tp_item, fk_item, count(*) as n, (select distinct page from fourdays f2 where f.tp_item=f2.tp_item and f.fk_item=f2.fk_item order by method desc limit 1) as link
-      FROM fourdays WHERE page_number = ${page} AND mysql_id = ${mysql_id} AND fk_item <> 0 
+      FROM fourdays f WHERE page_number = ${page} AND mysql_id = ${mysql_id} AND fk_item <> 0 
       AND ${timeConditions} AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
     else
       return `SELECT tp_item, fk_item, count(*) as n, (select distinct page from fourdays f2 where f.tp_item=f2.tp_item and f.fk_item=f2.fk_item order by method desc limit 1) as link   
-      FROM fourdays WHERE page_number > 2 AND fk_item <> 0 
+      FROM fourdays f WHERE page_number > 2 AND fk_item <> 0 
       AND ${timeConditions} AND search_string='${string}' GROUP BY tp_item, fk_item ORDER BY n DESC`;
   },
 
@@ -170,22 +170,22 @@ const query = {
 
 
   getHotQueries(startDate) {
-    return `select search_string, avgRank, oneCount, totalLast24h, totalPrevious24h, totalLast4days, cast(((totalLast24h-totalPrevious24h)/totalPrevious24h  * 100) as decimal(10,2)) as GrowthLast24h, cast(((totalLast24h-average4days)/average4days * 100) as decimal(10,2)) as GrowthLast4d, dates, searches from  
+    return `select search_string, avgRank, oneCount, totalClicks, totalLast24h, totalPrevious24h, totalLast4days, cast(((totalLast24h-totalPrevious24h)/totalPrevious24h  * 100) as decimal(10,2)) as GrowthLast24h, cast(((totalLast24h-average4days)/average4days * 100) as decimal(10,2)) as GrowthLast4d, dates, searches from  
     (select search_string, count(*) as totalLast4days, count(*)/4 as average4days from fourdays group by search_string) as 4days natural join 
     (select search_string, count(*) as totalPrevious24h from fourdays where date = '2021-01-20' group by search_string) as 24hours natural join  
     (select search_string, count(*) as totalLast24h from fourdays where date = '2021-01-21' and search_string <> '' group by search_string having count(*) >= 5) as day natural join  
-    (select search_string, cast(avg((page_number - 1) * 10 + mysql_id) as decimal(10,2)) as avgRank from fourdays where  mysql_id <> 0 group by search_string) as ranking natural join
+    (select search_string, cast(avg((page_number - 1) * 10 + mysql_id) as decimal(10,2)) as avgRank, count(*) as totalClicks from fourdays where  mysql_id <> 0 group by search_string) as ranking natural join
     (select search_string, count(*) as oneCount from fourdays where mysql_id = 1 and page_number = 1 group by search_string) as firstOption natural join
     (select search_string, group_concat(date order by date) as dates, group_concat (count order by date) as searches from (select search_string, date, count(*) as count from fourdays group by search_string, date order by date) as aux group by search_string) as searchesPerDay
     order by GrowthLast4d DESC;`
   },
 
   getHotPages(startDate) {
-    return `select tp_item, fk_item, avgRank, oneCount, totalPrevious24h, totalLast24h, totalLast4days, cast(((totalLast24h-totalPrevious24h)/totalPrevious24h  * 100) as decimal(10,2)) as GrowthLast24h, cast(((totalLast24h-average4days)/average4days * 100) as decimal(10,2)) as GrowthLast4d, dates, searches from  
+    return `select tp_item, fk_item, avgRank, oneCount, totalClicks, totalLast24h, totalPrevious24h, totalLast4days, cast(((totalLast24h-totalPrevious24h)/totalPrevious24h  * 100) as decimal(10,2)) as GrowthLast24h, cast(((totalLast24h-average4days)/average4days * 100) as decimal(10,2)) as GrowthLast4d, dates, searches from  
     (select tp_item, fk_item, count(*) as totalLast4days, count(*)/4 as average4days from fourdays where mysql_id <> 0 and fk_item <> 0 group by tp_item, fk_item) as 4days natural join 
     (select tp_item, fk_item, count(*) as totalPrevious24h from fourdays where date = '2021-01-20' and mysql_id <> 0 group by tp_item, fk_item) as 24hours natural join  
     (select tp_item, fk_item, count(*) as totalLast24h from fourdays where date = '2021-01-21' and mysql_id <> 0 group by tp_item, fk_item having count(*) >= 5) as day natural join  
-    (select tp_item, fk_item, cast(avg((page_number - 1) * 10 + mysql_id) as decimal(10,2)) as avgRank from fourdays where date <> '2021-01-21' and mysql_id <> 0 group by tp_item, fk_item) as ranking natural join
+    (select tp_item, fk_item, cast(avg((page_number - 1) * 10 + mysql_id) as decimal(10,2)) as avgRank, count(*) as totalClicks from fourdays where mysql_id <> 0 group by tp_item, fk_item) as ranking natural join
     (select tp_item, fk_item, count(*) as oneCount from fourdays where mysql_id = 1 and page_number = 1 group by tp_item, fk_item) as firstOption natural join
     (select tp_item, fk_item, group_concat(date order by date) as dates, group_concat (count order by date) as searches from (select tp_item, fk_item, date, count(*) as count from fourdays group by tp_item, fk_item, date order by date) as aux group by tp_item, fk_item) as searchesPerDay
     order by GrowthLast4d DESC;`

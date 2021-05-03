@@ -16,8 +16,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import IconButton from "@material-ui/core/IconButton";
-import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
-
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Chart from "../../components/Chart/Chart";
 
 function createData(query, avgrank, daygrowth, weekgrowth, daytotal, weektotal, weekgraph) {
@@ -123,21 +123,20 @@ function EnhancedTableHead(props) {
             padding={headCell.disablePadding ? 'none' : 'default'}
             sortDirection={orderBy === headCell.id ? order : false}
             style = {{backgroundColor: "#2c3e50", paddingLeft: 20}}
-            
           >
             <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
               style = {{color: "white"}}
-              className = {classes.sortLabel}
+              hideSortIcon={true}
+              IconComponent= {ExpandLessIcon}
             >
               <b style = {{color: "white"}}>{headCell.label}</b>
               {orderBy === headCell.id ? (
-                <span style = {{color: "white"}} className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
-              ) : null}
+                <div>
+                  {order === 'desc' ? <ExpandMoreIcon/> : <ExpandLessIcon/>}
+                </div>
+                ) : null}
+              
             </TableSortLabel>
           </TableCell>
         ))}
@@ -198,21 +197,11 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,    
   },
-
+  
   sortLabel: {
-    root: {
-      color: 'white',
-      "&:hover": {
-        color: 'white',
-      },
-      '&$active': {
-        color: 'white',
-      },
-    },
-    active: {},
-    icon: {
-      color: 'inherit !important'
-    },
+    icon:{
+      color: "white"
+    }
   }
 }));
 
@@ -319,7 +308,7 @@ export default function EnhancedTable(props) {
                       <TableCell style = {{paddingLeft: 20}} component="th" id={labelId} scope="row" padding="none">
                         <b>{row.tp_item == null? row.search_string : tp_item_list[row.tp_item] + row.fk_item}</b>
                       </TableCell>
-                      <TableCell align="right"><b>{row.avgRank}</b> <LinearProgress variant="determinate" value={100 * row.oneCount/row.totalLast4days} /></TableCell>
+                      <TableCell align="right"><b>{row.avgRank}</b> <LinearProgressWithLabel variant="determinate" value={100 * row.oneCount/row.totalClicks} /></TableCell>
                       <TableCell align="right"><b>{row.totalLast24h}</b></TableCell>
                       <TableCell align="right"><b>{row.totalPrevious24h}</b></TableCell>
                       <TableCell align="right"><b>{row.totalLast4days}</b></TableCell>

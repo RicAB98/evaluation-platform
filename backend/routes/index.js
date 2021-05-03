@@ -153,9 +153,7 @@ router.post("/runeval2", function (req, res, next) {
     formatedStartDate = startDate.getFullYear() + "-" + startDate.getMonth() + "-" + startDate.getDate() + " " + 
                         startDate.getHours() + ":" + startDate.getMinutes() + ":00";
   }
-     
-
-                        
+                            
   endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(),
                      endDate.getHours(), endDate.getMinutes(), 0);
 
