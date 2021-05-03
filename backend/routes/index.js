@@ -586,12 +586,14 @@ router.get("/stringsperrank", function (req, res, next) {
 router.get("/hotqueries", function (req, res, next) {
 
   let startDate = new Date(req.query.startDate)
-  let endDate = new Date(req.query.endDate)
 
-  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
-  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), 0)
+  startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate())
+  let nextDay = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate())
+  nextDay.setDate(startDate.getDate() + 1);
+  let last24Hours = new Date(startDate - 60000 * 60 * 24)
+  let last7Days = new Date(startDate - 60000 * 60 * 24 * 8)
 
-  let query = queryUtil.getHotQueries(startDate);
+  let query = queryUtil.getHotQueries(startDate, nextDay, last24Hours, last7Days);
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
@@ -606,12 +608,14 @@ router.get("/hotqueries", function (req, res, next) {
 router.get("/hotpages", function (req, res, next) {
 
   let startDate = new Date(req.query.startDate)
-  let endDate = new Date(req.query.endDate)
 
   startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes(), 0)
-  endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate(), endDate.getHours(), endDate.getMinutes(), 0)
+  let nextDay = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate())
+  nextDay.setDate(startDate.getDate() + 1);
+  let last24Hours = new Date(startDate - 60000 * 60 * 24)
+  let last7Days = new Date(startDate - 60000 * 60 * 24 * 8)
 
-  let query = queryUtil.getHotPages(startDate);
+  let query = queryUtil.getHotPages(startDate, nextDay, last24Hours, last7Days);
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {

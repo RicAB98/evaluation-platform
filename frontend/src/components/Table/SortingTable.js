@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import { lighten, makeStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -52,6 +52,20 @@ const tp_item_list = {
   17: "agent.php?id=",
 }
 
+const CustomSwitch = withStyles({
+  switchBase: {
+    color: "#2c3e50",
+    '&$checked': {
+      color: "#2c3e50",
+    },
+    '&$checked + $track': {
+      backgroundColor: "#2c3e50",
+    },
+  },
+  checked: {},
+  track: {},
+})(Switch);
+
 function LinearProgressWithLabel(props) {
   return (
     <Box display="flex" alignItems="center">
@@ -100,9 +114,9 @@ const headCells = [
   { id: 'avgRank', numeric: true, disablePadding: false, label: 'Average rank' },
   { id: 'totalLast24h', numeric: true, disablePadding: false, label: 'Last 24 hours searches' },
   { id: 'totalPrevious24h', numeric: true, disablePadding: false, label: 'Previous 24 hours searches' },
-  { id: 'totalLast4days', numeric: true, disablePadding: false, label: 'Last 7 days searches' },
+  { id: 'totalLast7days', numeric: true, disablePadding: false, label: 'Last 7 days searches' },
   { id: 'GrowthLast24h', numeric: true, disablePadding: false, label: 'Last 24 hours growth' },
-  { id: 'GrowthLast4d', numeric: true, disablePadding: false, label: 'Last 7 days growth' },
+  { id: 'GrowthLast7d', numeric: true, disablePadding: false, label: 'Last 7 days growth' },
   { id: 'weekgraph', numeric: false, disablePadding: false, label: '7 days graph' },
   { id: 'icon', numeric: false, disablePadding: false, label: '' },
 ];
@@ -213,7 +227,7 @@ export default function EnhancedTable(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const { rows, iconButton, localLinkPath, localLinkFields } = props;
+  const { rows, iconButton, localLinkPath, localLinkFields, localLinkAdditional } = props;
 
 
   const handleRequestSort = (event, property) => {
@@ -311,9 +325,9 @@ export default function EnhancedTable(props) {
                       <TableCell align="right"><b>{row.avgRank}</b> <LinearProgressWithLabel variant="determinate" value={100 * row.oneCount/row.totalClicks} /></TableCell>
                       <TableCell align="right"><b>{row.totalLast24h}</b></TableCell>
                       <TableCell align="right"><b>{row.totalPrevious24h}</b></TableCell>
-                      <TableCell align="right"><b>{row.totalLast4days}</b></TableCell>
+                      <TableCell align="right"><b>{row.totalLast7days}</b></TableCell>
                       <TableCell align="right" style={{color: row.GrowthLast24h > 0 ? "#00cc00" :  "red" }}><b>{row.GrowthLast24h}%</b></TableCell>
-                      <TableCell align="right" style={{color: row.GrowthLast4d > 0 ? "#00cc00" : "red" }}><b>{row.GrowthLast4d}%</b></TableCell>
+                      <TableCell align="right" style={{color: row.GrowthLast7d > 0 ? "#00cc00" : "red" }}><b>{row.GrowthLast7d}%</b></TableCell>
                       <TableCell align="right">
                         <Chart
                           string={row.search_string}
@@ -331,7 +345,7 @@ export default function EnhancedTable(props) {
                         <IconButton
                           color="primary"
                           component="span"
-                          onClick={() => window.open(localLinkPath + new String(localLinkFields.map((field) => { return field + "=" + row[field] })).replace(',','&') )}
+                          onClick={() => window.open(localLinkPath + new String(localLinkFields.map((field) => { return field + "=" + row[field] })).replace(',','&') + localLinkAdditional)}
                         >
                           {iconButton}
                         </IconButton>  
@@ -358,7 +372,7 @@ export default function EnhancedTable(props) {
         />
       </Paper>
       <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
+        control={<CustomSwitch checked={dense} onChange={handleChangeDense} style={{ color: "#2c3e50" }} />}
         label="Dense padding"
       />
     </div>

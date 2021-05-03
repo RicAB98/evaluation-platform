@@ -29,11 +29,34 @@ class HotQueries extends Component {
       GrowthLast4d: "-5"
     }],
 
-    startDate: new Date()
+    startDate: new Date("2021-1-23")
   };
 
   componentDidMount() {
     this.submitEvaluation()
+  }
+
+  getDate(date)
+  {
+
+    let month =
+      date.getMonth() <= 9
+        ? "0" + this.addOne(date.getMonth())
+        : this.addOne(date.getMonth());
+    let day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
+    let hours = date.getHours() <= 9 ? "0" + date.getHours() : date.getHours();
+    let minutes =
+      date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
+
+    console.log(date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes)
+
+    return (
+      date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
+    ); 
+  }
+  
+  addOne(value) {
+    return value + 1;
   }
 
   submitEvaluation = () => {
@@ -55,12 +78,14 @@ class HotQueries extends Component {
           rows = {this.state.hotQueries}
           localLinkPath="/admin/query?"
           localLinkFields={["search_string"]}
+          localLinkAdditional={"&startDate=" + this.getDate(this.state.startDate)}
           iconButton = {<TextRotationNoneIcon/>}
         />
         <SortingTable
           rows = {this.state.hotPages}
           localLinkPath="/admin/page?"
           localLinkFields={["tp_item", "fk_item"]}
+          localLinkAdditional={"&startDate=" + this.getDate(this.state.startDate)}
           iconButton = {<MenuBookIcon/>}
         />
       </div>
