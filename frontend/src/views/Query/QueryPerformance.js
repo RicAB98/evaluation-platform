@@ -351,8 +351,8 @@ class QueryPerformance extends Component {
           style={{
             display: "flex",
             flexDirection: "row",
-            width: this.state.checkbox === false ? 650: 850,
-            justifyContent: "space-around",
+            border: "1px solid grey",
+            padding: 20
           }}
         >
           <label
@@ -371,12 +371,14 @@ class QueryPerformance extends Component {
               display: "flex",
               flexDirection: "column",
               justifyContent: "start",
+              marginLeft: 20
             }}
           >
             <TimePicker
               selectedDate={this.state.startDate}
               onChange={this.changeStartDate}
               label={this.state.checkbox === true ? "Start date" : "Date"}
+              style = {{}}
             />
             <FormControlLabel
               control={

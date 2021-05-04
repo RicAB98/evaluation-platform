@@ -201,12 +201,13 @@ class Result extends Component {
 
   render() {
     return (
-      <div style={{ marginLeft: 16 }}>
+      <div style={{ marginLeft: 16, marginRight: 16 }} >
         <div
           style={{
             display: "flex",
             flexDirection: "row",
-            width: 800,
+            border: "1px solid grey",
+            padding: 20
           }}
         >
           <div
@@ -457,9 +458,9 @@ class Result extends Component {
               </GridContainer>
             ) : (
               <GridContainer spacing={0}>
-                <GridItem md={12} lg={6}>
+                <GridItem md={12} lg={6} style = {{marginTop: 20}}>
+                  <h5 style = {{ marginTop: "auto", marginBottom: "auto"}}> Popular queries </h5>
                   <BarChart
-                    title="Popular queries"
                     data={this.state.popularQueries}
                     xVariable="search_string"
                     yVariable="n"
@@ -467,23 +468,23 @@ class Result extends Component {
                     page={-1}
                   />
                 </GridItem>
-                <GridItem md={12} lg={6}>
+                <GridItem md={12} lg={6} style = {{marginTop: 20}}>
+                  <h5 style = {{ marginTop: "auto", marginBottom: "auto"}}> Popular pages </h5>
                   <BarChart
-                    title="Unsuccessful queries"
-                    data={this.state.unsuccessfulQueries}
-                    xVariable="search_string"
-                    yVariable="n"
-                    yLabel="Queries"
-                    page={-1}
-                  />
-                </GridItem>
-                <GridItem md={12} lg={6}>
-                  <BarChart
-                    title="Popular pages"
                     data={this.state.popularPages}
                     xVariable="partialUrl"
                     yVariable="n"
                     yLabel="Pages"
+                    page={-1}
+                  />
+                </GridItem>
+                <GridItem md={12} lg={6} style = {{marginTop: 20}}>
+                  <h5 style = {{ marginTop: "auto", marginBottom: "auto"}}> Unsuccessful queries </h5>
+                  <BarChart
+                    data={this.state.unsuccessfulQueries}
+                    xVariable="search_string"
+                    yVariable="n"
+                    yLabel="Queries"
                     page={-1}
                   />
                 </GridItem>

@@ -230,8 +230,8 @@ class PageAnalysis extends Component {
           style={{
             display: "flex",
             flexDirection: "row",
-            width: this.state.checkbox === false ? 750 : 950,
-            justifyContent: "space-around",
+            border: "1px solid grey",
+            padding: 20
           }}
         >
           <Dropdown
@@ -241,7 +241,7 @@ class PageAnalysis extends Component {
             onChange={this.changeTpItem}
           />
           <label
-            style={{ marginLeft: 8, marginTop: "auto", marginBottom: "auto" }}
+            style={{ marginLeft: 20, marginTop: "auto", marginBottom: "auto" }}
           >
             Fk_item:
             <input
@@ -262,6 +262,7 @@ class PageAnalysis extends Component {
               display: "flex",
               flexDirection: "column",
               justifyContent: "start",
+              marginLeft: 20
             }}
           >
             <TimePicker
