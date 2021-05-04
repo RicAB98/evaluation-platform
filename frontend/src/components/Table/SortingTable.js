@@ -52,30 +52,18 @@ const tp_item_list = {
   17: "agent.php?id=",
 }
 
-const CustomSwitch = withStyles({
-  switchBase: {
-    color: "#2c3e50",
-    '&$checked': {
-      color: "#2c3e50",
-    },
-    '&$checked + $track': {
-      backgroundColor: "#2c3e50",
-    },
-  },
-  checked: {},
-  track: {},
-})(Switch);
-
 function LinearProgressWithLabel(props) {
   return (
     <Box display="flex" alignItems="center">
       <Box width="100%" mr={1}>
-        <LinearProgress variant="determinate" {...props} />
+        <LinearProgress 
+          variant="determinate" 
+          {...props} />
       </Box>
       <Box minWidth={35}>
         <Typography variant="body2" color="textSecondary">{`${Math.round(
-          props.value,
-        )}%`}</Typography>
+          props.value * 10,
+        )/10}%`}</Typography>
       </Box>
     </Box>
   );
@@ -100,6 +88,8 @@ function getComparator(order, orderBy) {
 function stableSort(array, comparator) {
 
   const stabilizedThis = array.map((el, index) => [el, index]);
+  console.log(stabilizedThis)
+
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -112,17 +102,18 @@ function stableSort(array, comparator) {
 const headCells = [
   { id: 'search_string', numeric: false, disablePadding: true, label: 'Id' },
   { id: 'avgRank', numeric: true, disablePadding: false, label: 'Average rank' },
-  { id: 'totalLast24h', numeric: true, disablePadding: false, label: 'Last 24 hours searches' },
-  { id: 'totalPrevious24h', numeric: true, disablePadding: false, label: 'Previous 24 hours searches' },
-  { id: 'totalLast7days', numeric: true, disablePadding: false, label: 'Last 7 days searches' },
-  { id: 'GrowthLast24h', numeric: true, disablePadding: false, label: 'Last 24 hours growth' },
-  { id: 'GrowthLast7d', numeric: true, disablePadding: false, label: 'Last 7 days growth' },
+  { id: 'insuccessRate', numeric: true, disablePadding: false, label: 'Insuccess rate' },
+  { id: 'totalLast24h', numeric: true, disablePadding: false, label: 'Last 24 hours' },
+  { id: 'totalPrevious24h', numeric: true, disablePadding: false, label: 'Previous 24 hours' },
+  { id: 'average7days', numeric: true, disablePadding: false, label: 'Last 7 days' },
+  { id: 'GrowthLast24h', numeric: true, disablePadding: false, label: 'Last 24 hours %' },
+  { id: 'GrowthLast7d', numeric: true, disablePadding: false, label: 'Last 7 days %' },
   { id: 'weekgraph', numeric: false, disablePadding: false, label: '7 days graph' },
   { id: 'icon', numeric: false, disablePadding: false, label: '' },
 ];
 
 function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const { order, orderBy, onRequestSort, includeInsuccess } = props;
   const createSortHandler =  (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -131,6 +122,7 @@ function EnhancedTableHead(props) {
     <TableHead >
       <TableRow>
         {headCells.map((headCell) => (
+          !includeInsuccess && headCell.label === 'Insuccess rate' ? null :
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -212,10 +204,12 @@ const useStyles = makeStyles((theme) => ({
     width: 1,    
   },
   
-  sortLabel: {
-    icon:{
-      color: "white"
-    }
+  colorPrimary: {
+    backgroundColor: '#ffb2b2',
+  },
+
+  barColorPrimary: {
+    backgroundColor: '#e50000',
   }
 }));
 
@@ -227,8 +221,7 @@ export default function EnhancedTable(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const { rows, iconButton, localLinkPath, localLinkFields, localLinkAdditional } = props;
-
+  const { tableTitle, rows, includeInsuccess, iconButton, localLinkPath, localLinkFields, localLinkAdditional } = props;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -254,22 +247,19 @@ export default function EnhancedTable(props) {
     setPage(0);
   };
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
-
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
+      <h4 style = {{ marginBottom: 30}}> {tableTitle} </h4>
       <Paper className={classes.paper}>
         <TableContainer >
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
+            size={'small'}
             aria-label="enhanced table"
           >
             <EnhancedTableHead
@@ -280,10 +270,15 @@ export default function EnhancedTable(props) {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
-              
+              includeInsuccess = {includeInsuccess}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {rows.forEach(function (element) {
+                element.avgRank = Math.round(element.sumRank * 100 / element.totalClicks) / 100;
+                element.insuccessRate = 100 - (100 * element.totalClicks/element.totalLast7days)
+              })}{
+              
+              stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
@@ -300,9 +295,24 @@ export default function EnhancedTable(props) {
                       style={{border: "2px solid grey"}}
                     >
                       <TableCell style = {{paddingLeft: 20}} component="th" id={labelId} scope="row" padding="none">
-                        <b>{row.tp_item == null? row.search_string : tp_item_list[row.tp_item] + row.fk_item}</b>
+                        {row.tp_item == null? <b> {row.search_string} </b>
+                        : (<a href={"https://www.zerozero.pt/" + tp_item_list[row.tp_item] + row.fk_item}> <b>{tp_item_list[row.tp_item] + row.fk_item}</b> </a>)}
                       </TableCell>
-                      <TableCell align="right"><b>{row.avgRank}</b> <LinearProgressWithLabel variant="determinate" value={100 * row.oneCount/row.totalClicks} /></TableCell>
+                      <TableCell align="right">
+                        <b>{row.avgRank}</b> 
+                        <LinearProgressWithLabel 
+                          variant="determinate" 
+                          value={100 * row.oneCount/row.totalClicks} 
+                        />
+                      </TableCell> 
+                      {includeInsuccess ?
+                      <TableCell align="right"> 
+                        <LinearProgressWithLabel  
+                          variant="determinate" 
+                          value={row.insuccessRate}
+                          classes={{colorPrimary: classes.colorPrimary, barColorPrimary: classes.barColorPrimary}}
+                        />
+                      </TableCell> : null}
                       <TableCell align="right"><b>{row.totalLast24h}</b></TableCell>
                       <TableCell align="right"><b>{row.totalPrevious24h}</b></TableCell>
                       <TableCell align="right"><b>{row.totalLast7days}</b></TableCell>
@@ -351,10 +361,6 @@ export default function EnhancedTable(props) {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<CustomSwitch checked={dense} onChange={handleChangeDense} style={{ color: "#2c3e50" }} />}
-        label="Dense padding"
-      />
     </div>
   );
 }

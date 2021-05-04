@@ -33,11 +33,15 @@ class HotQueries extends Component {
       },
     ],
 
-    startDate: new Date("2021-1-23"),
+    startDate: new Date(),
+    endDate: new Date("2021-1-23 23:59"),
   };
 
   componentDidMount() {
-    this.submitEvaluation();
+    let sevenDaysEarlier = new Date(this.state.endDate - 60000 * 60 * 24 * 7) 
+    sevenDaysEarlier.setHours(0)
+    sevenDaysEarlier.setMinutes(0)
+    this.setState({ startDate: sevenDaysEarlier  }, () => this.submitEvaluation() )
   }
 
   getDate(date) {
@@ -50,10 +54,6 @@ class HotQueries extends Component {
     let minutes =
       date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
 
-    console.log(
-      date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
-    );
-
     return (
       date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
     );
@@ -64,10 +64,10 @@ class HotQueries extends Component {
   }
 
   submitEvaluation = () => {
-    getHotQueries(this.state.startDate)
+    getHotQueries(this.state.endDate)
       .then((res) => res.json())
       .then((res) => this.setState({ hotQueries: res }));
-    getHotPages(this.state.startDate)
+    getHotPages(this.state.endDate)
       .then((res) => res.json())
       .then((res) => this.setState({ hotPages: res }));
   };
@@ -76,22 +76,27 @@ class HotQueries extends Component {
     return (
       <div style={{ marginTop: 20, marginLeft: 16 }}>
         <SortingTable
+          tableTitle = "Hot Queries"
           rows={this.state.hotQueries}
+          includeInsuccess={true}
           localLinkPath="/admin/query?"
           localLinkFields={["search_string"]}
           localLinkAdditional={
-            "&startDate=" + this.getDate(this.state.startDate)
+            "&startDate=" + this.getDate(this.state.startDate) + "&endDate=" + this.getDate(this.state.endDate)
           }
           iconButton={<TextRotationNoneIcon />}
         />
         <SortingTable
+          tableTitle = "Hot Pages"
           rows={this.state.hotPages}
+          includeInsuccess={false}
           localLinkPath="/admin/page?"
           localLinkFields={["tp_item", "fk_item"]}
           localLinkAdditional={
-            "&startDate=" + this.getDate(this.state.startDate)
+            "&startDate=" + this.getDate(this.state.startDate) + "&endDate=" + this.getDate(this.state.endDate)
           }
           iconButton={<MenuBookIcon />}
+          style = {{marginTop: 300}}
         />
       </div>
     );
