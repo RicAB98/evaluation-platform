@@ -88,8 +88,6 @@ function getComparator(order, orderBy) {
 function stableSort(array, comparator) {
 
   const stabilizedThis = array.map((el, index) => [el, index]);
-  console.log(stabilizedThis)
-
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -315,7 +313,7 @@ export default function EnhancedTable(props) {
                       </TableCell> : null}
                       <TableCell align="right"><b>{row.totalLast24h}</b></TableCell>
                       <TableCell align="right"><b>{row.totalPrevious24h}</b></TableCell>
-                      <TableCell align="right"><b>{row.totalLast7days}</b></TableCell>
+                      <TableCell align="right"><b>{Math.round(100 * row.average7days)/100}</b></TableCell>
                       <TableCell align="right" style={{color: row.GrowthLast24h > 0 ? "#00cc00" :  "red" }}><b>{row.GrowthLast24h}%</b></TableCell>
                       <TableCell align="right" style={{color: row.GrowthLast7d > 0 ? "#00cc00" : "red" }}><b>{row.GrowthLast7d}%</b></TableCell>
                       <TableCell align="right">

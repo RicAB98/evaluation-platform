@@ -517,6 +517,43 @@ router.get("/clicksranks", function (req, res, next) {
   });
 });
 
+router.get("/querysummary", function (req, res, next) {
+
+  let string = req.query.string;
+  let startDate = new Date(req.query.startDate);
+
+  startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate()
+  );
+  let nextDay = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth(),
+    startDate.getDate()
+  );
+  nextDay.setDate(startDate.getDate() + 1);
+  let last24Hours = new Date(startDate - 60000 * 60 * 24);
+  let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
+
+  let query = queryUtil.getQuerySummary(
+    string, 
+    startDate,
+    nextDay,
+    last24Hours,
+    last7Days
+  );
+
+  db.getConnection((err, conn) => {
+    conn.query(query, (err, results, fields) => {
+      if (err) throw err;
+
+      res.send(results);
+      conn.release();
+    });
+  });
+});
+
 router.get("/pagesperrank", function (req, res, next) {
   let page = req.query.page;
   let mysql_id = req.query.mysql_id;
@@ -741,7 +778,7 @@ router.get("/hotqueries", function (req, res, next) {
   );
   let nextDay = new Date(
     startDate.getFullYear(),
-    startDate.getMonth() + 1,
+    startDate.getMonth(),
     startDate.getDate()
   );
   nextDay.setDate(startDate.getDate() + 1);

@@ -14,11 +14,13 @@ import Table2 from "../../components/Table/Table2.js";
 import TimePicker from "../../components/Calendar/TimePicker.js";
 import Calendar from "../../components/Calendar/Calendar.js";
 import Chart from "../../components/Chart/Chart";
+import List from "../../components/List/List";
 import {
   queryGraph,
   getClicksRanks,
   getPagesPerRank,
   getUnsuccessfulSessions,
+  getQuerySummary
 } from "../../requests/requests.js";
 
 class QueryPerformance extends Component {
@@ -49,6 +51,16 @@ class QueryPerformance extends Component {
     showedGraphData: {
       string: "Loading..",
     },
+
+    querySummary: [{
+      search_string: "Loading",
+      avgRank: 0,
+      totalLast24h: 0,
+      totalPrevious24h: 0,
+      totalLast7days: 0,
+      GrowthLast24h: 0,
+      GrowthLast7d: 0,
+    }],
 
     clickRank: [
       {
@@ -216,6 +228,15 @@ class QueryPerformance extends Component {
             }),
           this.setState({ showGraph: true })
         );
+
+    getQuerySummary(
+      this.state.string,
+      this.state.startDate,
+    )
+      .then((res) => res.json())
+      .then(
+        (res) => this.setState({ querySummary: res })
+      );
 
     getClicksRanks(
       this.state.string,
@@ -450,6 +471,16 @@ class QueryPerformance extends Component {
                   </div>
                 </div>
               ) : null}
+            </GridItem>
+            <GridItem
+              xs={this.state.showPagesPerRank === true ? 12 : 18}
+              sm={this.state.showPagesPerRank === true ? 12 : 18}
+              md={this.state.showPagesPerRank === true ? 4 : 6}
+            >
+
+            <List
+              info = {this.state.querySummary[0]}
+            />
             </GridItem>
             {this.state.showClickRank === true ? (
               <GridItem

@@ -90,7 +90,6 @@ class Result extends Component {
   };
 
   handleChangeView = (event) => {
-    console.log(event);
     this.setState({ viewTables: event.target.checked });
   };
 

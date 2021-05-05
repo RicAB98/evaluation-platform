@@ -82,8 +82,6 @@ export function topPages(startDate, endDate) {
 
   if (endDate != null) query = query + "&endDate=" + endDate;
 
-  console.log(query);
-
   return fetch(query, {
     method: "GET",
     headers: {
@@ -102,6 +100,19 @@ export function queryGraph(string, startDate, endDate) {
     startDate +
     "&endDate=" +
     endDate;
+
+  return fetch(query, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+}
+
+export function getQuerySummary(string, startDate) {
+  let query =
+    apiHost + "/querysummary?string=" + string + "&startDate=" + startDate;
 
   return fetch(query, {
     method: "GET",
