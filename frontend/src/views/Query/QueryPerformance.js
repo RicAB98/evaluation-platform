@@ -232,6 +232,7 @@ class QueryPerformance extends Component {
     getQuerySummary(
       this.state.string,
       this.state.startDate,
+      this.state.checkbox == true ? this.state.endDate : null
     )
       .then((res) => res.json())
       .then(

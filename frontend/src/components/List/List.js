@@ -31,27 +31,96 @@ export default function InteractiveList(props) {
   const { info } = props;
 
   return (
-    <div style = {{}}>
+    <div style = {{width: "50%"}}>
       <div className={classes.demo}>
+        {
+            info.GrowthLast7d = info.average7days !== 0 ? Math.round((info.totalLast24h-info.average7days) * 100 * 100 / info.average7days)/100 : 0,
+            info.GrowthLast24h = info.totalPrevious24h !== 0 ? Math.round((info.totalLast24h-info.totalPrevious24h) * 100 * 100/info.totalPrevious24h)/100 : 0,
+
+            ''
+        }
         <List>
           <ListItem>
-            <ListItemText style ={{width: "50%"}}> <b> Total 7 days: </b> {info.totalLast7days} </ListItemText>
-            <ListItemText style ={{width: "50%"}}> <b> Average 7 days: </b> {Math.round(100 * info.average7days)/100} </ListItemText>
+            <ListItemText> 
+                Total 7 days:
+                <span style={{position: "absolute",
+                              right: 125 }}>
+                    <b> {info.totalLast7days} </b> 
+                </span>
+            </ListItemText>
           </ListItem>
           <ListItem>
-            <ListItemText style ={{width: "50%"}}> <b> Previous 24 hours: </b> {info.totalPrevious24h} </ListItemText>
-            <ListItemText style ={{width: "50%"}}> <b> Last 24 hours: </b> {info.totalLast24h}% </ListItemText>
+            <ListItemText>
+                Average 7 days: 
+                <span style={{position: "absolute",
+                              right: 125 }}>
+                    <b> {Math.round(100 * info.average7days)/100} </b> 
+                </span>
+            </ListItemText>
           </ListItem>
           <ListItem>
-            <ListItemText style ={{width: "50%"}}> <b> Growth 24 hours: </b> <span style={{color: info.GrowthLast24h > 0 ? "#00ff00" :  "#e50000" }}>{info.GrowthLast24h}% </span></ListItemText>
-            <ListItemText style ={{width: "50%"}}> <b> Growth 7 days: </b> <span style={{color: info.GrowthLast7d > 0 ? "#00e300" :  "#e50000" }}>{info.GrowthLast7d}% </span> </ListItemText>
+            <ListItemText> 
+                Previous 24 hours: 
+                <span style={{position: "absolute",
+                              right: 125 }}>
+                    <b> {info.totalPrevious24h} </b>
+                </span>
+            </ListItemText>
           </ListItem>
           <ListItem>
-            <ListItemText style ={{width: "50%"}}> <b> Average rank: </b> {Math.round(info.sumRank * 100 / info.totalClicks) / 100} </ListItemText>
-            <ListItemText style ={{width: "50%"}}> <b> Clicks on first option: </b> {Math.round((100 * info.oneCount/info.totalClicks) * 10) / 10} % </ListItemText>
+            <ListItemText> 
+                Within range: 
+                <span style={{position: "absolute",
+                              right: 125 }}>
+                    <b> {info.totalLast24h} </b>
+                </span>
+            </ListItemText>
           </ListItem>
           <ListItem>
-            <ListItemText> <b> Insuccess rate: </b> {Math.round((100 - (100 * info.totalClicks/info.totalLast7days)) * 10) / 10} % </ListItemText>
+            <ListItemText> 
+                 Growth 7 days:
+                <span style={{position: "absolute",
+                              right: 125, 
+                              color: info.GrowthLast7d > 0 ? "#00cc00" :  "red" }}>
+                    <b> {info.GrowthLast7d}% </b>
+                </span> 
+            </ListItemText>
+          </ListItem>
+          <ListItem>
+            <ListItemText> 
+                Growth 24 hours:
+                <span style={{position: "absolute",
+                              right: 125,
+                              color: info.GrowthLast24h > 0 ? "#00cc00" :  "red" }}>
+                    <b> {info.GrowthLast24h}% </b>
+                </span></ListItemText>
+          </ListItem>
+          <ListItem>
+            <ListItemText> 
+                Average rank:
+                <span style={{position: "absolute",
+                              right: 125 }}>
+                    <b> {info.totalClicks !== 0 ? Math.round(info.sumRank * 100 / info.totalClicks) / 100 : 0} </b>
+                </span>
+            </ListItemText>
+          </ListItem>
+          <ListItem>
+            <ListItemText> 
+                Clicks on first option: 
+                <span style={{position: "absolute",
+                              right: 125 }}>
+                    <b> {info.totalClicks !== 0 ? Math.round((100 * info.oneCount/info.totalClicks) * 10) / 10 : 0} % </b> 
+                </span>
+            </ListItemText>
+          </ListItem>
+          <ListItem>
+            <ListItemText>
+                Insuccess rate: 
+                <span style={{position: "absolute",
+                              right: 125 }}>
+                    <b> {info.totalLast7days !== 0 ? Math.round((100 - (100 * info.totalClicks/info.totalLast7days)) * 10) / 10 : 0} % </b> 
+                </span>
+            </ListItemText>
           </ListItem>
         </List>
       </div>

@@ -110,9 +110,11 @@ export function queryGraph(string, startDate, endDate) {
   });
 }
 
-export function getQuerySummary(string, startDate) {
+export function getQuerySummary(string, startDate, endDate) {
   let query =
     apiHost + "/querysummary?string=" + string + "&startDate=" + startDate;
+
+  if (endDate != null) query = query + "&endDate=" + endDate;
 
   return fetch(query, {
     method: "GET",
