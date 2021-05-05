@@ -53,13 +53,13 @@ class QueryPerformance extends Component {
     },
 
     querySummary: [{
-      search_string: "Loading",
       avgRank: 0,
+      oneCount: 0,
+      totalClicks: 0,
       totalLast24h: 0,
       totalPrevious24h: 0,
+      average7days: 0,
       totalLast7days: 0,
-      GrowthLast24h: 0,
-      GrowthLast7d: 0,
     }],
 
     clickRank: [

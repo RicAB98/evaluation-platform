@@ -663,6 +663,71 @@ router.get("/unsuccessfulsessions", function (req, res, next) {
   });
 });
 
+router.get("/pagesummary", function (req, res, next) {
+
+  let tp_item = req.query.tp_item;
+  let fk_item = req.query.fk_item;  
+  let startDate = new Date(req.query.startDate);
+  let endDate = new Date(req.query.endDate);
+
+  startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate(),
+    startDate.getHours(),
+    startDate.getMinutes()
+  );
+  
+  let nextDay = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth(),
+    startDate.getDate()
+  );
+
+  nextDay.setDate(startDate.getDate() + 1);
+
+  let last24Hours = new Date(startDate - 60000 * 60 * 24);
+  let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
+
+  if (endDate != "Invalid Date")
+  {
+    endDate = new Date(
+      endDate.getFullYear(),
+      endDate.getMonth() + 1,
+      endDate.getDate(),
+      endDate.getHours(),
+      endDate.getMinutes()    
+    );
+
+    nextDay = new Date(
+        endDate.getFullYear(),
+        endDate.getMonth(),
+        endDate.getDate()
+      );
+
+    nextDay.setDate(endDate.getDate() + 1);
+  }
+
+  let query = queryUtil.getPageSummary(
+    tp_item,
+    fk_item,
+    startDate,
+    endDate,
+    nextDay,
+    last24Hours,
+    last7Days
+  );
+
+  db.getConnection((err, conn) => {
+    conn.query(query, (err, results, fields) => {
+      if (err) throw err;
+
+      res.send(results);
+      conn.release();
+    });
+  });
+});
+
 router.get("/pagesrank", function (req, res, next) {
   let tp_item = req.query.tp_item;
   let fk_item = req.query.fk_item;

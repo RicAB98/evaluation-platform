@@ -203,6 +203,21 @@ export function getPagesRank(tp_item, fk_item, startDate, endDate) {
   });
 }
 
+export function getPageSummary(tp_item, fk_item, startDate, endDate) {
+  let query =
+    apiHost + "/pagesummary?tp_item=" + tp_item + "&fk_item=" + fk_item + "&startDate=" + startDate;
+
+  if (endDate != null) query = query + "&endDate=" + endDate;
+
+  return fetch(query, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+}
+
 export function getStringsPerRank(page, mysql_id, tp_item, fk_item, startDate, endDate) {
   let query =
     apiHost +

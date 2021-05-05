@@ -13,8 +13,9 @@ import ExpandableTable from "../../components/Table/ExpandableTable";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
 import Table2 from "../../components/Table/Table2.js";
 import TimePicker from "../../components/Calendar/TimePicker.js";
+import List from "../../components/List/List";
 
-import { getPagesRank, getStringsPerRank } from "../../requests/requests.js";
+import { getPagesRank, getPageSummary, getStringsPerRank } from "../../requests/requests.js";
 
 class PageAnalysis extends Component {
   state = {
@@ -59,6 +60,16 @@ class PageAnalysis extends Component {
         n: "Loading...",
       },
     ],
+
+    pageSummary: [{
+      avgRank: 0,
+      oneCount: 0,
+      totalClicks: 0,
+      totalLast24h: 0,
+      totalPrevious24h: 0,
+      average7days: 0,
+      totalLast7days: 0,
+    }],
 
     stringsPerRank: null,
   };
@@ -209,6 +220,17 @@ class PageAnalysis extends Component {
           this.setState({ tableData: res["rank"], pageLink: res["link"] }),
         this.setState({ showPagesRank: true })
       );
+
+    getPageSummary(
+      this.state.tp_item,
+      this.state.fk_item,
+      this.state.startDate,
+      this.state.checkbox == true ? this.state.endDate : null
+    )
+      .then((res) => res.json())
+      .then(
+        (res) => this.setState({ pageSummary: res })
+      );
   };
 
   changeStartDate = (event) => {
@@ -325,6 +347,15 @@ class PageAnalysis extends Component {
                   onClick={this.submitStringsPerRank}
                 />
               ) : null}
+            </GridItem>
+            <GridItem
+              xs={this.state.showPagesRank === true ? 12 : 18}
+              sm={this.state.showPagesRank === true ? 12 : 18}
+              md={this.state.showPagesRank === true ? 12 : 6}
+            >
+              <List
+                info = {this.state.pageSummary[0]}
+              />
             </GridItem>
             <GridItem xs={12} sm={12} md={4}>
               {this.state.showStringsPerRank === true ? (

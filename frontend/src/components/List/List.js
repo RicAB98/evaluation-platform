@@ -118,7 +118,7 @@ export default function InteractiveList(props) {
                 Insuccess rate: 
                 <span style={{position: "absolute",
                               right: 125 }}>
-                    <b> {info.totalLast7days !== 0 ? Math.round((100 - (100 * info.totalClicks/info.totalLast7days)) * 10) / 10 : 0} % </b> 
+                    <b> {info.totalLast7days !== 0 || info.totalLast24h !== 0 ? Math.round((100 - (100 * info.totalClicks/(info.totalLast7days + info.totalLast24h))) * 10) / 10 : 0} % </b> 
                 </span>
             </ListItemText>
           </ListItem>
