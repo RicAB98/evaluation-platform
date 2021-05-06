@@ -29,7 +29,7 @@ const tp_item_list = {
   13: "arbitro.php?id=",
   16: "dirigente.php?id=",
   17: "agent.php?id=",
-  18: "menu id="
+  18: "menu.php?id="
 }
 
 function LinearProgressWithLabel(props) {

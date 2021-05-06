@@ -326,9 +326,8 @@ class PageAnalysis extends Component {
         <div style={{ marginTop: 20, marginLeft: 16 }}>
           <GridContainer>
             <GridItem
-              xs={this.state.showPagesRank === true ? 12 : 18}
-              sm={this.state.showPagesRank === true ? 12 : 18}
-              md={this.state.showPagesRank === true ? 4 : 6}
+              xs={12}
+              lg={4}
             >
               {this.state.showPagesRank === true ? (
                 <Table2
@@ -349,15 +348,15 @@ class PageAnalysis extends Component {
               ) : null}
             </GridItem>
             <GridItem
-              xs={this.state.showPagesRank === true ? 12 : 18}
-              sm={this.state.showPagesRank === true ? 12 : 18}
-              md={this.state.showPagesRank === true ? 12 : 6}
+              xs={12}
+              lg={8}
+              style={{marginTop: 70}}
             >
               <List
                 info = {this.state.pageSummary[0]}
               />
             </GridItem>
-            <GridItem xs={12} sm={12} md={4}>
+            <GridItem xs={12} sm={12} md={2} style={{marginTop: 20}}>
               {this.state.showStringsPerRank === true ? (
                 <ExpandableTable
                   tableTitle={

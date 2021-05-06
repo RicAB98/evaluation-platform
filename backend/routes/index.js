@@ -789,7 +789,13 @@ router.get("/pagesrank", function (req, res, next) {
           n: otherPagesClicks,
         });
 
-      tp_item == 18 && results.length != 0 && (link = results[0].link);
+      if(tp_item == 18 && results.length != 0)
+      {
+        if(results[0].link.search('https://www.zerozero.pt/') == -1)
+          link = "https://www.zerozero.pt/" + results[0].link;
+        else
+          link = results[0].link
+      }
 
       let response = {
         link: link,

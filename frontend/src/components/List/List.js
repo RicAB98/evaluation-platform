@@ -31,7 +31,7 @@ export default function InteractiveList(props) {
   const { info } = props;
 
   return (
-    <div style = {{width: "50%"}}>
+    <div style = {{width: 350}}>
       <div className={classes.demo}>
         {
             info.GrowthLast7d = info.average7days !== 0 ? Math.round((info.totalLast24h-info.average7days) * 100 * 100 / info.average7days)/100 : 0,
@@ -44,7 +44,7 @@ export default function InteractiveList(props) {
             <ListItemText> 
                 Total 7 days:
                 <span style={{position: "absolute",
-                              right: 125 }}>
+                              right: 100 }}>
                     <b> {info.totalLast7days} </b> 
                 </span>
             </ListItemText>
@@ -53,7 +53,7 @@ export default function InteractiveList(props) {
             <ListItemText>
                 Average 7 days: 
                 <span style={{position: "absolute",
-                              right: 125 }}>
+                              right: 100 }}>
                     <b> {Math.round(100 * info.average7days)/100} </b> 
                 </span>
             </ListItemText>
@@ -62,7 +62,7 @@ export default function InteractiveList(props) {
             <ListItemText> 
                 Previous 24 hours: 
                 <span style={{position: "absolute",
-                              right: 125 }}>
+                              right: 100 }}>
                     <b> {info.totalPrevious24h} </b>
                 </span>
             </ListItemText>
@@ -71,7 +71,7 @@ export default function InteractiveList(props) {
             <ListItemText> 
                 Within range: 
                 <span style={{position: "absolute",
-                              right: 125 }}>
+                              right: 100 }}>
                     <b> {info.totalLast24h} </b>
                 </span>
             </ListItemText>
@@ -80,7 +80,7 @@ export default function InteractiveList(props) {
             <ListItemText> 
                  Growth 7 days:
                 <span style={{position: "absolute",
-                              right: 125, 
+                              right: 100, 
                               color: info.GrowthLast7d > 0 ? "#00cc00" :  "red" }}>
                     <b> {info.GrowthLast7d}% </b>
                 </span> 
@@ -90,7 +90,7 @@ export default function InteractiveList(props) {
             <ListItemText> 
                 Growth 24 hours:
                 <span style={{position: "absolute",
-                              right: 125,
+                              right: 100,
                               color: info.GrowthLast24h > 0 ? "#00cc00" :  "red" }}>
                     <b> {info.GrowthLast24h}% </b>
                 </span></ListItemText>
@@ -99,7 +99,7 @@ export default function InteractiveList(props) {
             <ListItemText> 
                 Average rank:
                 <span style={{position: "absolute",
-                              right: 125 }}>
+                              right: 100 }}>
                     <b> {info.totalClicks !== 0 ? Math.round(info.sumRank * 100 / info.totalClicks) / 100 : 0} </b>
                 </span>
             </ListItemText>
@@ -108,7 +108,7 @@ export default function InteractiveList(props) {
             <ListItemText> 
                 Clicks on first option: 
                 <span style={{position: "absolute",
-                              right: 125 }}>
+                              right: 100 }}>
                     <b> {info.totalClicks !== 0 ? Math.round((100 * info.oneCount/info.totalClicks) * 10) / 10 : 0} % </b> 
                 </span>
             </ListItemText>
@@ -117,7 +117,7 @@ export default function InteractiveList(props) {
             <ListItemText>
                 Insuccess rate: 
                 <span style={{position: "absolute",
-                              right: 125 }}>
+                              right: 100 }}>
                     <b> {info.totalLast7days !== 0 || info.totalLast24h !== 0 ? Math.round((100 - (100 * info.totalClicks/(info.totalLast7days + info.totalLast24h))) * 10) / 10 : 0} % </b> 
                 </span>
             </ListItemText>

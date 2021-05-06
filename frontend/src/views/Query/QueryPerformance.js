@@ -431,12 +431,12 @@ class QueryPerformance extends Component {
 
         <div style={{ marginTop: 20 }}>
           <GridContainer>
+          {this.state.showGraph === true ? (
             <GridItem
-              xs={this.state.showPagesPerRank === true ? 12 : 18}
-              sm={this.state.showPagesPerRank === true ? 12 : 18}
-              md={this.state.showPagesPerRank === true ? 4 : 6}
+              xs={12}
+              lg={6}
             >
-              {this.state.showGraph === true ? (
+              
                 <div style={{ backgroundColor: this.state.showGraph === true ? "#E8E8E8": "inherit" }}>
                   <Chart
                     string={this.state.showedGraphData["string"]}
@@ -471,12 +471,11 @@ class QueryPerformance extends Component {
                     />
                   </div>
                 </div>
-              ) : null}
             </GridItem>
+            ) : null}
             <GridItem
-              xs={this.state.showPagesPerRank === true ? 12 : 18}
-              sm={this.state.showPagesPerRank === true ? 12 : 18}
-              md={this.state.showPagesPerRank === true ? 4 : 6}
+              xs={12}
+              lg={this.state.showGraph === true ? 6 : 12}
             >
 
             <List
@@ -485,15 +484,13 @@ class QueryPerformance extends Component {
             </GridItem>
             {this.state.showClickRank === true ? (
               <GridItem
-                xs={this.state.showPagesPerRank === true ? 12 : 18}
-                sm={this.state.showPagesPerRank === true ? 12 : 18}
-                md={this.state.showPagesPerRank === true ? 4 : 6}
+                xs={12}
+                lg={4}
+                style = {{marginTop: 20}}
               >
                 <Table2
                   tableTitle={
-                    "Clicks' rank for query \"" +
-                    this.state.calculatedString +
-                    '"'
+                    "Positions clicked"
                   }
                   tableHeaderColor="gray"
                   tableHead={["Rank", "Clicks", ""]}
@@ -505,7 +502,7 @@ class QueryPerformance extends Component {
                 </h6>
               </GridItem>
             ) : null}
-            <GridItem xs={12} sm={12} md={4}>
+            <GridItem xs={12} md={12} lg={4} style = {{marginTop: 20}}>
               {this.state.showPagesPerRank === true ? (
                 <Table
                   tableTitle={
