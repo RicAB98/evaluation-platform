@@ -19,6 +19,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Chart from "../../components/Chart/Chart";
+import Dropdown from "../../components/Dropdown/Dropdown.js";
 
 function createData(query, avgrank, daygrowth, weekgrowth, daytotal, weektotal, weekgraph) {
   return { query, avgrank, daygrowth, weekgrowth, daytotal, weektotal, weekgraph };
@@ -219,7 +220,7 @@ export default function EnhancedTable(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const { tableTitle, rows, includeInsuccess, iconButton, localLinkPath, localLinkFields, localLinkAdditional } = props;
+  const { tableTitle, rows, includeInsuccess, iconButton, localLinkPath, localLinkFields, localLinkAdditional, defaultMinimum, dropdownOnChange } = props;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -251,7 +252,27 @@ export default function EnhancedTable(props) {
 
   return (
     <div className={classes.root}>
-      <h4 style = {{ marginBottom: 30}}> {tableTitle} </h4>
+      <div 
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        marginBottom: 30
+      }}>
+        <h4 style = {{marginTop: "auto", marginBottom: "auto", marginRight: 20, top: 200}}> {tableTitle} </h4>
+        <Dropdown
+          list={[{ id: 5, name: "5" },
+          { id: 10, name: 10 },
+          { id: 20, name: 20 },
+          { id: 50, name: 50 },
+          { id: 100, name: 100 },
+          { id: 200, name: 200 },
+          { id: 500, name: 500 },
+          { id: 1000, name: 1000 }]}
+          name="Minimum 24h"
+          value={defaultMinimum}
+          onChange={dropdownOnChange}
+        />
+      </div>
       <Paper className={classes.paper}>
         <TableContainer >
           <Table
@@ -273,7 +294,9 @@ export default function EnhancedTable(props) {
             <TableBody>
               {rows.forEach(function (element) {
                 element.avgRank = Math.round(element.sumRank * 100 / element.totalClicks) / 100;
-                element.insuccessRate = 100 - (100 * element.totalClicks/element.totalLast7days)
+                element.insuccessRate = 100 - (100 * element.totalClicks/(element.totalLast7days + element.totalLast24h));
+                element.GrowthLast7d = element.average7days !== 0 ? Math.round((element.totalLast24h-element.average7days) * 100 * 100 / element.average7days)/100 : 0;
+                element.GrowthLast24h = element.totalPrevious24h !== 0 ? Math.round((element.totalLast24h-element.totalPrevious24h) * 100 * 100/element.totalPrevious24h)/100 : Math.round((element.totalLast24h-1) * 100 * 100/1)/100
               })}{
               
               stableSort(rows, getComparator(order, orderBy))

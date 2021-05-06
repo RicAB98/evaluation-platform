@@ -35,6 +35,8 @@ class HotQueries extends Component {
 
     startDate: new Date(),
     endDate: new Date("2021-1-23 23:59"),
+    queryDefaultMinimum: 10,
+    pageDefaultMinimum: 10
   };
 
   componentDidMount() {
@@ -63,14 +65,56 @@ class HotQueries extends Component {
     return value + 1;
   }
 
+  changeQueryDefaultMinimum = (event) => {
+    this.setState({ queryDefaultMinimum: event.target.value }, () => this.getHotQueries());
+  };
+
+  changePageDefaultMinimum = (event) => {
+    this.setState({ pageDefaultMinimum: event.target.value }, () => this.getHotPages());
+  };
+
   submitEvaluation = () => {
-    getHotQueries(this.state.endDate)
+    
+    this.getHotQueries();
+    this.getHotPages();
+  };
+
+  getHotQueries() {
+
+    this.setState({hotQueries: [
+      {
+        search_string: "Loading",
+        avgRank: 0,
+        totalLast24h: 0,
+        totalPrevious24h: 0,
+        totalLast7days: 0,
+        GrowthLast24h: 0,
+        GrowthLast7d: 0,
+      },
+    ]})
+
+    getHotQueries(this.state.endDate, this.state.queryDefaultMinimum)
       .then((res) => res.json())
       .then((res) => this.setState({ hotQueries: res }));
-    getHotPages(this.state.endDate)
+  };
+
+  getHotPages() {
+    this.setState({hotPages: [
+      {
+        search_string: "Loading",
+        avgRank: 0,
+        totalLast24h: 0,
+        totalPrevious24h: 0,
+        totalLast7days: 0,
+        GrowthLast24h: 0,
+        GrowthLast7d: 0,
+      },
+    ]})
+
+    getHotPages(this.state.endDate, this.state.pageDefaultMinimum)
       .then((res) => res.json())
       .then((res) => this.setState({ hotPages: res }));
-  };
+  }
 
   render() {
     return (
@@ -85,6 +129,8 @@ class HotQueries extends Component {
             "&startDate=" + this.getDate(this.state.startDate) + "&endDate=" + this.getDate(this.state.endDate)
           }
           iconButton={<TextRotationNoneIcon />}
+          defaultMinimum = {this.state.queryDefaultMinimum}
+          dropdownOnChange = {this.changeQueryDefaultMinimum}
         />
         <SortingTable
           tableTitle = "Hot Pages"
@@ -97,6 +143,8 @@ class HotQueries extends Component {
           }
           iconButton={<MenuBookIcon />}
           style = {{marginTop: 300}}
+          defaultMinimum = {this.state.pageDefaultMinimum}
+          dropdownOnChange = {this.changePageDefaultMinimum}
         />
       </div>
     );

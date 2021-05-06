@@ -861,6 +861,7 @@ router.get("/stringsperrank", function (req, res, next) {
 
 router.get("/hotqueries", function (req, res, next) {
   let startDate = new Date(req.query.startDate);
+  let minimum = req.query.minimum;
 
   startDate = new Date(
     startDate.getFullYear(),
@@ -877,6 +878,7 @@ router.get("/hotqueries", function (req, res, next) {
   let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
 
   let query = queryUtil.getHotQueries(
+    minimum,
     startDate,
     nextDay,
     last24Hours,

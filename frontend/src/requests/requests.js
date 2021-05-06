@@ -244,8 +244,8 @@ export function getStringsPerRank(page, mysql_id, tp_item, fk_item, startDate, e
   });
 }
 
-export function getHotQueries(startDate) {
-  let query = apiHost + "/hotqueries?startDate=" +  startDate;
+export function getHotQueries(startDate, minimum) {
+  let query = apiHost + "/hotqueries?startDate=" +  startDate + "&minimum= " + minimum;
 
   return fetch(query, {
     method: "GET",
@@ -256,8 +256,8 @@ export function getHotQueries(startDate) {
   });
 }
 
-export function getHotPages(startDate) {
-  let query = apiHost + "/hotpages?startDate=" +  startDate;
+export function getHotPages(startDate, minimum) {
+  let query = apiHost + "/hotpages?startDate=" +  startDate + "&minimum= " + minimum;
   
   return fetch(query, {
     method: "GET",
