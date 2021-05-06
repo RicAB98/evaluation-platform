@@ -10,8 +10,6 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -20,26 +18,6 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Chart from "../../components/Chart/Chart";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
-
-function createData(query, avgrank, daygrowth, weekgrowth, daytotal, weektotal, weekgraph) {
-  return { query, avgrank, daygrowth, weekgrowth, daytotal, weektotal, weekgraph };
-}
-
-const rows = [
-  createData('Cupcake', 305, 3.7, 5.6, 400, 2000, 15),
-  createData('Donut', 452, 25.0, 20.5, 500, 2100, 10),
-  createData('Eclair', 262, 5.0, -5.5, 550, 2100, 10),
-  createData('Frozen yoghurt', 159, 6.0, 1.0, 100, 262),
-  createData('Gingerbread', 356, 16.0, 10.3, 300, 516,5),
-  /*createData('Honeycomb', 408, 3.2, 87, 6.5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0),
-  createData('KitKat', 518, 26.0, 65, 7.0),
-  createData('Lollipop', 392, 0.2, 98, 0.0),
-  createData('Marshmallow', 318, 0, 81, 2.0),
-  createData('Nougat', 360, 19.0, 9, 37.0),
-  createData('Oreo', 437, 18.0, 63, 4.0),*/
-];
 
 const tp_item_list = {
   2: "competition.php?id_comp=",
@@ -51,6 +29,7 @@ const tp_item_list = {
   13: "arbitro.php?id=",
   16: "dirigente.php?id=",
   17: "agent.php?id=",
+  18: "menu id="
 }
 
 function LinearProgressWithLabel(props) {
@@ -87,7 +66,6 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
-
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -220,7 +198,13 @@ export default function EnhancedTable(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [entityType, setEntityType] = React.useState(0);
   const { tableTitle, rows, includeInsuccess, iconButton, localLinkPath, localLinkFields, localLinkAdditional, defaultMinimum, dropdownOnChange } = props;
+
+  const handleChangeEntity = (event) => {
+    setEntityType(event.target.value)
+    setPage(0)
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -272,6 +256,25 @@ export default function EnhancedTable(props) {
           value={defaultMinimum}
           onChange={dropdownOnChange}
         />
+        {tableTitle === "Hot Pages" ? 
+        <Dropdown
+          list={[
+            { id: 0, name: "All" },
+            { id: 2, name: "Competition" },
+            { id: 3, name: "Team" },
+            { id: 4, name: "Player" },
+            { id: 8, name: "Stadium" },
+            { id: 9, name: "Coach" },
+            { id: 10, name: "City" },
+            { id: 13, name: "Referee" },
+            { id: 16, name: "Director" },
+            { id: 17, name: "Agent" },
+            { id: 18, name: "Menu" },
+          ]}
+          name="Entities"
+          value={entityType}
+          onChange={handleChangeEntity}
+        /> : null}
       </div>
       <Paper className={classes.paper}>
         <TableContainer >
@@ -295,11 +298,12 @@ export default function EnhancedTable(props) {
               {rows.forEach(function (element) {
                 element.avgRank = Math.round(element.sumRank * 100 / element.totalClicks) / 100;
                 element.insuccessRate = 100 - (100 * element.totalClicks/(element.totalLast7days + element.totalLast24h));
-                element.GrowthLast7d = element.average7days !== 0 ? Math.round((element.totalLast24h-element.average7days) * 100 * 100 / element.average7days)/100 : 0;
+                element.GrowthLast7d = element.average7days !== 0 ? Math.round((element.totalLast24h-element.average7days) * 100 * 100 / element.average7days)/100 : Math.round((element.totalLast24h-1) * 100 * 100 / 1)/100;
                 element.GrowthLast24h = element.totalPrevious24h !== 0 ? Math.round((element.totalLast24h-element.totalPrevious24h) * 100 * 100/element.totalPrevious24h)/100 : Math.round((element.totalLast24h-1) * 100 * 100/1)/100
               })}{
               
               stableSort(rows, getComparator(order, orderBy))
+                .filter(element => entityType != 0 ? element.tp_item == entityType : true)
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
@@ -375,7 +379,7 @@ export default function EnhancedTable(props) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={entityType == 0 ? rows.length : rows.filter(element =>element.tp_item == entityType).length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
