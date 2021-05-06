@@ -897,6 +897,7 @@ router.get("/hotqueries", function (req, res, next) {
 
 router.get("/hotpages", function (req, res, next) {
   let startDate = new Date(req.query.startDate);
+  let minimum = req.query.minimum;
 
   startDate = new Date(
     startDate.getFullYear(),
@@ -915,7 +916,7 @@ router.get("/hotpages", function (req, res, next) {
   let last24Hours = new Date(startDate - 60000 * 60 * 24);
   let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
 
-  let query = queryUtil.getHotPages(startDate, nextDay, last24Hours, last7Days);
+  let query = queryUtil.getHotPages(minimum, startDate, nextDay, last24Hours, last7Days);
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
