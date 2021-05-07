@@ -16,9 +16,9 @@ class Compare extends Component {
   };
 
   componentDidMount() {
-    getEvaluations()
+    /*getEvaluations()
       .then((res) => res.json())
-      .then((res) => this.setState({ evaluations: res }));
+      .then((res) => this.setState({ evaluations: res }));*/
   }
 
   render() {
