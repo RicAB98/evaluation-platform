@@ -405,7 +405,7 @@ router.get("/toppages", function (req, res, next) {
   });
 });
 
-router.get("/queryGraph", function (req, res, next) {
+router.get("/querygraph", function (req, res, next) {
   let string = req.query.string;
   let startDate = new Date(req.query.startDate);
   let endDate = new Date(req.query.endDate);
@@ -427,7 +427,7 @@ router.get("/queryGraph", function (req, res, next) {
     0
   );
 
-  let query = queryUtil.getSearchesPerDay(string, startDate, endDate);
+  let query = queryUtil.getQuerySearchesPerDay(string, startDate, endDate);
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
@@ -658,6 +658,58 @@ router.get("/unsuccessfulsessions", function (req, res, next) {
       if (err) throw err;
 
       res.send(results[0]);
+      conn.release();
+    });
+  });
+});
+
+router.get("/pagegraph", function (req, res, next) {
+
+  let tp_item = req.query.tp_item;
+  let fk_item = req.query.fk_item;  
+  let startDate = new Date(req.query.startDate);
+  let endDate = new Date(req.query.endDate);
+
+  startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate(),
+    startDate.getHours(),
+    startDate.getMinutes(),
+    0
+  );
+  endDate = new Date(
+    endDate.getFullYear(),
+    endDate.getMonth() + 1,
+    endDate.getDate(),
+    endDate.getHours(),
+    endDate.getMinutes(),
+    0
+  );
+
+  let query = queryUtil.getPageSearchesPerDay(tp_item, fk_item, startDate, endDate);
+
+  db.getConnection((err, conn) => {
+    conn.query(query, (err, results, fields) => {
+      if (err) throw err;
+
+      dates = new Array();
+      clicks = new Array();
+
+      for (r of results) {
+        dates.push(r.x);
+        clicks.push(r.y);
+      }
+
+      response = {
+        tp_item: tp_item,
+        fk_item : fk_item,
+        color: "hsl(181, 70%, 50%)",
+        dates: dates,
+        clicks: clicks,
+      };
+
+      res.send(response);
       conn.release();
     });
   });

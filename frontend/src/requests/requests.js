@@ -94,7 +94,7 @@ export function topPages(startDate, endDate) {
 export function queryGraph(string, startDate, endDate) {
   let query =
     apiHost +
-    "/queryGraph?string=" +
+    "/querygraph?string=" +
     string +
     "&startDate=" +
     startDate +
@@ -172,6 +172,27 @@ export function getUnsuccessfulSessions(string, startDate, endDate) {
     startDate;
 
   if (endDate != null) query = query + "&endDate=" + endDate;
+
+  return fetch(query, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+}
+
+export function pageGraph(tp_item, fk_item, startDate, endDate) {
+  let query =
+    apiHost +
+    "/pagegraph?tp_item=" +
+    tp_item +
+    "&fk_item=" +
+    fk_item +
+    "&startDate=" +
+    startDate +
+    "&endDate=" +
+    endDate;
 
   return fetch(query, {
     method: "GET",

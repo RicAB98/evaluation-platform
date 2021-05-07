@@ -521,7 +521,11 @@ class QueryPerformance extends Component {
                 </h6>
               </GridItem>
             ) : null}
-            <GridItem xs={12} md={12} lg={4} style = {{marginTop: 20}}>
+            <GridItem 
+                xs={12}
+                lg={4}
+                style = {{marginTop: 20}}
+            >
               {this.state.showPagesPerRank === true ? (
                 <Table
                   tableTitle={

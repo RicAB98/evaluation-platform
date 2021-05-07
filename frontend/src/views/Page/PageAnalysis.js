@@ -8,6 +8,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
+import Calendar from "../../components/Calendar/Calendar.js";
+import Chart from "../../components/Chart/Chart";
 import Button from "../../components/Button/Button.js";
 import ExpandableTable from "../../components/Table/ExpandableTable";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
@@ -15,7 +17,7 @@ import Table2 from "../../components/Table/Table2.js";
 import TimePicker from "../../components/Calendar/TimePicker.js";
 import List from "../../components/List/List";
 
-import { getPagesRank, getPageSummary, getStringsPerRank } from "../../requests/requests.js";
+import { getPagesRank, pageGraph, getPageSummary, getStringsPerRank } from "../../requests/requests.js";
 
 class PageAnalysis extends Component {
   state = {
@@ -40,6 +42,10 @@ class PageAnalysis extends Component {
 
     checkbox: false,
 
+    showGraph: false,
+    graphStartDate: null,
+    graphEndDate: null,
+
     calculatedTp_Item: 0,
     calculatedFk_Item: 0,
     calculatedStartDate: null,
@@ -53,6 +59,14 @@ class PageAnalysis extends Component {
 
     page: 0,
     rowsPerPage: 10,
+
+    graphData: {
+      string: "Loading..",
+    },
+
+    showedGraphData: {
+      string: "Loading..",
+    },
 
     tableData: [
       {
@@ -219,6 +233,23 @@ class PageAnalysis extends Component {
         this.state.checkbox == true ? this.state.endDate : null,
     });
 
+    if (this.state.checkbox == true)
+      pageGraph(this.state.tp_item, 
+                this.state.fk_item, 
+                this.state.startDate, 
+                this.state.endDate)
+        .then((res) => res.json())
+        .then(
+          (res) =>
+            this.setState({
+              graphData: res,
+              showedGraphData: res,
+              graphStartDate: new Date(res["dates"][0]),
+              graphEndDate: new Date(res["dates"][res["dates"].length - 1]),
+            }),
+          this.setState({ showGraph: true })
+        );
+
     getPageSummary(
       this.state.tp_item,
       this.state.fk_item,
@@ -344,8 +375,58 @@ class PageAnalysis extends Component {
           </Button>
         </div>
 
-        <div style={{ marginTop: 20, marginLeft: 16 }}>
+        <div style={{ marginTop: 20 }}>
           <GridContainer>
+            {this.state.showGraph === true ? (
+            <GridItem
+              xs={12}
+              lg={6}
+            >  
+                <div style={{ backgroundColor: this.state.showGraph === true ? "#E8E8E8": "inherit" }}>
+                  <Chart
+                    string={this.state.showedGraphData["string"]}
+                    labels={this.state.showedGraphData["dates"]}
+                    data={this.state.showedGraphData["clicks"]}
+                    smaller = {false}
+                    displayLegend = {true}
+                    displayTitle = {true}
+                    displayX = {true}
+                    displayXLegend = {true}
+                    displayYLegend = {true}
+                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      width: 800,
+                    }}
+                  >
+                    <Calendar
+                      id="startDate"
+                      selectedDate={this.state.graphStartDate}
+                      onChange={this.changeGraphStartDate}
+                      label="Start date"
+                    />
+                    <Calendar
+                      id="endDate"
+                      selectedDate={this.state.graphEndDate}
+                      onChange={this.changeGraphEndDate}
+                      label="End date"
+                      margin="20px"
+                    />
+                  </div>
+                </div>
+            </GridItem>
+            ) : null}
+            <GridItem
+              xs={12}
+              lg={this.state.showGraph === true ? 6 : 12}
+            >
+              <List
+                rangeInfo = {this.state.pageSummary[0]}
+                last24hInfo = {this.state.last24HourSummary[0]}
+              />
+            </GridItem>
             <GridItem
               xs={12}
               lg={4}
@@ -367,16 +448,6 @@ class PageAnalysis extends Component {
                   onClick={this.submitStringsPerRank}
                 />
               ) : null}
-            </GridItem>
-            <GridItem
-              xs={12}
-              lg={8}
-              style={{marginTop: 70}}
-            >
-              <List
-                rangeInfo = {this.state.pageSummary[0]}
-                last24hInfo = {this.state.last24HourSummary[0]}
-              />
             </GridItem>
             <GridItem xs={12} sm={12} md={2} style={{marginTop: 20}}>
               {this.state.showStringsPerRank === true ? (

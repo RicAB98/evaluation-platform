@@ -4,7 +4,7 @@ const query = {
   },
 
   //TODO change to main table AND use dates
-  getSearchesPerDay(string, startDate, endDate) {
+  getQuerySearchesPerDay(string, startDate, endDate) {
     timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
                     ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
                     AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
@@ -50,6 +50,16 @@ const query = {
     (select search_string, count(*) as totalLast24h from fourdays where ${timeConditions} and search_string = '${string}') as day on ranking.search_string = day.search_string left join
     (select search_string, count(*) as oneCount from fourdays where date > ${last7Days} and date < ${nextDay} and mysql_id = 1 and (page_number = 1 or page_number = 0) and fk_item <> 0 and search_string = '${string}') as firstOption on ranking.search_string = firstOption.search_string
     `;
+  },
+
+  getPageSearchesPerDay(tp_item, fk_item, startDate, endDate) {
+    timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
+                    ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
+                    AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
+                    ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`;
+
+    return `SELECT date_format(date, "%Y-%c-%d") as x, count(*) as y FROM fourdays
+            WHERE ${timeConditions} GROUP BY tp_item, fk_item, date HAVING tp_item = ${tp_item} and fk_item = ${fk_item}`;
   },
 
   //Returns list of position clicked to reach a certain page
