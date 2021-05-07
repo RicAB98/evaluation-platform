@@ -36,6 +36,7 @@ class PageAnalysis extends Component {
 
     startDate: new Date(),
     endDate: new Date(),
+    today: new Date("2021-01-23"),
 
     checkbox: false,
 
@@ -62,6 +63,16 @@ class PageAnalysis extends Component {
     ],
 
     pageSummary: [{
+      avgRank: 0,
+      oneCount: 0,
+      totalClicks: 0,
+      totalLast24h: 0,
+      totalPrevious24h: 0,
+      average7days: 0,
+      totalLast7days: 0,
+    }],
+
+    last24HourSummary: [{
       avgRank: 0,
       oneCount: 0,
       totalClicks: 0,
@@ -208,6 +219,27 @@ class PageAnalysis extends Component {
         this.state.checkbox == true ? this.state.endDate : null,
     });
 
+    getPageSummary(
+      this.state.tp_item,
+      this.state.fk_item,
+      this.state.startDate,
+      this.state.checkbox == true ? this.state.endDate : null
+    )
+      .then((res) => res.json())
+      .then(
+        (res) => this.setState({ pageSummary: res })
+      );
+
+    getPageSummary(
+      this.state.tp_item,
+      this.state.fk_item,
+      this.state.today
+    )
+      .then((res) => res.json())
+      .then(
+        (res) => this.setState({ last24HourSummary: res })
+      );
+
     getPagesRank(
       this.state.tp_item,
       this.state.fk_item,
@@ -219,17 +251,6 @@ class PageAnalysis extends Component {
         (res) =>
           this.setState({ tableData: res["rank"], pageLink: res["link"] }),
         this.setState({ showPagesRank: true })
-      );
-
-    getPageSummary(
-      this.state.tp_item,
-      this.state.fk_item,
-      this.state.startDate,
-      this.state.checkbox == true ? this.state.endDate : null
-    )
-      .then((res) => res.json())
-      .then(
-        (res) => this.setState({ pageSummary: res })
       );
   };
 
@@ -353,7 +374,8 @@ class PageAnalysis extends Component {
               style={{marginTop: 70}}
             >
               <List
-                info = {this.state.pageSummary[0]}
+                rangeInfo = {this.state.pageSummary[0]}
+                last24hInfo = {this.state.last24HourSummary[0]}
               />
             </GridItem>
             <GridItem xs={12} sm={12} md={2} style={{marginTop: 20}}>

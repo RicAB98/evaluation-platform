@@ -27,6 +27,7 @@ class QueryPerformance extends Component {
   state = {
     startDate: new Date(),
     endDate: new Date(),
+    today: new Date("2021-01-23"),
     calculatedStartDate: null,
     calculatedEndDate: null,
 
@@ -53,6 +54,16 @@ class QueryPerformance extends Component {
     },
 
     querySummary: [{
+      avgRank: 0,
+      oneCount: 0,
+      totalClicks: 0,
+      totalLast24h: 0,
+      totalPrevious24h: 0,
+      average7days: 0,
+      totalLast7days: 0,
+    }],
+
+    last24HourSummary: [{
       avgRank: 0,
       oneCount: 0,
       totalClicks: 0,
@@ -237,6 +248,15 @@ class QueryPerformance extends Component {
       .then((res) => res.json())
       .then(
         (res) => this.setState({ querySummary: res })
+      );
+
+    getQuerySummary(
+      this.state.string,
+      this.state.today,
+    )
+      .then((res) => res.json())
+      .then(
+        (res) => this.setState({ last24HourSummary: res })
       );
 
     getClicksRanks(
@@ -476,10 +496,10 @@ class QueryPerformance extends Component {
               xs={12}
               lg={this.state.showGraph === true ? 6 : 12}
             >
-
-            <List
-              info = {this.state.querySummary[0]}
-            />
+              <List
+                rangeInfo = {this.state.querySummary[0]}
+                last24hInfo = {this.state.last24HourSummary[0]}
+              />
             </GridItem>
             {this.state.showClickRank === true ? (
               <GridItem
