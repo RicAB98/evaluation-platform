@@ -4,7 +4,7 @@ import Button from "../../components/Button/Button.js";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
 import StickyHeadTable from "../../components/StickyHeadTable/StickyHeadTable.js";
 
-import { getEvaluations } from "../../requests/requests.js";
+//import { getEvaluations } from "../../requests/requests.js";
 
 class Compare extends Component {
   state = {
