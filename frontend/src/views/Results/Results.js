@@ -212,7 +212,7 @@ class Result extends Component {
           <div
             style={{
               display: "flex",
-              flexDirection: "column",
+              flexDirection: "row",
               justifyContent: "start",
             }}
           >
@@ -221,29 +221,29 @@ class Result extends Component {
               onChange={this.changeStartDate}
               label={this.state.checkbox === true ? "Start date" : "Date"}
             />
+            {this.state.checkbox === true ?
+              <Calendar
+                selectedDate={this.state.endDate}
+                onChange={this.changeEndDate}
+                label="End date"
+                margin="20px"
+              /> : null}
             <FormControlLabel
               control={
                 <Checkbox
                   checked={this.state.checkbox}
                   onChange={this.handleCheckbox}
-                  style={{ color: "#2c3e50" }}
+                  style={{ color: "#2c3e50", marginLeft: 20 }}
                   name="checkbox"
                 />
               }
               label="Date range"
               style={{ marginTop: "auto", marginBottom: "auto" }}
-            />
+            /> 
           </div>
-          {this.state.checkbox === true ? (
-            <Calendar
-              selectedDate={this.state.endDate}
-              onChange={this.changeEndDate}
-              label="End date"
-              margin="20px"
-            />
-          ) : (
+          {this.state.checkbox !== true ? 
+          (
             <ButtonGroup
-              orientation="vertical"
               aria-label="vertical outlined primary button group"
             >
               <Button
@@ -280,7 +280,7 @@ class Result extends Component {
                 Last 24 hours
               </Button>
             </ButtonGroup>
-          )}
+          ) : null}
           <Button
             color="custom"
             onClick={() =>

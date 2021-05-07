@@ -522,14 +522,6 @@ router.get("/querysummary", function (req, res, next) {
   let string = req.query.string;
   let startDate = new Date(req.query.startDate);
   let endDate = new Date(req.query.endDate);
-
-  startDate = new Date(
-    startDate.getFullYear(),
-    startDate.getMonth() + 1,
-    startDate.getDate(),
-    startDate.getHours(),
-    startDate.getMinutes()
-  );
   
   let nextDay = new Date(
     startDate.getFullYear(),
@@ -541,6 +533,14 @@ router.get("/querysummary", function (req, res, next) {
 
   let last24Hours = new Date(startDate - 60000 * 60 * 24);
   let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
+
+  /*startDate = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth() + 1,
+    startDate.getDate(),
+    startDate.getHours(),
+    startDate.getMinutes()
+  );*/
 
   if (endDate != "Invalid Date")
   {

@@ -391,7 +391,7 @@ class QueryPerformance extends Component {
           <div
             style={{
               display: "flex",
-              flexDirection: "column",
+              flexDirection: "row",
               justifyContent: "start",
               marginLeft: 20
             }}
@@ -402,20 +402,7 @@ class QueryPerformance extends Component {
               label={this.state.checkbox === true ? "Start date" : "Date"}
               style = {{}}
             />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.checkbox}
-                  onChange={this.handleCheckbox}
-                  style={{ color: "#2c3e50" }}
-                  name="checkbox"
-                />
-              }
-              label="Date range"
-              style={{ marginTop: "auto", marginBottom: "auto" }}
-            />
-          </div>
-          {this.state.checkbox === true ? (
+            {this.state.checkbox === true ? (
             <TimePicker
               selectedDate={this.state.endDate}
               onChange={this.changeEndDate}
@@ -423,7 +410,19 @@ class QueryPerformance extends Component {
               margin="20px"
             />
           ) : null}
-
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.checkbox}
+                  onChange={this.handleCheckbox}
+                  style={{ color: "#2c3e50", marginLeft: 20 }}
+                  name="checkbox"
+                />
+              }
+              label="Date range"
+              style={{ marginTop: "auto", marginBottom: "auto" }}
+            />
+          </div>
           <Button color="custom" onClick={() => this.submitEvaluation()}>
             Submit
           </Button>

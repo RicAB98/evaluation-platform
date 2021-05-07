@@ -30,18 +30,18 @@ const query = {
   },
 
   getQuerySummary(string, startDate, endDate, nextDay, last24Hours, last7Days) {
-    let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`;
+    let timeConditions = `date = '${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}'`;
 
     if (endDate != "Invalid Date")
-      timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()} 
+      timeConditions = `time > '${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()} 
                       ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'
-                      AND time < '${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()} 
+                      AND time < '${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()} 
                       ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`;
 
-    startDate = `'${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}'`;            
-    nextDay = `'${nextDay.getFullYear()}-${nextDay.getMonth()}-${nextDay.getDate()}'`;
-    last24Hours = `'${last24Hours.getFullYear()}-${last24Hours.getMonth()}-${last24Hours.getDate()}'`;
-    last7Days = `'${last7Days.getFullYear()}-${last7Days.getMonth()}-${last7Days.getDate()}'`;
+    startDate = `'${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}'`;            
+    nextDay = `'${nextDay.getFullYear()}-${nextDay.getMonth() + 1}-${nextDay.getDate()}'`;
+    last24Hours = `'${last24Hours.getFullYear()}-${last24Hours.getMonth() + 1}-${last24Hours.getDate()}'`;
+    last7Days = `'${last7Days.getFullYear()}-${last7Days.getMonth() + 1}-${last7Days.getDate()}'`;
 
     return `select coalesce(sumRank,0) as sumRank, coalesce(oneCount,0) as oneCount, coalesce(totalClicks,0) as totalClicks, coalesce(totalLast24h,0) as totalLast24h, coalesce(totalPrevious24h,0) as totalPrevious24h, coalesce(totalLast7days,0) as totalLast7days, coalesce(average7days,0) as average7days FROM 
     (select search_string, sum(case when page_number = 0 then mysql_id else page_number * mysql_id end) as sumRank, count(*) as totalClicks from fourdays where date > ${last7Days} and date < ${nextDay} and fk_item <> 0 and search_string = '${string}') as ranking left join
