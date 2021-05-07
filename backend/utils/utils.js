@@ -11,6 +11,20 @@ module.exports = {
       17: "agent.php?id=",
     },
 
+    addOne(month)
+    {
+      return month + 1;
+    },
+
+    getCorrectDate(date)
+    {
+      let correctDate = new Date(date);
+
+      if(correctDate.getTimezoneOffset() == "-60") correctDate = new Date(correctDate - 60000 * 60);
+
+      return correctDate;
+    },
+
     buildPageInformation(row)
     {
       let url = "https://www.zerozero.pt/" + module.exports.tp_item_list[row.tp_item] + row.fk_item

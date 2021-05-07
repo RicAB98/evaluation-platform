@@ -13,46 +13,39 @@ router.post("/runevaluation", function (req, res, next) {
   if (endDate.getFullYear() == 1970) {
     startDate = new Date(
       startDate.getFullYear(),
-      startDate.getMonth() + 1,
+      startDate.getMonth(),
       startDate.getDate(),
       0,
       0,
       0
     );
 
-    formatedStartDate =
-      startDate.getFullYear() +
-      "-" +
-      startDate.getMonth() +
-      "-" +
-      startDate.getDate() +
-      " 00:00:00";
   } else {
     startDate = new Date(
       startDate.getFullYear(),
-      startDate.getMonth() + 1,
+      startDate.getMonth(),
       startDate.getDate(),
       startDate.getHours(),
       startDate.getMinutes(),
       0
     );
-
-    formatedStartDate =
-      startDate.getFullYear() +
-      "-" +
-      startDate.getMonth() +
-      "-" +
-      startDate.getDate() +
-      " " +
-      startDate.getHours() +
-      ":" +
-      startDate.getMinutes() +
-      ":00";
   }
+
+  formatedStartDate =
+    startDate.getFullYear() +
+    "-" +
+    utils.addOne(startDate.getMonth()) +
+    "-" +
+    startDate.getDate() +
+    " " +
+    startDate.getHours() +
+    ":" +
+    startDate.getMinutes() +
+    ":00";
 
   endDate = new Date(
     endDate.getFullYear(),
-    endDate.getMonth() + 1,
+    endDate.getMonth(),
     endDate.getDate(),
     endDate.getHours(),
     endDate.getMinutes(),
@@ -62,7 +55,7 @@ router.post("/runevaluation", function (req, res, next) {
   formatedEndDate =
     endDate.getFullYear() +
     "-" +
-    endDate.getMonth() +
+    utils.addOne(endDate.getMonth()) +
     "-" +
     endDate.getDate() +
     " " +
@@ -132,25 +125,8 @@ router.post("/runevaluation", function (req, res, next) {
 
 router.get("/loadevaluation", function (req, res, next) {
   let type = req.query.type;
-  let startDate = new Date(req.query.startDate);
-  let endDate = new Date(req.query.endDate);
-
-  startDate = new Date(
-    startDate.getFullYear(),
-    startDate.getMonth() + 1,
-    startDate.getDate(),
-    startDate.getHours(),
-    startDate.getMinutes(),
-    0
-  );
-  endDate = new Date(
-    endDate.getFullYear(),
-    endDate.getMonth() + 1,
-    endDate.getDate(),
-    endDate.getHours(),
-    endDate.getMinutes(),
-    0
-  );
+  let startDate = utils.getCorrectDate(req.query.startDate)
+  let endDate = utils.getCorrectDate(req.query.endDate);
 
   switch (type) {
     case "1":
@@ -191,24 +167,25 @@ router.get("/loadevaluation", function (req, res, next) {
 
 router.get("/querygraph", function (req, res, next) {
   let string = req.query.string;
-  let startDate = new Date(req.query.startDate);
-  let endDate = new Date(req.query.endDate);
+  let startDate = utils.getCorrectDate(req.query.startDate)
+  let endDate = utils.getCorrectDate(req.query.endDate)
 
   startDate = new Date(
     startDate.getFullYear(),
-    startDate.getMonth() + 1,
+    startDate.getMonth(),
     startDate.getDate(),
     startDate.getHours(),
     startDate.getMinutes(),
     0
   );
+
   endDate = new Date(
     endDate.getFullYear(),
-    endDate.getMonth() + 1,
+    endDate.getMonth(),
     endDate.getDate(),
     endDate.getHours(),
     endDate.getMinutes(),
-    0
+    59
   );
 
   let query = queryUtil.getQuerySearchesPerDay(string, startDate, endDate);
@@ -240,12 +217,12 @@ router.get("/querygraph", function (req, res, next) {
 
 router.get("/clicksranks", function (req, res, next) {
   let string = req.query.string;
-  let startDate = new Date(req.query.startDate);
-  let endDate = new Date(req.query.endDate);
+  let startDate = utils.getCorrectDate(req.query.startDate)
+  let endDate = utils.getCorrectDate(req.query.endDate)
 
   startDate = new Date(
     startDate.getFullYear(),
-    startDate.getMonth() + 1,
+    startDate.getMonth(),
     startDate.getDate(),
     startDate.getHours(),
     startDate.getMinutes(),
@@ -253,7 +230,7 @@ router.get("/clicksranks", function (req, res, next) {
   );
   endDate = new Date(
     endDate.getFullYear(),
-    endDate.getMonth() + 1,
+    endDate.getMonth(),
     endDate.getDate(),
     endDate.getHours(),
     endDate.getMinutes(),
@@ -261,7 +238,7 @@ router.get("/clicksranks", function (req, res, next) {
   );
 
   query = queryUtil.getClickRanks(string, startDate, endDate);
-
+ 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
       if (err) throw err;
@@ -304,33 +281,24 @@ router.get("/clicksranks", function (req, res, next) {
 router.get("/querysummary", function (req, res, next) {
 
   let string = req.query.string;
-  let startDate = new Date(req.query.startDate);
-  let endDate = new Date(req.query.endDate);
+  let startDate = utils.getCorrectDate(req.query.startDate)
+  let endDate = utils.getCorrectDate(req.query.endDate)
   
   let nextDay = new Date(
     startDate.getFullYear(),
     startDate.getMonth(),
     startDate.getDate()
   );
-
   nextDay.setDate(startDate.getDate() + 1);
 
   let last24Hours = new Date(startDate - 60000 * 60 * 24);
   let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
 
-  /*startDate = new Date(
-    startDate.getFullYear(),
-    startDate.getMonth() + 1,
-    startDate.getDate(),
-    startDate.getHours(),
-    startDate.getMinutes()
-  );*/
-
   if (endDate != "Invalid Date")
   {
     endDate = new Date(
       endDate.getFullYear(),
-      endDate.getMonth() + 1,
+      endDate.getMonth(),
       endDate.getDate(),
       endDate.getHours(),
       endDate.getMinutes()    
@@ -368,12 +336,12 @@ router.get("/pagesperrank", function (req, res, next) {
   let page = req.query.page;
   let mysql_id = req.query.mysql_id;
   let string = req.query.string;
-  let startDate = new Date(req.query.startDate);
-  let endDate = new Date(req.query.endDate);
+  let startDate = utils.getCorrectDate(req.query.startDate);
+  let endDate = utils.getCorrectDate(req.query.endDate);
 
   startDate = new Date(
     startDate.getFullYear(),
-    startDate.getMonth() + 1,
+    startDate.getMonth(),
     startDate.getDate(),
     startDate.getHours(),
     startDate.getMinutes(),
@@ -381,11 +349,11 @@ router.get("/pagesperrank", function (req, res, next) {
   );
   endDate = new Date(
     endDate.getFullYear(),
-    endDate.getMonth() + 1,
+    endDate.getMonth(),
     endDate.getDate(),
     endDate.getHours(),
     endDate.getMinutes(),
-    0
+    59
   );
 
   let query = queryUtil.getPagesByStringRank(
@@ -415,12 +383,12 @@ router.get("/pagesperrank", function (req, res, next) {
 
 router.get("/unsuccessfulsessions", function (req, res, next) {
   let string = req.query.string;
-  let startDate = new Date(req.query.startDate);
-  let endDate = new Date(req.query.endDate);
+  let startDate = utils.getCorrectDate(req.query.startDate);
+  let endDate = utils.getCorrectDate(req.query.endDate);
 
   startDate = new Date(
     startDate.getFullYear(),
-    startDate.getMonth() + 1,
+    startDate.getMonth(),
     startDate.getDate(),
     startDate.getHours(),
     startDate.getMinutes(),
@@ -428,11 +396,11 @@ router.get("/unsuccessfulsessions", function (req, res, next) {
   );
   endDate = new Date(
     endDate.getFullYear(),
-    endDate.getMonth() + 1,
+    endDate.getMonth(),
     endDate.getDate(),
     endDate.getHours(),
     endDate.getMinutes(),
-    0
+    59
   );
 
   let query = queryUtil.getUnsuccessfulSessions(string, startDate, endDate);
@@ -451,12 +419,12 @@ router.get("/pagegraph", function (req, res, next) {
 
   let tp_item = req.query.tp_item;
   let fk_item = req.query.fk_item;  
-  let startDate = new Date(req.query.startDate);
-  let endDate = new Date(req.query.endDate);
+  let startDate = utils.getCorrectDate(req.query.startDate);
+  let endDate = utils.getCorrectDate(req.query.endDate);
 
   startDate = new Date(
     startDate.getFullYear(),
-    startDate.getMonth() + 1,
+    startDate.getMonth(),
     startDate.getDate(),
     startDate.getHours(),
     startDate.getMinutes(),
@@ -464,11 +432,11 @@ router.get("/pagegraph", function (req, res, next) {
   );
   endDate = new Date(
     endDate.getFullYear(),
-    endDate.getMonth() + 1,
+    endDate.getMonth(),
     endDate.getDate(),
     endDate.getHours(),
     endDate.getMinutes(),
-    0
+    59
   );
 
   let query = queryUtil.getPageSearchesPerDay(tp_item, fk_item, startDate, endDate);
@@ -503,12 +471,12 @@ router.get("/pagesummary", function (req, res, next) {
 
   let tp_item = req.query.tp_item;
   let fk_item = req.query.fk_item;  
-  let startDate = new Date(req.query.startDate);
-  let endDate = new Date(req.query.endDate);
+  let startDate = utils.getCorrectDate(req.query.startDate)
+  let endDate = utils.getCorrectDate(req.query.endDate)
 
   startDate = new Date(
     startDate.getFullYear(),
-    startDate.getMonth() + 1,
+    startDate.getMonth(),
     startDate.getDate(),
     startDate.getHours(),
     startDate.getMinutes()
@@ -529,7 +497,7 @@ router.get("/pagesummary", function (req, res, next) {
   {
     endDate = new Date(
       endDate.getFullYear(),
-      endDate.getMonth() + 1,
+      endDate.getMonth(),
       endDate.getDate(),
       endDate.getHours(),
       endDate.getMinutes()    
@@ -567,12 +535,12 @@ router.get("/pagesummary", function (req, res, next) {
 router.get("/pagesrank", function (req, res, next) {
   let tp_item = req.query.tp_item;
   let fk_item = req.query.fk_item;
-  let startDate = new Date(req.query.startDate);
-  let endDate = new Date(req.query.endDate);
+  let startDate = utils.getCorrectDate(req.query.startDate);
+  let endDate = utils.getCorrectDate(req.query.endDate);
 
   startDate = new Date(
     startDate.getFullYear(),
-    startDate.getMonth() + 1,
+    startDate.getMonth(),
     startDate.getDate(),
     startDate.getHours(),
     startDate.getMinutes(),
@@ -580,11 +548,11 @@ router.get("/pagesrank", function (req, res, next) {
   );
   endDate = new Date(
     endDate.getFullYear(),
-    endDate.getMonth() + 1,
+    endDate.getMonth(),
     endDate.getDate(),
     endDate.getHours(),
     endDate.getMinutes(),
-    0
+    59
   );
 
   let query = queryUtil.getPagesRank(tp_item, fk_item, startDate, endDate);
@@ -649,12 +617,12 @@ router.get("/stringsperrank", function (req, res, next) {
   let mysql_id = req.query.mysql_id;
   let tp_item = req.query.tp_item;
   let fk_item = req.query.fk_item;
-  let startDate = new Date(req.query.startDate);
-  let endDate = new Date(req.query.endDate);
+  let startDate = utils.getCorrectDate(req.query.startDate);
+  let endDate = utils.getCorrectDate(req.query.endDate);
 
   startDate = new Date(
     startDate.getFullYear(),
-    startDate.getMonth() + 1,
+    startDate.getMonth(),
     startDate.getDate(),
     startDate.getHours(),
     startDate.getMinutes(),
@@ -662,11 +630,11 @@ router.get("/stringsperrank", function (req, res, next) {
   );
   endDate = new Date(
     endDate.getFullYear(),
-    endDate.getMonth() + 1,
+    endDate.getMonth() ,
     endDate.getDate(),
     endDate.getHours(),
     endDate.getMinutes(),
-    0
+    59
   );
 
   let query = queryUtil.getStringsPerRank(
@@ -702,12 +670,12 @@ router.get("/stringsperrank", function (req, res, next) {
 });
 
 router.get("/hotqueries", function (req, res, next) {
-  let startDate = new Date(req.query.startDate);
+  let startDate = utils.getCorrectDate(req.query.startDate);
   let minimum = req.query.minimum;
 
   startDate = new Date(
     startDate.getFullYear(),
-    startDate.getMonth() + 1,
+    startDate.getMonth(),
     startDate.getDate()
   );
   let nextDay = new Date(
@@ -738,12 +706,12 @@ router.get("/hotqueries", function (req, res, next) {
 });
 
 router.get("/hotpages", function (req, res, next) {
-  let startDate = new Date(req.query.startDate);
+  let startDate = utils.getCorrectDate(req.query.startDate);
   let minimum = req.query.minimum;
 
   startDate = new Date(
     startDate.getFullYear(),
-    startDate.getMonth() + 1,
+    startDate.getMonth(),
     startDate.getDate(),
     startDate.getHours(),
     startDate.getMinutes(),
@@ -759,6 +727,7 @@ router.get("/hotpages", function (req, res, next) {
   let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
 
   let query = queryUtil.getHotPages(minimum, startDate, nextDay, last24Hours, last7Days);
+  console.log(query)
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
