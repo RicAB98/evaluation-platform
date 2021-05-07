@@ -1,7 +1,7 @@
 const apiHost = "http://localhost:9000";
 
 export function runEvaluation(startDate, endDate) {
-  return fetch(apiHost + "/runeval2", {
+  return fetch(apiHost + "/runevaluation", {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
@@ -16,7 +16,7 @@ export function runEvaluation(startDate, endDate) {
 
 export function loadEvaluation(type, startDate, endDate) {
 
-  let query = apiHost + "/loadeval?type=" + type + "&startDate=" + startDate;
+  let query = apiHost + "/loadevaluation?type=" + type + "&startDate=" + startDate;
 
   if (endDate != null) query += "&endDate=" + endDate;
 
@@ -29,56 +29,8 @@ export function loadEvaluation(type, startDate, endDate) {
   });
 }
 
-export function loadDailyEvaluation(date) {
-  return fetch(apiHost + "/loaddailyeval?date=" + date, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
-}
-
-export function getEvaluations() {
-  return fetch(apiHost + "/getevaluations", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
-}
-
 export function topQueries(startDate, endDate) {
   let query = apiHost + "/topqueries?startDate=" + startDate;
-
-  if (endDate != null) query = query + "&endDate=" + endDate;
-
-  return fetch(query, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
-}
-
-export function unsuccessfulQueries(startDate, endDate) {
-  let query = apiHost + "/unsuccessfulqueries?startDate=" + startDate;
-
-  if (endDate != null) query = query + "&endDate=" + endDate;
-
-  return fetch(query, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
-}
-
-export function topPages(startDate, endDate) {
-  let query = apiHost + "/toppages?startDate=" + startDate;
 
   if (endDate != null) query = query + "&endDate=" + endDate;
 
