@@ -18,6 +18,7 @@ import TimePicker from "../../components/Calendar/TimePicker.js";
 import List from "../../components/List/List";
 
 import { getPagesRank, pageGraph, getPageSummary, getStringsPerRank } from "../../requests/requests.js";
+import { toISOString, addOne } from "../../utils/utils.js"
 
 class PageAnalysis extends Component {
   state = {
@@ -131,31 +132,6 @@ class PageAnalysis extends Component {
     this.setState({ rowsPerPage: parseInt(event.target.value, 10), page: 0 });
   };
 
-  toISOString(date) {
-    let month =
-      date.getMonth() <= 9
-        ? "0" + this.addOne(date.getMonth())
-        : this.addOne(date.getMonth());
-    let day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
-    let hours = date.getHours() <= 9 ? "0" + date.getHours() : date.getHours();
-    let minutes =
-      date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
-
-    return (
-      date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
-    );
-  }
-
-  toRegularFormat(date) {
-    return (
-      date.getFullYear() +
-      "-" +
-      this.addOne(date.getMonth()) +
-      "-" +
-      date.getDate()
-    );
-  }
-
   handleCheckbox = (event) => {
     this.setState({ checkbox: event.target.checked });
   };
@@ -204,11 +180,11 @@ class PageAnalysis extends Component {
       "&fk_item=" +
       this.state.fk_item +
       "&startDate=" +
-      this.toISOString(this.state.startDate);
+      toISOString(this.state.startDate);
 
     urlSearch +=
       this.state.checkbox == true
-        ? "&endDate=" + this.toISOString(this.state.endDate)
+        ? "&endDate=" + toISOString(this.state.endDate)
         : "";
 
     this.props.history.push({
@@ -292,10 +268,6 @@ class PageAnalysis extends Component {
   changeEndDate = (event) => {
     this.setState({ endDate: new Date(event.target.value) });
   };
-
-  addOne(value) {
-    return value + 1;
-  }
 
   render() {
     return (
@@ -463,10 +435,10 @@ class PageAnalysis extends Component {
                   localLinkPath="localLink"
                   localLinkAditionalInfo={
                     "&startDate=" +
-                    this.toISOString(this.state.calculatedStartDate) +
+                    toISOString(this.state.calculatedStartDate) +
                     (this.state.calculatedEndDate !== null
                       ? "&endDate=" +
-                        this.toISOString(this.state.calculatedEndDate)
+                        toISOString(this.state.calculatedEndDate)
                       : "")
                   }
                   localLinkIcon={<TextRotationNoneIcon />}

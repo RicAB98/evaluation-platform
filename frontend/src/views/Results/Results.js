@@ -19,6 +19,7 @@ import Calendar from "../../components/Calendar/TimePicker.js";
 import BarChart from "../../components/Chart/BarChart.js";
 
 import { runEvaluation } from "../../requests/requests.js";
+import { toISOString } from "../../utils/utils.js"
 
 const CustomSwitch = withStyles({
   switchBase: {
@@ -93,21 +94,6 @@ class Result extends Component {
     this.setState({ viewTables: event.target.checked });
   };
 
-  toISOString(date) {
-    let month =
-      date.getMonth() <= 9
-        ? "0" + this.addOne(date.getMonth())
-        : this.addOne(date.getMonth());
-    let day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
-    let hours = date.getHours() <= 9 ? "0" + date.getHours() : date.getHours();
-    let minutes =
-      date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
-
-    return (
-      date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
-    );
-  }
-
   toRegularDateFormat(date) {
     return date != null ? date.replace("T", " ") : null;
   }
@@ -125,9 +111,9 @@ class Result extends Component {
           pathname: "/admin/evaluation",
           search:
             "?startDate=" +
-            this.toISOString(startDate) +
+            toISOString(startDate) +
             "&endDate=" +
-            this.toISOString(endDate),
+            toISOString(endDate),
         });
 
       runEvaluation(startDate, endDate)
@@ -144,7 +130,7 @@ class Result extends Component {
       if (!fromURL)
         this.props.history.push({
           pathname: "/admin/evaluation",
-          search: "?startDate=" + this.toISOString(startDate),
+          search: "?startDate=" + toISOString(startDate),
         });
 
       this.setState({ calculatedEndDate: null });
@@ -192,10 +178,6 @@ class Result extends Component {
       endDate: this.state.startDate,
       checkbox: true,
     });
-  }
-
-  addOne(value) {
-    return value + 1;
   }
 
   render() {
@@ -308,9 +290,9 @@ class Result extends Component {
         {this.state.showTables === true ? (
           <div>
             <h3 style={{ marginTop: 20 }}>
-              {this.toRegularDateFormat(this.toISOString(this.state.calculatedStartDate))}
+              {this.toRegularDateFormat(toISOString(this.state.calculatedStartDate))}
               {this.state.calculatedEndDate !== null ?
-                 "   -   " + this.toRegularDateFormat(this.toISOString(this.state.calculatedEndDate))
+                 "   -   " + this.toRegularDateFormat(toISOString(this.state.calculatedEndDate))
               : null}
             </h3>
             {this.state.viewTables === true ? (
@@ -323,18 +305,18 @@ class Result extends Component {
                     headerLinkIcon={<OpenWithIcon />}
                     headerLinkPath={
                       "expanded?type=1&startDate=" +
-                      this.toISOString(this.state.calculatedStartDate) +
+                      toISOString(this.state.calculatedStartDate) +
                       (this.state.calculatedEndDate !== null
                         ? "&endDate=" +
-                          this.toISOString(this.state.calculatedEndDate)
+                          toISOString(this.state.calculatedEndDate)
                         : "")
                     }
                     localLinkAditionalInfo={
                       "&startDate=" +
-                      this.toISOString(this.state.calculatedStartDate) +
+                      toISOString(this.state.calculatedStartDate) +
                       (this.state.calculatedEndDate !== null
                         ? "&endDate=" +
-                          this.toISOString(this.state.calculatedEndDate)
+                          toISOString(this.state.calculatedEndDate)
                         : "")
                     }
                     tableData={this.state.popularQueries}
@@ -369,10 +351,10 @@ class Result extends Component {
                     headerLinkIcon={<OpenWithIcon />}
                     headerLinkPath={
                       "expanded?type=2&startDate=" +
-                      this.toISOString(this.state.calculatedStartDate) +
+                      toISOString(this.state.calculatedStartDate) +
                       (this.state.calculatedEndDate !== null
                         ? "&endDate=" +
-                          this.toISOString(this.state.calculatedEndDate)
+                          toISOString(this.state.calculatedEndDate)
                         : "")
                     }
                     tableData={this.state.unsuccessfulQueries}
@@ -381,10 +363,10 @@ class Result extends Component {
                     localLinkPath="url"
                     localLinkAditionalInfo={
                       "&startDate=" +
-                      this.toISOString(this.state.calculatedStartDate) +
+                      toISOString(this.state.calculatedStartDate) +
                       (this.state.calculatedEndDate !== null
                         ? "&endDate=" +
-                          this.toISOString(this.state.calculatedEndDate)
+                          toISOString(this.state.calculatedEndDate)
                         : "")
                     }
                     localLinkIcon={<TextRotationNoneIcon />}
@@ -415,10 +397,10 @@ class Result extends Component {
                     headerLinkIcon={<OpenWithIcon />}
                     headerLinkPath={
                       "expanded?type=3&startDate=" +
-                      this.toISOString(this.state.calculatedStartDate) +
+                      toISOString(this.state.calculatedStartDate) +
                       (this.state.calculatedEndDate !== null
                         ? "&endDate=" +
-                          this.toISOString(this.state.calculatedEndDate)
+                          toISOString(this.state.calculatedEndDate)
                         : "")
                     }
                     tableData={this.state.popularPages}
@@ -427,10 +409,10 @@ class Result extends Component {
                     localLinkPath="localUrl"
                     localLinkAditionalInfo={
                       "&startDate=" +
-                      this.toISOString(this.state.calculatedStartDate) +
+                      toISOString(this.state.calculatedStartDate) +
                       (this.state.calculatedEndDate !== null
                         ? "&endDate=" +
-                          this.toISOString(this.state.calculatedEndDate)
+                          toISOString(this.state.calculatedEndDate)
                         : "")
                     }
                     localLinkIcon={<MenuBookIcon />}

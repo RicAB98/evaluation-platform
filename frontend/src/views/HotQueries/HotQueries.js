@@ -6,6 +6,7 @@ import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 
 import { getHotQueries, getHotPages } from "../../requests/requests.js";
+import { toISOString} from "../../utils/utils.js"
 
 class HotQueries extends Component {
   state = {
@@ -44,25 +45,6 @@ class HotQueries extends Component {
     sevenDaysEarlier.setHours(0)
     sevenDaysEarlier.setMinutes(0)
     this.setState({ startDate: sevenDaysEarlier  }, () => this.submitEvaluation() )
-  }
-
-  getDate(date) {
-    let month =
-      date.getMonth() <= 9
-        ? "0" + this.addOne(date.getMonth())
-        : this.addOne(date.getMonth());
-    let day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
-    let hours = date.getHours() <= 9 ? "0" + date.getHours() : date.getHours();
-    let minutes =
-      date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
-
-    return (
-      date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
-    );
-  }
-
-  addOne(value) {
-    return value + 1;
   }
 
   changeQueryDefaultMinimum = (event) => {
@@ -126,7 +108,7 @@ class HotQueries extends Component {
           localLinkPath="/admin/query?"
           localLinkFields={["search_string"]}
           localLinkAdditional={
-            "&startDate=" + this.getDate(this.state.startDate) + "&endDate=" + this.getDate(this.state.endDate)
+            "&startDate=" + toISOString(this.state.startDate) + "&endDate=" + toISOString(this.state.endDate)
           }
           iconButton={<TextRotationNoneIcon />}
           defaultMinimum = {this.state.queryDefaultMinimum}
@@ -139,7 +121,7 @@ class HotQueries extends Component {
           localLinkPath="/admin/page?"
           localLinkFields={["tp_item", "fk_item"]}
           localLinkAdditional={
-            "&startDate=" + this.getDate(this.state.startDate) + "&endDate=" + this.getDate(this.state.endDate)
+            "&startDate=" + toISOString(this.state.startDate) + "&endDate=" + toISOString(this.state.endDate)
           }
           iconButton={<MenuBookIcon />}
           style = {{marginTop: 300}}

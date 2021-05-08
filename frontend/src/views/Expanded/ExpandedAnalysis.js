@@ -11,6 +11,7 @@ import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ZzIcon from "../../assets/img/logo.png";
 
 import { loadEvaluation } from "../../requests/requests.js";
+import { toISOString, addOne } from "../../utils/utils.js"
 
 class ExpandedAnalysis extends Component {
   state = {
@@ -36,31 +37,6 @@ class ExpandedAnalysis extends Component {
   handleChangeRowsPerPage = (event) => {
     this.setState({ rowsPerPage: parseInt(event.target.value, 10), page: 0 });
   };
-
-  toISOString(date) {
-    let month =
-      date.getMonth() <= 9
-        ? "0" + this.addOne(date.getMonth())
-        : this.addOne(date.getMonth());
-    let day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
-    let hours = date.getHours() <= 9 ? "0" + date.getHours() : date.getHours();
-    let minutes =
-      date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
-
-    return (
-      date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
-    );
-  }
-
-  toRegularFormat(date) {
-    return (
-      date.getFullYear() +
-      "-" +
-      this.addOne(date.getMonth()) +
-      "-" +
-      date.getDate()
-    );
-  }
 
   componentDidMount() {
     let search = window.location.search;
@@ -92,10 +68,6 @@ class ExpandedAnalysis extends Component {
       .then((res) => this.setState({ tableData: res }));
   }
 
-  addOne(value) {
-    return value + 1;
-  }
-
   render() {
     return (
       <div style={{ marginLeft: 16 }}>
@@ -113,9 +85,9 @@ class ExpandedAnalysis extends Component {
                   localLinkPath="url"
                   localLinkAditionalInfo={
                     "&startDate=" +
-                    this.toISOString(this.state.startDate) +
+                    toISOString(this.state.startDate) +
                     (this.state.endDate !== null
-                      ? "&endDate=" + this.toISOString(this.state.endDate)
+                      ? "&endDate=" + toISOString(this.state.endDate)
                       : "")
                   }
                   localLinkIcon={<TextRotationNoneIcon />}
@@ -152,9 +124,9 @@ class ExpandedAnalysis extends Component {
                   localLinkPath="url"
                   localLinkAditionalInfo={
                     "&startDate=" +
-                    this.toISOString(this.state.startDate) +
+                    toISOString(this.state.startDate) +
                     (this.state.endDate !== null
-                      ? "&endDate=" + this.toISOString(this.state.endDate)
+                      ? "&endDate=" + toISOString(this.state.endDate)
                       : "")
                   }
                   localLinkIcon={<TextRotationNoneIcon />}
@@ -191,9 +163,9 @@ class ExpandedAnalysis extends Component {
                   localLinkPath="localUrl"
                   localLinkAditionalInfo={
                     "&startDate=" +
-                    this.toISOString(this.state.startDate) +
+                    toISOString(this.state.startDate) +
                     (this.state.endDate !== null
-                      ? "&endDate=" + this.toISOString(this.state.endDate)
+                      ? "&endDate=" + toISOString(this.state.endDate)
                       : "")
                   }
                   localLinkIcon={<MenuBookIcon />}

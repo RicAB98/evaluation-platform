@@ -234,7 +234,7 @@ router.get("/clicksranks", function (req, res, next) {
     endDate.getDate(),
     endDate.getHours(),
     endDate.getMinutes(),
-    0
+    59
   );
 
   query = queryUtil.getClickRanks(string, startDate, endDate);
@@ -727,7 +727,6 @@ router.get("/hotpages", function (req, res, next) {
   let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
 
   let query = queryUtil.getHotPages(minimum, startDate, nextDay, last24Hours, last7Days);
-  console.log(query)
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {

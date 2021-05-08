@@ -15,6 +15,7 @@ import TimePicker from "../../components/Calendar/TimePicker.js";
 import Calendar from "../../components/Calendar/Calendar.js";
 import Chart from "../../components/Chart/Chart";
 import List from "../../components/List/List";
+
 import {
   queryGraph,
   getClicksRanks,
@@ -22,6 +23,7 @@ import {
   getUnsuccessfulSessions,
   getQuerySummary
 } from "../../requests/requests.js";
+import { toISOString, addOne } from "../../utils/utils.js"
 
 class QueryPerformance extends Component {
   state = {
@@ -108,46 +110,6 @@ class QueryPerformance extends Component {
     });
   }
 
-  toISOString(date) {
-    let month =
-      date.getMonth() <= 9
-        ? "0" + this.addOne(date.getMonth())
-        : this.addOne(date.getMonth());
-    let day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
-    let hours = date.getHours() <= 9 ? "0" + date.getHours() : date.getHours();
-    let minutes =
-      date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
-
-    return (
-      date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
-    );
-  }
-  
-  toRegularFormat(date) {
-    return (
-      date.getFullYear() +
-      "-" +
-      this.addOne(date.getMonth()) +
-      "-" +
-      date.getDate()
-    );
-  }
-
-  toISOString(date) {
-    let month =
-      date.getMonth() <= 9
-        ? "0" + this.addOne(date.getMonth())
-        : this.addOne(date.getMonth());
-    let day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
-    let hours = date.getHours() <= 9 ? "0" + date.getHours() : date.getHours();
-    let minutes =
-      date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
-
-    return (
-      date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + minutes
-    );
-  }
-
   changeValue = (event) => {
     this.setState({ string: event.target.value });
   };
@@ -190,11 +152,11 @@ class QueryPerformance extends Component {
       "?search_string=" +
       this.state.string +
       "&startDate=" +
-      this.toISOString(this.state.startDate);
+      toISOString(this.state.startDate);
 
     urlSearch +=
       this.state.checkbox == true
-        ? "&endDate=" + this.toISOString(this.state.endDate)
+        ? "&endDate=" + toISOString(this.state.endDate)
         : "";
 
     this.props.history.push({
@@ -290,7 +252,7 @@ class QueryPerformance extends Component {
     let formatedDate =
       newDate.getFullYear() +
       "-" +
-      this.addOne(newDate.getMonth()) +
+      addOne(newDate.getMonth()) +
       "-" +
       newDate.getDate();
     let dateArray = this.state.graphData["dates"];
@@ -313,7 +275,7 @@ class QueryPerformance extends Component {
     let formatedDate =
       newDate.getFullYear() +
       "-" +
-      this.addOne(newDate.getMonth()) +
+      addOne(newDate.getMonth()) +
       "-" +
       newDate.getDate();
     let dateArray = this.state.graphData["dates"];
@@ -343,13 +305,13 @@ class QueryPerformance extends Component {
     let formatedStartDate =
       closerStartDate.getFullYear() +
       "-" +
-      this.addOne(closerStartDate.getMonth()) +
+      addOne(closerStartDate.getMonth()) +
       "-" +
       closerStartDate.getDate();
     let formatedEndDate =
       closerEndDate.getFullYear() +
       "-" +
-      this.addOne(closerEndDate.getMonth()) +
+      addOne(closerEndDate.getMonth()) +
       "-" +
       closerEndDate.getDate();
 
@@ -380,10 +342,6 @@ class QueryPerformance extends Component {
         dateArrayCopy.reverse().find((element) => new Date(element) <= date)
       );
     }
-  }
-
-  addOne(value) {
-    return value + 1;
   }
 
   render() {
@@ -538,8 +496,8 @@ class QueryPerformance extends Component {
                   secondColumn={["n"]}
                   localLinkPath="localUrl"
                   localLinkAditionalInfo={
-                    "&startDate=" + this.toISOString(this.state.calculatedStartDate) + 
-                    (this.state.calculatedEndDate !== null ? "&endDate=" + this.toISOString(this.state.calculatedEndDate) : "")
+                    "&startDate=" + toISOString(this.state.calculatedStartDate) + 
+                    (this.state.calculatedEndDate !== null ? "&endDate=" + toISOString(this.state.calculatedEndDate) : "")
                     }
                   localLinkIcon={<MenuBookIcon />}
                   externalLink={true}
