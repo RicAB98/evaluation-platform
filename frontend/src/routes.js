@@ -7,7 +7,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
 // core components/views for Admin layout
 
-import ResultsPage from "./views/Results/Results.js";
+import ResultsPage from "./views/Evaluation/Evaluation";
 import HotQueriesPage from "./views/HotQueries/HotQueries";
 import QueryPage from "./views/Query/QueryPerformance.js";
 import PageAnalysisPage from "./views/Page/PageAnalysis";

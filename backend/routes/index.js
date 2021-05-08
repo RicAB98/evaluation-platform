@@ -111,7 +111,6 @@ router.post("/runevaluation", function (req, res, next) {
             if (err) throw err;
 
             res.send({
-              id: results.insertedId,
               popularQueries: popularQueriesResponse,
               unsuccessfulQueries: unsuccessfulResponse,
               popularPages: popularPagesResponse,

@@ -35,7 +35,7 @@ const CustomSwitch = withStyles({
   track: {},
 })(Switch);
 
-class Result extends Component {
+class Evaluation extends Component {
   state = {
     popularQueries: [
       {
@@ -56,12 +56,11 @@ class Result extends Component {
         n: "Loading...",
       },
     ],
-    evaluationId: -1,
     startDate: new Date("2021-01-20 0:0"),
     endDate: "",
     calculatedStartDate: null,
     calculatedEndDate: null,
-    checkbox: false,
+    dateRange: false,
     viewTables: false,
   };
 
@@ -79,74 +78,20 @@ class Result extends Component {
 
     if (startDate !== null && new Date(startDate) != "Invalid Date")
       this.setState({ startDate: new Date(startDate) }, () => {
-        this.submitEvaluation(new Date(startDate), new Date(endDate), true);
+        this.submitEvaluation();
       });
 
     if (endDate !== null && new Date(startDate) != "Invalid Date")
-      this.setState({ endDate: new Date(endDate), checkbox: true });
+      this.setState({ endDate: new Date(endDate), dateRange: true });
   }
 
   handleCheckbox = (event) => {
-    this.setState({ checkbox: event.target.checked });
+    this.setState({ dateRange: event.target.checked });
   };
 
   handleChangeView = (event) => {
     this.setState({ viewTables: event.target.checked });
   };
-
-  toRegularDateFormat(date) {
-    return date != null ? date.replace("T", " ") : null;
-  }
-
-  submitEvaluation(startDate, endDate, fromURL) {
-    this.setState({ calculatedStartDate: startDate });
-    this.setState({ calculatedEndDate: null });
-    this.setState({ showTables: true });
-
-    if (this.state.checkbox == true) {
-      this.setState({ calculatedEndDate: endDate });
-
-      if (!fromURL)
-        this.props.history.push({
-          pathname: "/admin/evaluation",
-          search:
-            "?startDate=" +
-            toISOString(startDate) +
-            "&endDate=" +
-            toISOString(endDate),
-        });
-
-      runEvaluation(startDate, endDate)
-        .then((res) => res.json())
-        .then((res) =>
-          this.setState({
-            evaluationId: res["id"],
-            popularQueries: res["popularQueries"],
-            unsuccessfulQueries: res["unsuccessfulQueries"],
-            popularPages: res["popularPages"],
-          })
-        );
-    } else {
-      if (!fromURL)
-        this.props.history.push({
-          pathname: "/admin/evaluation",
-          search: "?startDate=" + toISOString(startDate),
-        });
-
-      this.setState({ calculatedEndDate: null });
-
-      runEvaluation(startDate, null)
-        .then((res) => res.json())
-        .then((res) =>
-          this.setState({
-            evaluationId: res["id"],
-            popularQueries: res["popularQueries"],
-            unsuccessfulQueries: res["unsuccessfulQueries"],
-            popularPages: res["popularPages"],
-          })
-        );
-    }
-  }
 
   changeStartDate = (event) => {
     this.setState({ startDate: new Date(event.target.value) });
@@ -160,7 +105,7 @@ class Result extends Component {
     this.setState({
       startDate: new Date(this.state.startDate - 60000 * 30),
       endDate: this.state.startDate,
-      checkbox: true,
+      dateRange: true,
     });
   }
 
@@ -168,7 +113,7 @@ class Result extends Component {
     this.setState({
       startDate: new Date(this.state.startDate - 60000 * 60),
       endDate: this.state.startDate,
-      checkbox: true,
+      dateRange: true,
     });
   }
 
@@ -176,8 +121,63 @@ class Result extends Component {
     this.setState({
       startDate: new Date(this.state.startDate - 60000 * 60 * 24),
       endDate: this.state.startDate,
-      checkbox: true,
+      dateRange: true,
     });
+  }
+
+  toRegularDateFormat(date) {
+    return date != null ? date.replace("T", " ") : null;
+  }
+
+  submitEvaluation() {
+
+    let urlSearch =
+      "?startDate=" +
+      toISOString(this.state.startDate);
+
+    urlSearch +=
+      this.state.dateRange == true
+        ? "&endDate=" + toISOString(this.state.endDate)
+        : "";
+
+    this.props.history.push({
+      pathname: "/admin/evaluation",
+      search: urlSearch
+    });
+
+    this.setState({
+        popularQueries: [
+          {
+            search_string: "Loading...",
+            n: "Loading...",
+          },
+        ],
+        unsuccessfulQueries: [
+          {
+            search_string: "Loading...",
+            n: "Loading...",
+          },
+        ],
+        popularPages: [
+          {
+            tp_item: 0,
+            fk_item: 0,
+            n: "Loading...",
+          },
+        ], 
+        calculatedStartDate: this.state.startDate,
+        calculatedEndDate: this.state.dateRange == true ? this.state.endDate : null, 
+        showTables: true });
+
+    runEvaluation(this.state.startDate, this.state.dateRange == true ? this.state.endDate : null)
+      .then((res) => res.json())
+      .then((res) =>
+        this.setState({
+          popularQueries: res["popularQueries"],
+          unsuccessfulQueries: res["unsuccessfulQueries"],
+          popularPages: res["popularPages"],
+        })
+      );
   }
 
   render() {
@@ -201,9 +201,9 @@ class Result extends Component {
             <Calendar
               selectedDate={this.state.startDate}
               onChange={this.changeStartDate}
-              label={this.state.checkbox === true ? "Start date" : "Date"}
+              label={this.state.dateRange === true ? "Start date" : "Date"}
             />
-            {this.state.checkbox === true ?
+            {this.state.dateRange === true ?
               <Calendar
                 selectedDate={this.state.endDate}
                 onChange={this.changeEndDate}
@@ -213,7 +213,7 @@ class Result extends Component {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={this.state.checkbox}
+                  checked={this.state.dateRange}
                   onChange={this.handleCheckbox}
                   style={{ color: "#2c3e50", marginLeft: 20 }}
                   name="checkbox"
@@ -223,7 +223,7 @@ class Result extends Component {
               style={{ marginTop: "auto", marginBottom: "auto" }}
             /> 
           </div>
-          {this.state.checkbox !== true ? 
+          {this.state.dateRange !== true ? 
           (
             <ButtonGroup
               aria-label="vertical outlined primary button group"
@@ -266,11 +266,7 @@ class Result extends Component {
           <Button
             color="custom"
             onClick={() =>
-              this.submitEvaluation(
-                this.state.startDate,
-                this.state.endDate,
-                false
-              )
+              this.submitEvaluation()
             }
           >
             Submit
@@ -478,4 +474,4 @@ class Result extends Component {
   }
 }
 
-export default Result;
+export default Evaluation;
