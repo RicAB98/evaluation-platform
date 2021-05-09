@@ -41,7 +41,7 @@ class PageAnalysis extends Component {
     endDate: new Date(),
     today: new Date("2021-01-23"),
 
-    checkbox: false,
+    dateRange: false,
 
     showGraph: false,
     graphStartDate: null,
@@ -116,7 +116,7 @@ class PageAnalysis extends Component {
         fk_item: fk_item != null ? fk_item : "",
         startDate: startDate != null ? new Date(startDate) : new Date(),
         endDate: endDate != null ? new Date(endDate) : new Date(),
-        checkbox: endDate != null ? true : false,
+        dateRange: endDate != null ? true : false,
       },
       () => {
         if (tp_item != null && fk_item != null && startDate != null)
@@ -134,7 +134,8 @@ class PageAnalysis extends Component {
   };
 
   handleCheckbox = (event) => {
-    this.setState({ checkbox: event.target.checked });
+    this.setState({ dateRange: event.target.checked });
+    console.log( new Date (this.state.startDate + 60000))
   };
 
   changeValue = (event) => {
@@ -284,7 +285,7 @@ class PageAnalysis extends Component {
       calculatedFk_Item: this.state.fk_item,
       calculatedStartDate: this.state.startDate,
       calculatedEndDate:
-        this.state.checkbox == true ? this.state.endDate : null,
+        this.state.dateRange == true ? this.state.endDate : null,
     });
   }
 
@@ -327,7 +328,7 @@ class PageAnalysis extends Component {
       toISOString(this.state.startDate);
 
     urlSearch +=
-      this.state.checkbox == true
+      this.state.dateRange == true
         ? "&endDate=" + toISOString(this.state.endDate)
         : "";
 
@@ -338,7 +339,7 @@ class PageAnalysis extends Component {
 
     this.resetInformation()
 
-    if (this.state.checkbox == true)
+    if (this.state.dateRange == true)
       pageGraph(this.state.tp_item, 
                 this.state.fk_item, 
                 this.state.startDate, 
@@ -359,7 +360,7 @@ class PageAnalysis extends Component {
       this.state.tp_item,
       this.state.fk_item,
       this.state.startDate,
-      this.state.checkbox == true ? this.state.endDate : null
+      this.state.dateRange == true ? this.state.endDate : null
     )
       .then((res) => res.json())
       .then(
@@ -381,7 +382,7 @@ class PageAnalysis extends Component {
       this.state.tp_item,
       this.state.fk_item,
       this.state.startDate,
-      this.state.checkbox == true ? this.state.endDate : null
+      this.state.dateRange == true ? this.state.endDate : null
     )
       .then((res) => res.json())
       .then(
@@ -436,9 +437,9 @@ class PageAnalysis extends Component {
             <TimePicker
               selectedDate={this.state.startDate}
               onChange={this.changeStartDate}
-              label={this.state.checkbox === true ? "Start date" : "Date"}
+              label={this.state.dateRange === true ? "Start date" : "Date"}
             />
-            {this.state.checkbox === true ? (
+            {this.state.dateRange === true ? (
             <TimePicker
               selectedDate={this.state.endDate}
               onChange={this.changeEndDate}
@@ -449,7 +450,7 @@ class PageAnalysis extends Component {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={this.state.checkbox}
+                  checked={this.state.dateRange}
                   onChange={this.handleCheckbox}
                   style={{ color: "#2c3e50", marginLeft: 20 }}
                   name="checkbox"

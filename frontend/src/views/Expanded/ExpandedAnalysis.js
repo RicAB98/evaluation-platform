@@ -30,14 +30,6 @@ class ExpandedAnalysis extends Component {
     rowsPerPage: 10,
   };
 
-  handleChangePage = (event, newPage) => {
-    this.setState({ page: newPage });
-  };
-
-  handleChangeRowsPerPage = (event) => {
-    this.setState({ rowsPerPage: parseInt(event.target.value, 10), page: 0 });
-  };
-
   componentDidMount() {
     let search = window.location.search;
     let params = new URLSearchParams(search);
@@ -54,6 +46,14 @@ class ExpandedAnalysis extends Component {
       () => this.submitEvaluation()
     );
   }
+
+  handleChangePage = (event, newPage) => {
+    this.setState({ page: newPage });
+  };
+
+  handleChangeRowsPerPage = (event) => {
+    this.setState({ rowsPerPage: parseInt(event.target.value, 10), page: 0 });
+  };
 
   submitEvaluation() {
     if (

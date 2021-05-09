@@ -34,7 +34,7 @@ class QueryAnalysis extends Component {
     calculatedEndDate: null,
 
     string: "",
-    checkbox: false,
+    dateRange: false,
 
     showGraph: false,
     graphStartDate: null,
@@ -116,7 +116,7 @@ class QueryAnalysis extends Component {
   };
 
   handleCheckbox = (event) => {
-    this.setState({ checkbox: event.target.checked });
+    this.setState({ dateRange: event.target.checked });
   };
 
   changeStartDate = (event) => {
@@ -228,7 +228,7 @@ class QueryAnalysis extends Component {
     this.setState({
       calculatedString: this.state.string,
       calculatedStartDate: this.state.startDate,
-      calculatedEndDate: this.state.checkbox == true ? this.state.endDate : null,
+      calculatedEndDate: this.state.dateRange == true ? this.state.endDate : null,
       showGraph: false,
       showPagesPerRank: false,
       unsuccessfulSessions: "",
@@ -306,7 +306,7 @@ class QueryAnalysis extends Component {
       toISOString(this.state.startDate);
 
     urlSearch +=
-      this.state.checkbox == true
+      this.state.dateRange == true
         ? "&endDate=" + toISOString(this.state.endDate)
         : "";
 
@@ -317,7 +317,7 @@ class QueryAnalysis extends Component {
 
     this.resetInformation()
 
-    if (this.state.checkbox == true)
+    if (this.state.dateRange == true)
       queryGraph(this.state.string, this.state.startDate, this.state.endDate)
         .then((res) => res.json())
         .then(
@@ -334,7 +334,7 @@ class QueryAnalysis extends Component {
     getQuerySummary(
       this.state.string,
       this.state.startDate,
-      this.state.checkbox == true ? this.state.endDate : null
+      this.state.dateRange == true ? this.state.endDate : null
     )
       .then((res) => res.json())
       .then(
@@ -354,7 +354,7 @@ class QueryAnalysis extends Component {
     getClicksRanks(
       this.state.string,
       this.state.startDate,
-      this.state.checkbox == true ? this.state.endDate : null
+      this.state.dateRange == true ? this.state.endDate : null
     )
       .then((res) => res.json())
       .then(
@@ -364,7 +364,7 @@ class QueryAnalysis extends Component {
     getUnsuccessfulSessions(
       this.state.string,
       this.state.startDate,
-      this.state.checkbox == true ? this.state.endDate : null
+      this.state.dateRange == true ? this.state.endDate : null
     )
       .then((res) => res.json())
       .then((res) => this.setState({ unsuccessfulSessions: res["n"] }));
@@ -403,10 +403,10 @@ class QueryAnalysis extends Component {
             <TimePicker
               selectedDate={this.state.startDate}
               onChange={this.changeStartDate}
-              label={this.state.checkbox === true ? "Start date" : "Date"}
+              label={this.state.dateRange === true ? "Start date" : "Date"}
               style = {{}}
             />
-            {this.state.checkbox === true ? (
+            {this.state.dateRange === true ? (
             <TimePicker
               selectedDate={this.state.endDate}
               onChange={this.changeEndDate}
@@ -417,7 +417,7 @@ class QueryAnalysis extends Component {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={this.state.checkbox}
+                  checked={this.state.dateRange}
                   onChange={this.handleCheckbox}
                   style={{ color: "#2c3e50", marginLeft: 20 }}
                   name="checkbox"
