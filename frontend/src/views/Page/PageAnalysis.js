@@ -53,6 +53,7 @@ class PageAnalysis extends Component {
     calculatedEndDate: null,
 
     calculatedRank: null,
+    showSummaries: false,
     showPagesRank: false,
     showStringsPerRank: false,
 
@@ -78,23 +79,23 @@ class PageAnalysis extends Component {
     ],
 
     pageSummary: [{
-      avgRank: 0,
-      oneCount: 0,
-      totalClicks: 0,
-      totalLast24h: 0,
-      totalPrevious24h: 0,
-      average7days: 0,
-      totalLast7days: 0,
+      avgRank: 'TBD',
+      oneCount: 'TBD',
+      totalClicks: 'TBD',
+      totalLast24h: 'TBD',
+      totalPrevious24h: 'TBD',
+      average7days: 'TBD',
+      totalLast7days: 'TBD',
     }],
 
     last24HourSummary: [{
-      avgRank: 0,
-      oneCount: 0,
-      totalClicks: 0,
-      totalLast24h: 0,
-      totalPrevious24h: 0,
-      average7days: 0,
-      totalLast7days: 0,
+      avgRank: 'TBD',
+      oneCount: 'TBD',
+      totalClicks: 'TBD',
+      totalLast24h: 'TBD',
+      totalPrevious24h: 'TBD',
+      average7days: 'TBD',
+      totalLast7days: 'TBD',
     }],
 
     stringsPerRank: null,
@@ -144,6 +145,149 @@ class PageAnalysis extends Component {
     this.setState({ tp_item: event.target.value });
   };
 
+  changeStartDate = (event) => {
+    this.setState({ startDate: new Date(event.target.value) });
+  };
+
+  changeEndDate = (event) => {
+    this.setState({ endDate: new Date(event.target.value) });
+  };
+
+  changeGraphStartDate = (newDate) => {
+    let formatedDate =
+      newDate.getFullYear() +
+      "-" +
+      addOne(newDate.getMonth()) +
+      "-" +
+      newDate.getDate();
+    let dateArray = this.state.graphData["dates"];
+    let closerDateInArray = newDate;
+
+    if (newDate > this.state.graphEndDate) return;
+
+    if (dateArray.indexOf(formatedDate) === -1) {
+      let rangeStart = new Date(dateArray[0]);
+      let rangeEnd = new Date(dateArray[dateArray.length - 1]);
+
+      if (newDate < rangeStart || newDate > rangeEnd) return;
+    }
+
+    this.setState({ graphStartDate: newDate });
+    this.changeGraphRange(closerDateInArray, this.state.graphEndDate);
+  };
+
+  changeGraphEndDate = (newDate) => {
+    let formatedDate =
+      newDate.getFullYear() +
+      "-" +
+      addOne(newDate.getMonth()) +
+      "-" +
+      newDate.getDate();
+    let dateArray = this.state.graphData["dates"];
+    let closerDateInArray = newDate;
+
+    if (newDate < this.state.graphStartDate) return;
+
+    if (dateArray.indexOf(formatedDate) === -1) {
+      let rangeStart = new Date(dateArray[0]);
+      let rangeEnd = new Date(dateArray[dateArray.length - 1]);
+
+      if (newDate < rangeStart || newDate > rangeEnd) return;
+    }
+
+    this.setState({ graphEndDate: newDate });
+    this.changeGraphRange(this.state.graphStartDate, closerDateInArray);
+  };
+
+  changeGraphRange(startDate, endDate) {
+    let string = this.state.graphData["string"];
+    let dates = this.state.graphData["dates"];
+    let clicks = this.state.graphData["clicks"];
+
+    let closerStartDate = this.closerDateInArray(startDate, "start");
+    let closerEndDate = this.closerDateInArray(endDate, "end");
+
+    let formatedStartDate =
+      closerStartDate.getFullYear() +
+      "-" +
+      addOne(closerStartDate.getMonth()) +
+      "-" +
+      closerStartDate.getDate();
+    let formatedEndDate =
+      closerEndDate.getFullYear() +
+      "-" +
+      addOne(closerEndDate.getMonth()) +
+      "-" +
+      closerEndDate.getDate();
+
+    this.setState({
+      showedGraphData: {
+        string: string,
+        dates: dates.slice(
+          dates.indexOf(formatedStartDate),
+          dates.indexOf(formatedEndDate) + 1
+        ),
+        clicks: clicks.slice(
+          dates.indexOf(formatedStartDate),
+          dates.indexOf(formatedEndDate) + 1
+        ),
+      },
+    });
+  }
+
+  closerDateInArray(date, type) {
+    let dateArray = this.state.graphData["dates"];
+
+    if (type === "start")
+      return new Date(dateArray.find((element) => new Date(element) >= date));
+    else if (type === "end") {
+      let dateArrayCopy = dateArray.slice();
+
+      return new Date(
+        dateArrayCopy.reverse().find((element) => new Date(element) <= date)
+      );
+    }
+  }
+
+  resetInformation () {
+    this.setState({
+      tableData: [
+        {
+          page_number: 1,
+          mysql_id: 0,
+          n: "Loading...",
+        },
+      ],
+      pageSummary: [{
+        avgRank: 'TBD',
+        oneCount: 'TBD',
+        totalClicks: 'TBD',
+        totalLast24h: 'TBD',
+        totalPrevious24h: 'TBD',
+        average7days: 'TBD',
+        totalLast7days: 'TBD',
+      }],
+  
+      last24HourSummary: [{
+        avgRank: 'TBD',
+        oneCount: 'TBD',
+        totalClicks: 'TBD',
+        totalLast24h: 'TBD',
+        totalPrevious24h: 'TBD',
+        average7days: 'TBD',
+        totalLast7days: 'TBD',
+      }],
+      showGraph: false,
+      pageLink: "",
+      showPagesRank: false,
+      calculatedTp_Item: this.state.tp_item,
+      calculatedFk_Item: this.state.fk_item,
+      calculatedStartDate: this.state.startDate,
+      calculatedEndDate:
+        this.state.checkbox == true ? this.state.endDate : null,
+    });
+  }
+
   submitStringsPerRank = (page, mysql_id) => {
     let calculatedRank = page === "20+" ? "20+" : 10 * (page - 1) + mysql_id;
 
@@ -192,22 +336,7 @@ class PageAnalysis extends Component {
       search: urlSearch,
     });
 
-    this.setState({
-      tableData: [
-        {
-          page_number: 1,
-          mysql_id: 0,
-          n: "Loading...",
-        },
-      ],
-      pageLink: "",
-      showPagesRank: false,
-      calculatedTp_Item: this.state.tp_item,
-      calculatedFk_Item: this.state.fk_item,
-      calculatedStartDate: this.state.startDate,
-      calculatedEndDate:
-        this.state.checkbox == true ? this.state.endDate : null,
-    });
+    this.resetInformation()
 
     if (this.state.checkbox == true)
       pageGraph(this.state.tp_item, 
@@ -234,7 +363,8 @@ class PageAnalysis extends Component {
     )
       .then((res) => res.json())
       .then(
-        (res) => this.setState({ pageSummary: res })
+        (res) => this.setState({ pageSummary: res}),
+                 this.setState({ showSummaries: true })
       );
 
     getPageSummary(
@@ -244,7 +374,7 @@ class PageAnalysis extends Component {
     )
       .then((res) => res.json())
       .then(
-        (res) => this.setState({ last24HourSummary: res })
+        (res) => this.setState({ last24HourSummary: res})
       );
 
     getPagesRank(
@@ -257,16 +387,8 @@ class PageAnalysis extends Component {
       .then(
         (res) =>
           this.setState({ tableData: res["rank"], pageLink: res["link"] }),
-        this.setState({ showPagesRank: true })
+          this.setState({ showPagesRank: true })
       );
-  };
-
-  changeStartDate = (event) => {
-    this.setState({ startDate: new Date(event.target.value) });
-  };
-
-  changeEndDate = (event) => {
-    this.setState({ endDate: new Date(event.target.value) });
   };
 
   render() {
@@ -390,6 +512,7 @@ class PageAnalysis extends Component {
                 </div>
             </GridItem>
             ) : null}
+            { this.state.showSummaries ?
             <GridItem
               xs={12}
               lg={this.state.showGraph === true ? 6 : 12}
@@ -398,10 +521,11 @@ class PageAnalysis extends Component {
                 rangeInfo = {this.state.pageSummary[0]}
                 last24hInfo = {this.state.last24HourSummary[0]}
               />
-            </GridItem>
+            </GridItem> : null}
             <GridItem
               xs={12}
               lg={4}
+              style={{marginTop: 20}}
             >
               {this.state.showPagesRank === true ? (
                 <Table2

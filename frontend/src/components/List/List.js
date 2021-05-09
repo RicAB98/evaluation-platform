@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,11 +71,11 @@ export default function InteractiveList(props) {
                 Average 7 days: 
                 <span style={{position: "absolute",
                               right: 200 }}>
-                    <b> {Math.round(100 * rangeInfo.average7days)/100} </b> 
+                    <b> {rangeInfo.average7days ==='TBD' ? 'TBD' : Math.round(100 * rangeInfo.average7days)/100} </b> 
                 </span>
                 <span style={{position: "absolute",
                               right: 50 }}>
-                    <b> {Math.round(100 * last24hInfo.average7days)/100} </b> 
+                    <b> {last24hInfo.average7days ==='TBD' ? 'TBD' : Math.round(100 * last24hInfo.average7days)/100} </b> 
                 </span>
             </ListItemText>
           </ListItem>
@@ -112,12 +111,12 @@ export default function InteractiveList(props) {
                 <span style={{position: "absolute",
                               right: 200, 
                               color: rangeInfo.GrowthLast7d > 0 ? "#00cc00" :  "red" }}>
-                    <b> {rangeInfo.GrowthLast7d}% </b>
+                    <b> {isNaN(rangeInfo.GrowthLast7d) ? 'TBD' : rangeInfo.GrowthLast7d}% </b>
                 </span> 
                 <span style={{position: "absolute",
                               right: 50, 
                               color: last24hInfo.GrowthLast7d > 0 ? "#00cc00" :  "red" }}>
-                    <b> {last24hInfo.GrowthLast7d}% </b>
+                    <b> {isNaN(last24hInfo.GrowthLast7d) ? 'TBD' : last24hInfo.GrowthLast7d}% </b>
                 </span> 
             </ListItemText>
           </ListItem>
@@ -127,12 +126,12 @@ export default function InteractiveList(props) {
                 <span style={{position: "absolute",
                               right: 200,
                               color: rangeInfo.GrowthLast24h > 0 ? "#00cc00" :  "red" }}>
-                    <b> {rangeInfo.GrowthLast24h}% </b>
+                    <b> {isNaN(rangeInfo.GrowthLast24h) ? 'TBD' : rangeInfo.GrowthLast24h}% </b>
                 </span>
                 <span style={{position: "absolute",
                               right: 50,
                               color: last24hInfo.GrowthLast24h > 0 ? "#00cc00" :  "red" }}>
-                    <b> {last24hInfo.GrowthLast24h}% </b>
+                    <b> {isNaN(last24hInfo.GrowthLast24h) ? 'TBD' : last24hInfo.GrowthLast24h}% </b>
                 </span>
               </ListItemText>
           </ListItem>
@@ -141,11 +140,11 @@ export default function InteractiveList(props) {
                 Average rank:
                 <span style={{position: "absolute",
                               right: 200 }}>
-                    <b> {rangeInfo.totalClicks !== 0 ? Math.round(rangeInfo.sumRank * 100 / rangeInfo.totalClicks) / 100 : 0} </b>
+                    <b> {rangeInfo.totalClicks === 'TBD'? 'TBD' : rangeInfo.totalClicks !== 0 ? Math.round(rangeInfo.sumRank * 100 / rangeInfo.totalClicks) / 100 : 0} </b>
                 </span>
                 <span style={{position: "absolute",
                               right: 50 }}>
-                    <b> {last24hInfo.totalClicks !== 0 ? Math.round(last24hInfo.sumRank * 100 / last24hInfo.totalClicks) / 100 : 0} </b>
+                    <b> {last24hInfo.totalClicks === 'TBD'? 'TBD' : last24hInfo.totalClicks !== 0 ? Math.round(last24hInfo.sumRank * 100 / last24hInfo.totalClicks) / 100 : 0} </b>
                 </span>
             </ListItemText>
           </ListItem>
@@ -154,11 +153,11 @@ export default function InteractiveList(props) {
                 Clicks on first option: 
                 <span style={{position: "absolute",
                               right: 200 }}>
-                    <b> {rangeInfo.totalClicks !== 0 ? Math.round((100 * rangeInfo.oneCount/rangeInfo.totalClicks) * 10) / 10 : 0} % </b> 
+                    <b> {rangeInfo.totalClicks === 'TBD'? 'TBD' : rangeInfo.totalClicks !== 0 ? Math.round((100 * rangeInfo.oneCount/rangeInfo.totalClicks) * 10) / 10 : 0} % </b> 
                 </span>
                 <span style={{position: "absolute",
                               right: 50 }}>
-                    <b> {last24hInfo.totalClicks !== 0 ? Math.round((100 * last24hInfo.oneCount/last24hInfo.totalClicks) * 10) / 10 : 0} % </b> 
+                    <b> {last24hInfo.totalClicks === 'TBD'? 'TBD' : last24hInfo.totalClicks !== 0 ? Math.round((100 * last24hInfo.oneCount/last24hInfo.totalClicks) * 10) / 10 : 0} % </b> 
                 </span>
             </ListItemText>
           </ListItem>
@@ -167,11 +166,13 @@ export default function InteractiveList(props) {
                 Insuccess rate: 
                 <span style={{position: "absolute",
                               right: 200 }}>
-                    <b> {rangeInfo.totalLast7days !== 0 || rangeInfo.totalLast24h !== 0 ? Math.round((100 - (100 * rangeInfo.totalClicks/(rangeInfo.totalLast7days + rangeInfo.totalLast24h))) * 10) / 10 : 0} % </b> 
+                    <b> {rangeInfo.totalLast7days === 'TBD' ? 'TBD' : 
+                        rangeInfo.totalLast7days !== 0 || rangeInfo.totalLast24h !== 0 ? Math.round((100 - (100 * rangeInfo.totalClicks/(rangeInfo.totalLast7days + rangeInfo.totalLast24h))) * 10) / 10 : 0} % </b> 
                 </span>
                 <span style={{position: "absolute",
                               right: 50 }}>
-                    <b> {last24hInfo.totalLast7days !== 0 || last24hInfo.totalLast24h !== 0 ? Math.round((100 - (100 * last24hInfo.totalClicks/(last24hInfo.totalLast7days + last24hInfo.totalLast24h))) * 10) / 10 : 0} % </b> 
+                    <b> {rangeInfo.totalLast7days === 'TBD' ? 'TBD' : 
+                         last24hInfo.totalLast7days !== 0 || last24hInfo.totalLast24h !== 0 ? Math.round((100 - (100 * last24hInfo.totalClicks/(last24hInfo.totalLast7days + last24hInfo.totalLast24h))) * 10) / 10 : 0} % </b> 
                 </span>
             </ListItemText>
           </ListItem>

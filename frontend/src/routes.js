@@ -9,28 +9,13 @@ import OpenWithIcon from '@material-ui/icons/OpenWith';
 
 import ResultsPage from "./views/Evaluation/Evaluation";
 import HotQueriesPage from "./views/HotQueries/HotQueries";
-import QueryPage from "./views/Query/QueryPerformance.js";
+import QueryPage from "./views/Query/QueryAnalysis";
 import PageAnalysisPage from "./views/Page/PageAnalysis";
 import ExpandedAnalysisPage from "./views/Expanded/ExpandedAnalysis";
 import ComparePage from "./views/Compare/Compare.js";
 
 const dashboardRoutes = [
 
-  /*{
-    path: "/run",
-    name: "Run Evaluation",
-    icon: AddCircleOutlineOutlinedIcon,
-    component: RunPage,
-    layout: "/admin"
-  },
-
-  {
-    path: "/load",
-    name: "Load Evaluation",
-    icon: PublishOutlinedIcon,
-    component: LoadPage,
-    layout: "/admin"
-  },*/
   {
     path: "/trending",
     name: "Trending",

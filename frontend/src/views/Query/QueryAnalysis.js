@@ -25,7 +25,7 @@ import {
 } from "../../requests/requests.js";
 import { toISOString, addOne } from "../../utils/utils.js"
 
-class QueryPerformance extends Component {
+class QueryAnalysis extends Component {
   state = {
     startDate: new Date(),
     endDate: new Date(),
@@ -40,6 +40,7 @@ class QueryPerformance extends Component {
     graphStartDate: null,
     graphEndDate: null,
 
+    showSummaries: false,
     showClickRank: false,
     calculatedString: null,
     unsuccessfulSessions: "",
@@ -118,128 +119,6 @@ class QueryPerformance extends Component {
     this.setState({ checkbox: event.target.checked });
   };
 
-  submitPagesPerRank = (page, mysql_id) => {
-    let calculatedRank = page === "20+" ? "20+" : 10 * (page - 1) + mysql_id;
-
-    this.setState({
-      calculatedRank: calculatedRank,
-      pagesPerRank: [
-        {
-          page: "Loading...",
-          mysql_id: "Loading...",
-          n: "Loading...",
-        },
-      ],
-    });
-
-    getPagesPerRank(
-      page,
-      mysql_id,
-      this.state.calculatedString,
-      this.state.calculatedStartDate,
-      this.state.calculatedEndDate
-    )
-      .then((res) => res.json())
-      .then(
-        (res) => this.setState({ pagesPerRank: res }),
-        this.setState({ showPagesPerRank: true })
-      );
-  };
-
-  submitEvaluation = () => {
-
-    let urlSearch =
-      "?search_string=" +
-      this.state.string +
-      "&startDate=" +
-      toISOString(this.state.startDate);
-
-    urlSearch +=
-      this.state.checkbox == true
-        ? "&endDate=" + toISOString(this.state.endDate)
-        : "";
-
-    this.props.history.push({
-      pathname: "/admin/query",
-      search: urlSearch,
-    });
-
-    this.setState({
-      calculatedString: this.state.string,
-      calculatedStartDate: this.state.startDate,
-      calculatedEndDate: this.state.checkbox == true ? this.state.endDate : null,
-      showGraph: false,
-      showPagesPerRank: false,
-      unsuccessfulSessions: "",
-      clickRank: [
-        {
-          page_number: 1,
-          mysql_id: 0,
-          n: "Loading...",
-        },
-      ],
-      graphData: {
-        string: "Loading..",
-      },
-      showedGraphData: {
-        string: "Loading..",
-      },
-      graphStartDate: null,
-      graphEndDate: null,
-    });
-
-    if (this.state.checkbox == true)
-      queryGraph(this.state.string, this.state.startDate, this.state.endDate)
-        .then((res) => res.json())
-        .then(
-          (res) =>
-            this.setState({
-              graphData: res,
-              showedGraphData: res,
-              graphStartDate: new Date(res["dates"][0]),
-              graphEndDate: new Date(res["dates"][res["dates"].length - 1]),
-            }),
-          this.setState({ showGraph: true })
-        );
-
-    getQuerySummary(
-      this.state.string,
-      this.state.startDate,
-      this.state.checkbox == true ? this.state.endDate : null
-    )
-      .then((res) => res.json())
-      .then(
-        (res) => this.setState({ querySummary: res })
-      );
-
-    getQuerySummary(
-      this.state.string,
-      this.state.today,
-    )
-      .then((res) => res.json())
-      .then(
-        (res) => this.setState({ last24HourSummary: res })
-      );
-
-    getClicksRanks(
-      this.state.string,
-      this.state.startDate,
-      this.state.checkbox == true ? this.state.endDate : null
-    )
-      .then((res) => res.json())
-      .then(
-        (res) => this.setState({ clickRank: res }),
-        this.setState({ showClickRank: true })
-      );
-    getUnsuccessfulSessions(
-      this.state.string,
-      this.state.startDate,
-      this.state.checkbox == true ? this.state.endDate : null
-    )
-      .then((res) => res.json())
-      .then((res) => this.setState({ unsuccessfulSessions: res["n"] }));
-  };
-
   changeStartDate = (event) => {
     this.setState({ startDate: new Date(event.target.value) });
   };
@@ -247,7 +126,7 @@ class QueryPerformance extends Component {
   changeEndDate = (event) => {
     this.setState({ endDate: new Date(event.target.value) });
   };
-
+  
   changeGraphStartDate = (newDate) => {
     let formatedDate =
       newDate.getFullYear() +
@@ -343,6 +222,153 @@ class QueryPerformance extends Component {
       );
     }
   }
+
+  resetInformation()
+  {
+    this.setState({
+      calculatedString: this.state.string,
+      calculatedStartDate: this.state.startDate,
+      calculatedEndDate: this.state.checkbox == true ? this.state.endDate : null,
+      showGraph: false,
+      showPagesPerRank: false,
+      unsuccessfulSessions: "",
+      clickRank: [
+        {
+          page_number: 1,
+          mysql_id: 0,
+          n: "Loading...",
+        },
+      ],
+      graphData: {
+        string: "Loading..",
+      },
+      pageSummary: [{
+        avgRank: 'TBD',
+        oneCount: 'TBD',
+        totalClicks: 'TBD',
+        totalLast24h: 'TBD',
+        totalPrevious24h: 'TBD',
+        average7days: 'TBD',
+        totalLast7days: 'TBD',
+      }],
+  
+      last24HourSummary: [{
+        avgRank: 'TBD',
+        oneCount: 'TBD',
+        totalClicks: 'TBD',
+        totalLast24h: 'TBD',
+        totalPrevious24h: 'TBD',
+        average7days: 'TBD',
+        totalLast7days: 'TBD',
+      }],
+      showedGraphData: {
+        string: "Loading..",
+      },
+      graphStartDate: null,
+      graphEndDate: null,
+    });
+  }
+
+  submitPagesPerRank = (page, mysql_id) => {
+    let calculatedRank = page === "20+" ? "20+" : 10 * (page - 1) + mysql_id;
+
+    this.setState({
+      calculatedRank: calculatedRank,
+      pagesPerRank: [
+        {
+          page: "Loading...",
+          mysql_id: "Loading...",
+          n: "Loading...",
+        },
+      ],
+    });
+
+    getPagesPerRank(
+      page,
+      mysql_id,
+      this.state.calculatedString,
+      this.state.calculatedStartDate,
+      this.state.calculatedEndDate
+    )
+      .then((res) => res.json())
+      .then(
+        (res) => this.setState({ pagesPerRank: res }),
+        this.setState({ showPagesPerRank: true })
+      );
+  };
+
+  submitEvaluation = () => {
+
+    let urlSearch =
+      "?search_string=" +
+      this.state.string +
+      "&startDate=" +
+      toISOString(this.state.startDate);
+
+    urlSearch +=
+      this.state.checkbox == true
+        ? "&endDate=" + toISOString(this.state.endDate)
+        : "";
+
+    this.props.history.push({
+      pathname: "/admin/query",
+      search: urlSearch,
+    });
+
+    this.resetInformation()
+
+    if (this.state.checkbox == true)
+      queryGraph(this.state.string, this.state.startDate, this.state.endDate)
+        .then((res) => res.json())
+        .then(
+          (res) =>
+            this.setState({
+              graphData: res,
+              showedGraphData: res,
+              graphStartDate: new Date(res["dates"][0]),
+              graphEndDate: new Date(res["dates"][res["dates"].length - 1]),
+            }),
+          this.setState({ showGraph: true })
+        );
+
+    getQuerySummary(
+      this.state.string,
+      this.state.startDate,
+      this.state.checkbox == true ? this.state.endDate : null
+    )
+      .then((res) => res.json())
+      .then(
+        (res) => this.setState({ querySummary: res }),
+                 this.setState({ showSummaries: true })
+      );
+
+    getQuerySummary(
+      this.state.string,
+      this.state.today,
+    )
+      .then((res) => res.json())
+      .then(
+        (res) => this.setState({ last24HourSummary: res })
+      );
+
+    getClicksRanks(
+      this.state.string,
+      this.state.startDate,
+      this.state.checkbox == true ? this.state.endDate : null
+    )
+      .then((res) => res.json())
+      .then(
+        (res) => this.setState({ clickRank: res }),
+        this.setState({ showClickRank: true })
+      );
+    getUnsuccessfulSessions(
+      this.state.string,
+      this.state.startDate,
+      this.state.checkbox == true ? this.state.endDate : null
+    )
+      .then((res) => res.json())
+      .then((res) => this.setState({ unsuccessfulSessions: res["n"] }));
+  };
 
   render() {
     return (
@@ -450,6 +476,7 @@ class QueryPerformance extends Component {
                 </div>
             </GridItem>
             ) : null}
+            {this.state.showSummaries === true ? 
             <GridItem
               xs={12}
               lg={this.state.showGraph === true ? 6 : 12}
@@ -457,8 +484,8 @@ class QueryPerformance extends Component {
               <List
                 rangeInfo = {this.state.querySummary[0]}
                 last24hInfo = {this.state.last24HourSummary[0]}
-              />
-            </GridItem>
+              /> 
+            </GridItem> : null}
             {this.state.showClickRank === true ? (
               <GridItem
                 xs={12}
@@ -513,4 +540,4 @@ class QueryPerformance extends Component {
   }
 }
 
-export default QueryPerformance;
+export default QueryAnalysis;
