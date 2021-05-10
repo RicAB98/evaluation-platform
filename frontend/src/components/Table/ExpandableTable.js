@@ -18,6 +18,7 @@ const useStyles = makeStyles(styles);
 export default function ExpandableTable(props) {
   const classes = useStyles();
   const {
+    percentage,
     tableTitle,
     tableHead,
     tableData,
@@ -37,7 +38,7 @@ export default function ExpandableTable(props) {
   } = props;
 
   return (
-    <div className={classes.tableResponsive} style = {{width: 480}}>
+    <div className={classes.tableResponsive}>
       <h5 style={{ marginBottom: 30 }}> {tableTitle} </h5>
       <Table className={classes.table}>
         {tableHead !== undefined ? (
@@ -49,8 +50,8 @@ export default function ExpandableTable(props) {
                     className={classes.tableCell + " " + classes.tableHeadCell}
                     style = 
                     {{
-                      width: key == 0 ? "15%" : key == 2 && "20%",
-                      textAlign: key == 2 ? "end" : "start"
+                      width: key == 0 ? "5%" : (key == 2 || key == 3) && "20%",
+                      textAlign: key == 2 || key == 3 ? "end" : "start"
                     }}
                     key={key}
                   >
@@ -80,6 +81,12 @@ export default function ExpandableTable(props) {
                   {secondColumn.map((field) => {
                     return prop[field];
                   })}
+                </TableCell>
+                <TableCell
+                  className={classes.tableCell}
+                  style={{ textAlign: "end" }}
+                >
+                  {Math.round(10000 * prop["n"]/tableData.reduce((a,b) => a + b["n"], 0))/100} %   
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}

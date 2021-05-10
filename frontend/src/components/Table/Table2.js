@@ -83,6 +83,12 @@ export default function Table2(props) {
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
+                  style={{ textAlign: "right" }}
+                >
+                  {Math.round(10000 * prop["n"]/tableData.reduce((a,b) => a + b["n"], 0))/100} %
+                </TableCell>
+                <TableCell
+                  className={classes.tableCell}
                   style={{ textAlign: "center" }}
                 >
                   <IconButton

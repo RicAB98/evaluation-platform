@@ -17,6 +17,7 @@ const useStyles = makeStyles(styles);
 export default function CustomTable(props) {
   const classes = useStyles();
   const {
+    percentage,
     tableTitle,
     tableHead,
     headerLinkPath,
@@ -63,7 +64,7 @@ export default function CustomTable(props) {
                     className={classes.tableCell + " " + classes.tableHeadCell}
                     style = 
                     {{
-                      width: key == 0 ? "15%" : key == 2 && "20%",
+                      width: key == 0 ? "5%" : (key == 2 || key == 3) && "20%",
                       textAlign: key == 2 ? "end" : "start"
                     }}
                     key={key}
@@ -93,6 +94,10 @@ export default function CustomTable(props) {
                     return prop[field];
                   })}
                 </TableCell>
+                { percentage ? 
+                <TableCell className={classes.tableCell} style={{textAlign: "end"}}>
+                  {Math.round(10000 * prop["n"]/tableData.reduce((a,b) => a + b["n"], 0))/100} %   
+                </TableCell> : null}
                 <TableCell
                   className={classes.tableCell}
                   style={{ textAlign: "end" }}

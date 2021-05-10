@@ -532,7 +532,7 @@ class PageAnalysis extends Component {
                 <Table2
                   tableTitle={"Page's ranks"}
                   tableHeaderColor="gray"
-                  tableHead={["Rank", "Clicks", ""]}
+                  tableHead={["Rank", "Clicks", "%", ""]}
                   headerLinkIcon={
                     this.state.pageLink != "" ? (
                       <img width="35" src={ZzIcon} />
@@ -546,14 +546,14 @@ class PageAnalysis extends Component {
                 />
               ) : null}
             </GridItem>
-            <GridItem xs={12} sm={12} md={2} style={{marginTop: 20}}>
+            <GridItem xs={12} sm={12} md={2} style={{marginTop: 30}}>
               {this.state.showStringsPerRank === true ? (
                 <ExpandableTable
                   tableTitle={
                     "Searched strings for rank " + this.state.calculatedRank
                   }
                   tableHeaderColor="gray"
-                  tableHead={["#", "Query", "Count", " "]}
+                  tableHead={["#", "Query", "Count", "",""]}
                   tableData={this.state.stringsPerRank}
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}

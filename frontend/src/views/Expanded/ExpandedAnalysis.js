@@ -78,7 +78,7 @@ class ExpandedAnalysis extends Component {
                 <Table
                   tableTitle="Popular queries"
                   tableHeaderColor="gray"
-                  tableHead={["#", "Query", "Count", " "]}
+                  tableHead={["#", "Query", "Count", "%",""]}
                   tableData={this.state.tableData}
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}
@@ -117,7 +117,7 @@ class ExpandedAnalysis extends Component {
                 <Table
                   tableTitle="Unsuccessful queries"
                   tableHeaderColor="gray"
-                  tableHead={["#", "Query", "Count", " "]}
+                  tableHead={["#", "Query", "Count", "%",""]}
                   tableData={this.state.tableData}
                   firstColumn={["search_string"]}
                   secondColumn={["n"]}

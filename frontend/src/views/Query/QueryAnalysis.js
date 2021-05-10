@@ -497,7 +497,7 @@ class QueryAnalysis extends Component {
                     "Positions clicked"
                   }
                   tableHeaderColor="gray"
-                  tableHead={["Rank", "Clicks", ""]}
+                  tableHead={["Rank", "Clicks", "%", ""]}
                   tableData={this.state.clickRank}
                   onClick={this.submitPagesPerRank}
                 />
@@ -513,11 +513,12 @@ class QueryAnalysis extends Component {
             >
               {this.state.showPagesPerRank === true ? (
                 <Table
+                  percentage={true}
                   tableTitle={
                     "Clicked pages on rank " + this.state.calculatedRank
                   }
                   tableHeaderColor="gray"
-                  tableHead={["#", "Ids", "Count", "", ""]}
+                  tableHead={["#", "Ids", "Count", "%", "", ""]}
                   tableData={this.state.pagesPerRank}
                   firstColumn={["partialUrl"]}
                   secondColumn={["n"]}
