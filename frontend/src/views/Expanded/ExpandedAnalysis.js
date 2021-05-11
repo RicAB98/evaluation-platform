@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Helmet } from 'react-helmet';
+
 // core components
 
 import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
@@ -70,127 +72,132 @@ class ExpandedAnalysis extends Component {
 
   render() {
     return (
-      <div style={{ marginLeft: 16 }}>
-        <div>
-          {this.state.type == 1 ? (
-            <GridContainer>
-              <GridItem xs={12} xl={3} >
-                <Table
-                  tableTitle="Popular queries"
-                  tableHeaderColor="gray"
-                  tableHead={["#", "Query", "Count", "%",""]}
-                  tableData={this.state.tableData}
-                  firstColumn={["search_string"]}
-                  secondColumn={["n"]}
-                  localLinkPath="url"
-                  localLinkAditionalInfo={
-                    "&startDate=" +
-                    toISOString(this.state.startDate) +
-                    (this.state.endDate !== null
-                      ? "&endDate=" + toISOString(this.state.endDate)
-                      : "")
-                  }
-                  localLinkIcon={<TextRotationNoneIcon />}
-                  externalLink={false}
-                  page={this.state.page}
-                  rowsPerPage={this.state.rowsPerPage}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-              </GridItem>
-              <GridItem xs={12} xl={8} style={{ marginTop: 20, marginLeft: 10 }}>
-                <BarChart
-                  title="Popular queries"
-                  data={this.state.tableData}
-                  xVariable="search_string"
-                  yVariable="n"
-                  yLabel="Queries"
-                  page={this.state.page}
-                  rowsPerPage={this.state.rowsPerPage}
-                />
-              </GridItem>
-            </GridContainer>
-          ) : null}
-          {this.state.type == 2 ? (
-            <GridContainer spacing={2}>
-              <GridItem xs={12}>
-                <Table
-                  tableTitle="Unsuccessful queries"
-                  tableHeaderColor="gray"
-                  tableHead={["#", "Query", "Count", "%",""]}
-                  tableData={this.state.tableData}
-                  firstColumn={["search_string"]}
-                  secondColumn={["n"]}
-                  localLinkPath="url"
-                  localLinkAditionalInfo={
-                    "&startDate=" +
-                    toISOString(this.state.startDate) +
-                    (this.state.endDate !== null
-                      ? "&endDate=" + toISOString(this.state.endDate)
-                      : "")
-                  }
-                  localLinkIcon={<TextRotationNoneIcon />}
-                  externalLink={false}
-                  page={this.state.page}
-                  rowsPerPage={this.state.rowsPerPage}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-              </GridItem>
-              <GridItem xs={12} style={{ marginTop: 20, marginLeft: 10 }}>
-                <BarChart
-                  title="Unsuccessful queries"
-                  data={this.state.tableData}
-                  xVariable="search_string"
-                  yVariable="n"
-                  yLabel="Queries"
-                  page={this.state.page}
-                  rowsPerPage={this.state.rowsPerPage}
-                />
-              </GridItem>
-            </GridContainer>
-          ) : null}
-          {this.state.type == 3 ? (
-            <GridContainer spacing={2}>
-              <GridItem xs={12}>
-                <Table
-                  tableTitle="Popular pages"
-                  tableHeaderColor="gray"
-                  tableHead={["#", "IDs", "Count", " ", " "]}
-                  tableData={this.state.tableData}
-                  firstColumn={["partialUrl"]}
-                  secondColumn={["n"]}
-                  localLinkPath="localUrl"
-                  localLinkAditionalInfo={
-                    "&startDate=" +
-                    toISOString(this.state.startDate) +
-                    (this.state.endDate !== null
-                      ? "&endDate=" + toISOString(this.state.endDate)
-                      : "")
-                  }
-                  localLinkIcon={<MenuBookIcon />}
-                  externalLink={true}
-                  externalLinkPath="fullUrl"
-                  externalLinkIcon={<img width="25" src={ZzIcon} />}
-                  page={this.state.page}
-                  rowsPerPage={this.state.rowsPerPage}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-              </GridItem>
-              <GridItem xs={12} style={{ marginTop: 20, marginLeft: 10 }}>
-                <BarChart
-                  title="Unsuccessful queries"
-                  data={this.state.tableData}
-                  xVariable="partialUrl"
-                  yVariable="n"
-                  yLabel="Queries"
-                  page={this.state.page}
-                  rowsPerPage={this.state.rowsPerPage}
-                />
-              </GridItem>
-            </GridContainer>
-          ) : null}
+      <div>
+        <Helmet>
+          <title>{ "Expanded" }</title>
+        </Helmet>
+        <div style={{ marginLeft: 16 }}>
+          <div>
+            {this.state.type == 1 ? (
+              <GridContainer>
+                <GridItem xs={12} xl={3} >
+                  <Table
+                    tableTitle="Popular queries"
+                    tableHeaderColor="gray"
+                    tableHead={["#", "Query", "Count", "%",""]}
+                    tableData={this.state.tableData}
+                    firstColumn={["search_string"]}
+                    secondColumn={["n"]}
+                    localLinkPath="url"
+                    localLinkAditionalInfo={
+                      "&startDate=" +
+                      toISOString(this.state.startDate) +
+                      (this.state.endDate !== null
+                        ? "&endDate=" + toISOString(this.state.endDate)
+                        : "")
+                    }
+                    localLinkIcon={<TextRotationNoneIcon />}
+                    externalLink={false}
+                    page={this.state.page}
+                    rowsPerPage={this.state.rowsPerPage}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  />
+                </GridItem>
+                <GridItem xs={12} xl={8} style={{ marginTop: 20, marginLeft: 10 }}>
+                  <BarChart
+                    title="Popular queries"
+                    data={this.state.tableData}
+                    xVariable="search_string"
+                    yVariable="n"
+                    yLabel="Queries"
+                    page={this.state.page}
+                    rowsPerPage={this.state.rowsPerPage}
+                  />
+                </GridItem>
+              </GridContainer>
+            ) : null}
+            {this.state.type == 2 ? (
+              <GridContainer spacing={2}>
+                <GridItem xs={12}>
+                  <Table
+                    tableTitle="Unsuccessful queries"
+                    tableHeaderColor="gray"
+                    tableHead={["#", "Query", "Count", "%",""]}
+                    tableData={this.state.tableData}
+                    firstColumn={["search_string"]}
+                    secondColumn={["n"]}
+                    localLinkPath="url"
+                    localLinkAditionalInfo={
+                      "&startDate=" +
+                      toISOString(this.state.startDate) +
+                      (this.state.endDate !== null
+                        ? "&endDate=" + toISOString(this.state.endDate)
+                        : "")
+                    }
+                    localLinkIcon={<TextRotationNoneIcon />}
+                    externalLink={false}
+                    page={this.state.page}
+                    rowsPerPage={this.state.rowsPerPage}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  />
+                </GridItem>
+                <GridItem xs={12} style={{ marginTop: 20, marginLeft: 10 }}>
+                  <BarChart
+                    title="Unsuccessful queries"
+                    data={this.state.tableData}
+                    xVariable="search_string"
+                    yVariable="n"
+                    yLabel="Queries"
+                    page={this.state.page}
+                    rowsPerPage={this.state.rowsPerPage}
+                  />
+                </GridItem>
+              </GridContainer>
+            ) : null}
+            {this.state.type == 3 ? (
+              <GridContainer spacing={2}>
+                <GridItem xs={12}>
+                  <Table
+                    tableTitle="Popular pages"
+                    tableHeaderColor="gray"
+                    tableHead={["#", "IDs", "Count", " ", " "]}
+                    tableData={this.state.tableData}
+                    firstColumn={["partialUrl"]}
+                    secondColumn={["n"]}
+                    localLinkPath="localUrl"
+                    localLinkAditionalInfo={
+                      "&startDate=" +
+                      toISOString(this.state.startDate) +
+                      (this.state.endDate !== null
+                        ? "&endDate=" + toISOString(this.state.endDate)
+                        : "")
+                    }
+                    localLinkIcon={<MenuBookIcon />}
+                    externalLink={true}
+                    externalLinkPath="fullUrl"
+                    externalLinkIcon={<img width="25" src={ZzIcon} />}
+                    page={this.state.page}
+                    rowsPerPage={this.state.rowsPerPage}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  />
+                </GridItem>
+                <GridItem xs={12} style={{ marginTop: 20, marginLeft: 10 }}>
+                  <BarChart
+                    title="Unsuccessful queries"
+                    data={this.state.tableData}
+                    xVariable="partialUrl"
+                    yVariable="n"
+                    yLabel="Queries"
+                    page={this.state.page}
+                    rowsPerPage={this.state.rowsPerPage}
+                  />
+                </GridItem>
+              </GridContainer>
+            ) : null}
+          </div>
         </div>
       </div>
     );

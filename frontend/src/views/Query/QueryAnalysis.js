@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Helmet } from 'react-helmet';
 
 // core components
 import MenuBookIcon from "@material-ui/icons/MenuBook";
@@ -374,172 +375,177 @@ class QueryAnalysis extends Component {
 
   render() {
     return (
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            border: "1px solid grey",
-            padding: 20
-          }}
-        >
-          <label
-            style={{ marginLeft: 8, marginTop: "auto", marginBottom: "auto" }}
-          >
-            Query:
-            <input
-              value={this.state.string}
-              onChange={this.changeValue}
-              type="text"
-              style={{ marginLeft: 8, marginTop: "auto", marginBottom: "auto" }}
-            />
-          </label>
+      <div> 
+        <Helmet>
+          <title>{this.state.calculatedString !== null ? this.state.calculatedString + " - Query" : "Query" }</title>
+        </Helmet>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             style={{
               display: "flex",
               flexDirection: "row",
-              justifyContent: "start",
-              marginLeft: 20
+              border: "1px solid grey",
+              padding: 20
             }}
           >
-            <TimePicker
-              selectedDate={this.state.startDate}
-              onChange={this.changeStartDate}
-              label={this.state.dateRange === true ? "Start date" : "Date"}
-              style = {{}}
-            />
-            {this.state.dateRange === true ? (
-            <TimePicker
-              selectedDate={this.state.endDate}
-              onChange={this.changeEndDate}
-              label="End date"
-              margin="20px"
-            />
-          ) : null}
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.dateRange}
-                  onChange={this.handleCheckbox}
-                  style={{ color: "#2c3e50", marginLeft: 20 }}
-                  name="checkbox"
-                />
-              }
-              label="Date range"
-              style={{ marginTop: "auto", marginBottom: "auto" }}
-            />
-          </div>
-          <Button color="custom" onClick={() => this.submitEvaluation()}>
-            Submit
-          </Button>
-        </div>
-
-        <div style={{ marginTop: 20 }}>
-          <GridContainer>
-          {this.state.showGraph === true ? (
-            <GridItem
-              xs={12}
-              lg={6}
+            <label
+              style={{ marginLeft: 8, marginTop: "auto", marginBottom: "auto" }}
             >
-              
-                <div style={{ backgroundColor: this.state.showGraph === true ? "#E8E8E8": "inherit" }}>
-                  <Chart
-                    title = "Searches per day"
-                    string={this.state.showedGraphData["string"]}
-                    labels={this.state.showedGraphData["dates"]}
-                    data={this.state.showedGraphData["clicks"]}
-                    smaller = {false}
-                    yLabel = "Searches"
-                    displayLegend = {true}
-                    displayTitle = {true}
-                    displayX = {true}
-                    displayXLegend = {true}
-                    displayYLegend = {true}
-                  />
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      width: 800,
-                    }}
-                  >
-                    <Calendar
-                      id="startDate"
-                      selectedDate={this.state.graphStartDate}
-                      onChange={this.changeGraphStartDate}
-                      label="Start date"
-                    />
-                    <Calendar
-                      id="endDate"
-                      selectedDate={this.state.graphEndDate}
-                      onChange={this.changeGraphEndDate}
-                      label="End date"
-                      margin="20px"
-                    />
-                  </div>
-                </div>
-            </GridItem>
+              Query:
+              <input
+                value={this.state.string}
+                onChange={this.changeValue}
+                type="text"
+                style={{ marginLeft: 8, marginTop: "auto", marginBottom: "auto" }}
+              />
+            </label>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "start",
+                marginLeft: 20
+              }}
+            >
+              <TimePicker
+                selectedDate={this.state.startDate}
+                onChange={this.changeStartDate}
+                label={this.state.dateRange === true ? "Start date" : "Date"}
+                style = {{}}
+              />
+              {this.state.dateRange === true ? (
+              <TimePicker
+                selectedDate={this.state.endDate}
+                onChange={this.changeEndDate}
+                label="End date"
+                margin="20px"
+              />
             ) : null}
-            {this.state.showSummaries === true ? 
-            <GridItem
-              xs={12}
-              lg={6}
-            >
-              <List
-                title = "Query summary"
-                rangeInfo = {this.state.querySummary[0]}
-                last24hInfo = {this.state.last24HourSummary[0]}
-              /> 
-            </GridItem> : null}
-            {this.state.showClickRank === true ? (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.state.dateRange}
+                    onChange={this.handleCheckbox}
+                    style={{ color: "#2c3e50", marginLeft: 20 }}
+                    name="checkbox"
+                  />
+                }
+                label="Date range"
+                style={{ marginTop: "auto", marginBottom: "auto" }}
+              />
+            </div>
+            <Button color="custom" onClick={() => this.submitEvaluation()}>
+              Submit
+            </Button>
+          </div>
+
+          <div style={{ marginTop: 20 }}>
+            <GridContainer>
+            {this.state.showGraph === true ? (
               <GridItem
                 xs={12}
-                lg={4}
-                style = {{marginTop: 20}}
+                lg={6}
               >
-                <Table2
-                  tableTitle={
-                    "Clicked positions"
-                  }
-                  tableHeaderColor="gray"
-                  tableHead={["Rank", "Clicks", "%", ""]}
-                  tableData={this.state.clickRank}
-                  onClick={this.submitPagesPerRank}
-                />
-                <h6 style={{ marginTop: 10 }}>
-                  Sessions without a click: {this.state.unsuccessfulSessions}{" "}
-                </h6>
+                
+                  <div style={{ backgroundColor: this.state.showGraph === true ? "#E8E8E8": "inherit" }}>
+                    <Chart
+                      title = "Searches per day"
+                      string={this.state.showedGraphData["string"]}
+                      labels={this.state.showedGraphData["dates"]}
+                      data={this.state.showedGraphData["clicks"]}
+                      smaller = {false}
+                      yLabel = "Searches"
+                      displayLegend = {true}
+                      displayTitle = {true}
+                      displayX = {true}
+                      displayXLegend = {true}
+                      displayYLegend = {true}
+                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        width: 800,
+                      }}
+                    >
+                      <Calendar
+                        id="startDate"
+                        selectedDate={this.state.graphStartDate}
+                        onChange={this.changeGraphStartDate}
+                        label="Start date"
+                      />
+                      <Calendar
+                        id="endDate"
+                        selectedDate={this.state.graphEndDate}
+                        onChange={this.changeGraphEndDate}
+                        label="End date"
+                        margin="20px"
+                      />
+                    </div>
+                  </div>
               </GridItem>
-            ) : null}
-            <GridItem 
-                xs={12}
-                lg={4}
-                style = {{marginTop: 20}}
-            >
-              {this.state.showPagesPerRank === true ? (
-                <Table
-                  percentage={true}
-                  tableTitle={
-                    "Results on position " + this.state.calculatedRank
-                  }
-                  tableHeaderColor="gray"
-                  tableHead={["#", "Id", "Clicks", "%", "", ""]}
-                  tableData={this.state.pagesPerRank}
-                  firstColumn={["partialUrl"]}
-                  secondColumn={["n"]}
-                  localLinkPath="localUrl"
-                  localLinkAditionalInfo={
-                    "&startDate=" + toISOString(this.state.calculatedStartDate) + 
-                    (this.state.calculatedEndDate !== null ? "&endDate=" + toISOString(this.state.calculatedEndDate) : "")
-                    }
-                  localLinkIcon={<MenuBookIcon />}
-                  externalLink={true}
-                  externalLinkPath="fullUrl"
-                  externalLinkIcon={<img width="25" src={ZzIcon} />}
-                />
               ) : null}
-            </GridItem>
-          </GridContainer>
+              {this.state.showSummaries === true ? 
+              <GridItem
+                xs={12}
+                lg={6}
+              >
+                <List
+                  title = "Query summary"
+                  rangeInfo = {this.state.querySummary[0]}
+                  last24hInfo = {this.state.last24HourSummary[0]}
+                /> 
+              </GridItem> : null}
+              {this.state.showClickRank === true ? (
+                <GridItem
+                  xs={12}
+                  lg={4}
+                  style = {{marginTop: 20}}
+                >
+                  <Table2
+                    tableTitle={
+                      "Clicked positions"
+                    }
+                    tableHeaderColor="gray"
+                    tableHead={["Rank", "Clicks", "%", ""]}
+                    tableData={this.state.clickRank}
+                    onClick={this.submitPagesPerRank}
+                  />
+                  <h6 style={{ marginTop: 10 }}>
+                    Sessions without a click: {this.state.unsuccessfulSessions}{" "}
+                  </h6>
+                </GridItem>
+              ) : null}
+              <GridItem 
+                  xs={12}
+                  lg={4}
+                  style = {{marginTop: 20}}
+              >
+                {this.state.showPagesPerRank === true ? (
+                  <Table
+                    percentage={true}
+                    tableTitle={
+                      "Results on position " + this.state.calculatedRank
+                    }
+                    tableHeaderColor="gray"
+                    tableHead={["#", "Id", "Clicks", "%", "", ""]}
+                    tableData={this.state.pagesPerRank}
+                    firstColumn={["partialUrl"]}
+                    secondColumn={["n"]}
+                    localLinkPath="localUrl"
+                    localLinkAditionalInfo={
+                      "&startDate=" + toISOString(this.state.calculatedStartDate) + 
+                      (this.state.calculatedEndDate !== null ? "&endDate=" + toISOString(this.state.calculatedEndDate) : "")
+                      }
+                    localLinkIcon={<MenuBookIcon />}
+                    externalLink={true}
+                    externalLinkPath="fullUrl"
+                    externalLinkIcon={<img width="25" src={ZzIcon} />}
+                  />
+                ) : null}
+              </GridItem>
+            </GridContainer>
+          </div>
         </div>
       </div>
     );
