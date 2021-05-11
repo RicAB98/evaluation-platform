@@ -292,7 +292,9 @@ class Evaluation extends Component {
           {this.state.showTables === true ? (
             <div>
               <h3 style={{ marginTop: 20 }}>
-                {this.toRegularDateFormat(toISOString(this.state.calculatedStartDate))}
+                {this.state.calculatedEndDate !== null ? 
+                  this.toRegularDateFormat(toISOString(this.state.calculatedStartDate)) 
+                  : this.toRegularDateFormat(toISOString(this.state.calculatedStartDate)).substring(0,10)  }
                 {this.state.calculatedEndDate !== null ?
                   "   -   " + this.toRegularDateFormat(toISOString(this.state.calculatedEndDate))
                 : null}

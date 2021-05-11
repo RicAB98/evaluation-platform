@@ -476,6 +476,11 @@ class PageAnalysis extends Component {
           </div>
 
           <div style={{ marginTop: 20 }}>
+            <h3 style={{ marginBottom: 20 }}>
+              {this.state.pageLink !== "" ? 
+              this.state.pageLink.replace("https://www.zerozero.pt/","") : 
+              null}
+            </h3>
             <GridContainer>
               {this.state.showGraph === true ? (
               <GridItem

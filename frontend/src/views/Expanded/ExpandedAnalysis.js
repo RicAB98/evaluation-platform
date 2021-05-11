@@ -13,7 +13,7 @@ import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ZzIcon from "../../assets/img/logo.png";
 
 import { loadEvaluation } from "../../requests/requests.js";
-import { toISOString, addOne } from "../../utils/utils.js"
+import { toISOString } from "../../utils/utils.js"
 
 class ExpandedAnalysis extends Component {
   state = {
@@ -77,6 +77,14 @@ class ExpandedAnalysis extends Component {
           <title>{ "Expanded" }</title>
         </Helmet>
         <div style={{ marginLeft: 16 }}>
+        <h3 style={{ marginBottom: 20 }}>
+          {this.state.endDate !== null ? 
+            toISOString(this.state.startDate).replace("T"," ")
+            : toISOString(this.state.startDate).substring(0,10) }
+          {this.state.endDate !== null ?
+            "   -   " + toISOString(this.state.endDate).replace("T"," ")
+          : null}
+        </h3>
           <div>
             {this.state.type == 1 ? (
               <GridContainer>

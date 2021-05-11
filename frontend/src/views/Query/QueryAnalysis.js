@@ -440,6 +440,10 @@ class QueryAnalysis extends Component {
           </div>
 
           <div style={{ marginTop: 20 }}>
+            <h3 style={{ marginBottom: 20 }}>
+              {this.state.calculatedString !== null ? 
+                this.state.calculatedString : null}
+            </h3>
             <GridContainer>
             {this.state.showGraph === true ? (
               <GridItem
