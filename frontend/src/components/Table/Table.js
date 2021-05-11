@@ -65,7 +65,7 @@ export default function CustomTable(props) {
                     style = 
                     {{
                       width: key == 0 ? "5%" : (key == 2 || key == 3) && "20%",
-                      textAlign: key == 2 ? "end" : "start"
+                      textAlign: (key == 2 || key == 3) ? "end" : "start"
                     }}
                     key={key}
                   >

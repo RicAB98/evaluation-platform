@@ -523,7 +523,7 @@ class QueryAnalysis extends Component {
                     "Results on position " + this.state.calculatedRank
                   }
                   tableHeaderColor="gray"
-                  tableHead={["#", "Ids", "Count", "%", "", ""]}
+                  tableHead={["#", "Id", "Clicks", "%", "", ""]}
                   tableData={this.state.pagesPerRank}
                   firstColumn={["partialUrl"]}
                   secondColumn={["n"]}

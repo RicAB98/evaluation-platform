@@ -297,7 +297,7 @@ class Evaluation extends Component {
                   <Table
                     tableTitle="Popular queries"
                     tableHeaderColor="gray"
-                    tableHead={["#", "Query", "Count", " "]}
+                    tableHead={["#", "Query", "Searches", " "]}
                     headerLinkIcon={<OpenWithIcon />}
                     headerLinkPath={
                       "expanded?type=1&startDate=" +
@@ -343,7 +343,7 @@ class Evaluation extends Component {
                   <Table
                     tableTitle="Unsuccessful queries"
                     tableHeaderColor="gray"
-                    tableHead={["#", "Query", "Count", " "]}
+                    tableHead={["#", "Query", "Searches", " "]}
                     headerLinkIcon={<OpenWithIcon />}
                     headerLinkPath={
                       "expanded?type=2&startDate=" +
@@ -389,7 +389,7 @@ class Evaluation extends Component {
                   <Table
                     tableTitle="Popular pages"
                     tableHeaderColor="gray"
-                    tableHead={["#", "IDs", "Count", " ", " "]}
+                    tableHead={["#", "Id", "Clicks", " ", " "]}
                     headerLinkIcon={<OpenWithIcon />}
                     headerLinkPath={
                       "expanded?type=3&startDate=" +

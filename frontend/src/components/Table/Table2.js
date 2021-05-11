@@ -56,7 +56,7 @@ export default function Table2(props) {
                     key={key}
                     style = 
                     {{
-                      textAlign: key == 1 && "end" 
+                      textAlign: (key == 1 || key == 2) && "end" 
                     }}
                   >
                     {prop}

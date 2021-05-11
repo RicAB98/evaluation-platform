@@ -75,52 +75,52 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: "search_string", numeric: false, disablePadding: true, label: "Id" },
+  { id: "search_string", align: "left", disablePadding: true, label: "Id" },
   {
     id: "avgRank",
-    numeric: true,
+    align: "center",
     disablePadding: false,
     label: "Average rank",
   },
   {
     id: "insuccessRate",
-    numeric: true,
+    align: "center",
     disablePadding: false,
     label: "Insuccess rate",
   },
   {
     id: "totalLast24h",
-    numeric: true,
+    align: "right",
     disablePadding: false,
     label: "Last 24 hours",
   },
   {
     id: "totalPrevious24h",
-    numeric: true,
+    align: "right",
     disablePadding: false,
     label: "Previous 24 hours",
   },
   {
     id: "average7days",
-    numeric: true,
+    align: "right",
     disablePadding: false,
     label: "Last 7 days",
   },
   {
     id: "GrowthLast24h",
-    numeric: true,
+    align: "right",
     disablePadding: false,
     label: "Last 24 hours %",
   },
   {
     id: "GrowthLast7d",
-    numeric: true,
+    align: "right",
     disablePadding: false,
     label: "Last 7 days %",
   },
   {
     id: "weekgraph",
-    numeric: false,
+    align: "center",
     disablePadding: false,
     label: "7 days graph",
   },
@@ -140,7 +140,7 @@ function EnhancedTableHead(props) {
           !includeInsuccess && headCell.label === "Insuccess rate" ? null : (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? "right" : "left"}
+              align={headCell.align}
               padding={headCell.disablePadding ? "none" : "default"}
               sortDirection={orderBy === headCell.id ? order : false}
               style={{ backgroundColor: "#2c3e50", paddingLeft: 20 }}
@@ -175,26 +175,6 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
-
-const useToolbarStyles = makeStyles((theme) => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-  },
-  highlight:
-    theme.palette.type === "light"
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
-  title: {
-    flex: "1 1 100%",
-  },
-}));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -444,8 +424,9 @@ export default function EnhancedTable(props) {
                           }
                         />
                       </TableCell>
+                      
                       {includeInsuccess ? (
-                        <TableCell align="right">
+                        <TableCell align="right" style={{paddingTop:25}}>
                           <LinearProgressWithLabel
                             variant="determinate"
                             value={row.insuccessRate}
