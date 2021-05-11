@@ -73,8 +73,8 @@ class ExpandedAnalysis extends Component {
       <div style={{ marginLeft: 16 }}>
         <div>
           {this.state.type == 1 ? (
-            <GridContainer spacing={2}>
-              <GridItem xs={12}>
+            <GridContainer>
+              <GridItem xs={12} xl={3} >
                 <Table
                   tableTitle="Popular queries"
                   tableHeaderColor="gray"
@@ -98,7 +98,7 @@ class ExpandedAnalysis extends Component {
                   onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
               </GridItem>
-              <GridItem xs={12} style={{ marginTop: 20, marginLeft: 10 }}>
+              <GridItem xs={12} xl={8} style={{ marginTop: 20, marginLeft: 10 }}>
                 <BarChart
                   title="Popular queries"
                   data={this.state.tableData}
