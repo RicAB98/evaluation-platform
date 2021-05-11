@@ -444,10 +444,12 @@ class QueryAnalysis extends Component {
               
                 <div style={{ backgroundColor: this.state.showGraph === true ? "#E8E8E8": "inherit" }}>
                   <Chart
+                    title = "Searches per day"
                     string={this.state.showedGraphData["string"]}
                     labels={this.state.showedGraphData["dates"]}
                     data={this.state.showedGraphData["clicks"]}
                     smaller = {false}
+                    yLabel = "Searches"
                     displayLegend = {true}
                     displayTitle = {true}
                     displayX = {true}
@@ -484,6 +486,7 @@ class QueryAnalysis extends Component {
               lg={6}
             >
               <List
+                title = "Query summary"
                 rangeInfo = {this.state.querySummary[0]}
                 last24hInfo = {this.state.last24HourSummary[0]}
               /> 
@@ -496,7 +499,7 @@ class QueryAnalysis extends Component {
               >
                 <Table2
                   tableTitle={
-                    "Positions clicked"
+                    "Clicked positions"
                   }
                   tableHeaderColor="gray"
                   tableHead={["Rank", "Clicks", "%", ""]}
@@ -517,7 +520,7 @@ class QueryAnalysis extends Component {
                 <Table
                   percentage={true}
                   tableTitle={
-                    "Clicked pages on rank " + this.state.calculatedRank
+                    "Results on position " + this.state.calculatedRank
                   }
                   tableHeaderColor="gray"
                   tableHead={["#", "Ids", "Count", "%", "", ""]}

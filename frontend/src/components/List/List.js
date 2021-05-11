@@ -27,10 +27,11 @@ function generate(element) {
 
 export default function InteractiveList(props) {
   const classes = useStyles();
-  const { rangeInfo, last24hInfo } = props;
+  const { title, rangeInfo, last24hInfo } = props;
 
   return (
     <div style = {{width: 500}}>
+      <h5 style = {{ marginTop: "auto", marginBottom: "auto", backgroundColor: "#F5F5F5", paddingBottom: 20}}> {title} </h5>
       <div className={classes.demo}>
         {
             rangeInfo.GrowthLast7d = rangeInfo.average7days !== 0 ? Math.round((rangeInfo.totalLast24h-rangeInfo.average7days) * 100 * 100 / rangeInfo.average7days)/100 : 0,

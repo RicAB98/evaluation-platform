@@ -483,6 +483,7 @@ export default function EnhancedTable(props) {
                       </TableCell>
                       <TableCell align="right">
                         <Chart
+                          title = {false}
                           string={row.search_string}
                           data={
                             row.searches !== undefined

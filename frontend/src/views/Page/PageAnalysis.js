@@ -479,10 +479,12 @@ class PageAnalysis extends Component {
             >  
                 <div style={{ backgroundColor: this.state.showGraph === true ? "#E8E8E8": "inherit" }}>
                   <Chart
+                    title = "Clicks per day"
                     string={this.state.showedGraphData["string"]}
                     labels={this.state.showedGraphData["dates"]}
                     data={this.state.showedGraphData["clicks"]}
                     smaller = {false}
+                    yLabel = "Clicks"
                     displayLegend = {true}
                     displayTitle = {true}
                     displayX = {true}
@@ -519,6 +521,7 @@ class PageAnalysis extends Component {
               lg={6}
             >
               <List
+                title = "Page summary"
                 rangeInfo = {this.state.pageSummary[0]}
                 last24hInfo = {this.state.last24HourSummary[0]}
               />
@@ -530,7 +533,7 @@ class PageAnalysis extends Component {
             >
               {this.state.showPagesRank === true ? (
                 <Table2
-                  tableTitle={"Page's ranks"}
+                  tableTitle={"Clicked positions"}
                   tableHeaderColor="gray"
                   tableHead={["Rank", "Clicks", "%", ""]}
                   headerLinkIcon={
@@ -550,7 +553,7 @@ class PageAnalysis extends Component {
               {this.state.showStringsPerRank === true ? (
                 <ExpandableTable
                   tableTitle={
-                    "Searched strings for rank " + this.state.calculatedRank
+                    "Queries searched on position " + this.state.calculatedRank
                   }
                   tableHeaderColor="gray"
                   tableHead={["#", "Query", "Count", "",""]}
