@@ -104,7 +104,7 @@ class QueryAnalysis extends Component {
       string: string != null ? string : "",
       startDate: startDate != null ? new Date(startDate) : new Date(),
       endDate: endDate != null ? new Date(endDate) : new Date(),
-      checkbox: endDate != null ? true : false,
+      dateRange: endDate != null ? true : false,
     },
     () => {if(string != null && startDate != null)
             this.submitEvaluation()
@@ -317,19 +317,21 @@ class QueryAnalysis extends Component {
 
     this.resetInformation()
 
-    if (this.state.dateRange == true)
-      queryGraph(this.state.string, this.state.startDate, this.state.endDate)
-        .then((res) => res.json())
-        .then(
-          (res) =>
-            this.setState({
-              graphData: res,
-              showedGraphData: res,
-              graphStartDate: new Date(res["dates"][0]),
-              graphEndDate: new Date(res["dates"][res["dates"].length - 1]),
-            }),
-          this.setState({ showGraph: true })
-        );
+    queryGraph(
+      this.state.string, 
+      this.state.startDate, 
+      this.state.dateRange == true ? this.state.endDate : null)
+      .then((res) => res.json())
+      .then(
+        (res) =>
+          this.setState({
+            graphData: res,
+            showedGraphData: res,
+            graphStartDate: new Date(res["dates"][0]),
+            graphEndDate: new Date(res["dates"][res["dates"].length - 1]),
+          }),
+        this.setState({ showGraph: true })
+      );
 
     getQuerySummary(
       this.state.string,
@@ -479,7 +481,7 @@ class QueryAnalysis extends Component {
             {this.state.showSummaries === true ? 
             <GridItem
               xs={12}
-              lg={this.state.showGraph === true ? 6 : 12}
+              lg={6}
             >
               <List
                 rangeInfo = {this.state.querySummary[0]}

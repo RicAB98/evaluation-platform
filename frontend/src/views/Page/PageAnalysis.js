@@ -339,22 +339,22 @@ class PageAnalysis extends Component {
 
     this.resetInformation()
 
-    if (this.state.dateRange == true)
-      pageGraph(this.state.tp_item, 
-                this.state.fk_item, 
-                this.state.startDate, 
-                this.state.endDate)
-        .then((res) => res.json())
-        .then(
-          (res) =>
-            this.setState({
-              graphData: res,
-              showedGraphData: res,
-              graphStartDate: new Date(res["dates"][0]),
-              graphEndDate: new Date(res["dates"][res["dates"].length - 1]),
-            }),
-          this.setState({ showGraph: true })
-        );
+    pageGraph(this.state.tp_item, 
+              this.state.fk_item, 
+              this.state.startDate, 
+              this.state.dateRange == true ? this.state.endDate : null
+              )
+      .then((res) => res.json())
+      .then(
+        (res) =>
+          this.setState({
+            graphData: res,
+            showedGraphData: res,
+            graphStartDate: new Date(res["dates"][0]),
+            graphEndDate: new Date(res["dates"][res["dates"].length - 1]),
+          }),
+        this.setState({ showGraph: true })
+      );
 
     getPageSummary(
       this.state.tp_item,
@@ -516,7 +516,7 @@ class PageAnalysis extends Component {
             { this.state.showSummaries ?
             <GridItem
               xs={12}
-              lg={this.state.showGraph === true ? 6 : 12}
+              lg={6}
             >
               <List
                 rangeInfo = {this.state.pageSummary[0]}
