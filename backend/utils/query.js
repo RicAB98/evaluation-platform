@@ -166,7 +166,7 @@ const query = {
 
   loadEvaluationByDate(startDate, endDate) {
     let timeConditions = `startDate = '${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()} 
-    ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}' `;
+    ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}' AND endDate = '1970-01-01 01:00:00'`;
 
     if (endDate.getFullYear() != 1970)
       timeConditions = `startDate = '${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()} 
