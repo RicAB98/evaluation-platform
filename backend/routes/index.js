@@ -5,6 +5,22 @@ const queryUtil = require("../utils/query.js");
 const { buildPageInformation } = require("../utils/utils");
 const utils = require("../utils/utils");
 
+router.post("/insertsearch", function (req, res, next) {
+  let row = req.body;
+
+  let insertSearch = queryUtil.insertSearch(row);
+
+  console.log(insertSearch)
+
+  db.getConnection((err, conn) => {
+    conn.query(insertSearch, (err, results, fields) => {
+      if (err) throw err;
+
+      res.send(results)
+    });
+  });
+});
+
 router.post("/runevaluation", function (req, res, next) {
   let startDate = new Date(req.body.startDate);
   let endDate = new Date(req.body.endDate);

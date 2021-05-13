@@ -263,6 +263,30 @@ const query = {
               '${JSON.stringify(popularPages)}', 
               '${startDate}', '${endDate}')`;
   },
+
+  insertSearch(row) {
+    return `INSERT INTO zzlog_search (time, date, method, page, referer, IP, sess_id, username, agent, language, bot, page_number, mysql_id, cache, server_ip, geo_location, search_string, tp_item, fk_item) VALUES 
+              ('${row.time}',
+               '${row.date}',
+               '${row.method}',
+               '${row.page}',
+               '${row.referer}',
+               '${row.IP}',
+               '${row.sess_id}',
+               '${row.username}',
+               '${row.agent}',
+               '${row.language}',
+               ${row.bot},
+               ${row.page_number},
+               ${row.mysql_id},
+               ${row.cache},
+               '${row.server_ip}',
+               '${row.geo_location}',
+               '${row.search_string}',
+               ${row.tp_item},
+               ${row.fk_item}
+              )`;
+  },
 };
 
 module.exports = query;
