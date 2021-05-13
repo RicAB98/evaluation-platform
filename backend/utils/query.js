@@ -41,12 +41,13 @@ const query = {
     last7Days = `'${last7Days.getFullYear()}-${last7Days.getMonth() + 1}-${last7Days.getDate()}'`;
 
     return `select coalesce(sumRank,0) as sumRank, coalesce(oneCount,0) as oneCount, coalesce(totalClicks,0) as totalClicks, coalesce(totalLast24h,0) as totalLast24h, coalesce(totalPrevious24h,0) as totalPrevious24h, coalesce(total7daysAgo,0) as total7daysAgo, coalesce(totalLast7days,0) as totalLast7days, coalesce(average7days,0) as average7days FROM 
-    (select search_string, sum(case when page_number = 0 then mysql_id else page_number * mysql_id end) as sumRank, count(*) as totalClicks from zzlog_search where date > ${last7Days} and date < ${nextDay} and fk_item <> 0 and search_string = '${string}') as ranking left join
-    (select search_string, count(*) as totalLast7days, count(*)/7 as average7days from zzlog_search where date > ${last7Days} and date < ${startDate} and search_string = '${string}') as 7days on ranking.search_string = 7days.search_string left join 
-    (select search_string, count(*) as total7daysAgo from zzlog_search where date = ${last7Days} and search_string = '${string}') as weekago on ranking.search_string = weekago.search_string left join
-    (select search_string, count(*) as totalPrevious24h from zzlog_search where date = ${last24Hours} and search_string = '${string}') as 24hours on ranking.search_string = 24hours.search_string left join
-    (select search_string, count(*) as totalLast24h from zzlog_search where ${timeConditions} and search_string = '${string}') as day on ranking.search_string = day.search_string left join
-    (select search_string, count(*) as oneCount from zzlog_search where date > ${last7Days} and date < ${nextDay} and mysql_id = 1 and (page_number = 1 or page_number = 0) and fk_item <> 0 and search_string = '${string}') as firstOption on ranking.search_string = firstOption.search_string
+    (select search_string from zzlog_search where date > ${last7Days} and date < ${nextDay} and search_string = '${string}') as defaultTable left join
+    (select search_string, sum(case when page_number = 0 then mysql_id else page_number * mysql_id end) as sumRank, count(*) as totalClicks from zzlog_search where date > ${last7Days} and date < ${nextDay} and fk_item <> 0 and search_string = '${string}') as ranking on defaultTable.search_string = ranking.search_string left join
+    (select search_string, count(*) as totalLast7days, count(*)/7 as average7days from zzlog_search where date > ${last7Days} and date < ${startDate} and search_string = '${string}') as 7days on defaultTable.search_string = 7days.search_string left join 
+    (select search_string, count(*) as total7daysAgo from zzlog_search where date = ${last7Days} and search_string = '${string}') as weekago on defaultTable.search_string = weekago.search_string left join
+    (select search_string, count(*) as totalPrevious24h from zzlog_search where date = ${last24Hours} and search_string = '${string}') as 24hours on defaultTable.search_string = 24hours.search_string left join
+    (select search_string, count(*) as totalLast24h from zzlog_search where ${timeConditions} and search_string = '${string}') as day on defaultTable.search_string = day.search_string left join
+    (select search_string, count(*) as oneCount from zzlog_search where date > ${last7Days} and date < ${nextDay} and mysql_id = 1 and (page_number = 1 or page_number = 0) and fk_item <> 0 and search_string = '${string}') as firstOption on defaultTable.search_string = firstOption.search_string
     `;
   },
 

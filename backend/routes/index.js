@@ -330,6 +330,8 @@ router.get("/querysummary", function (req, res, next) {
     last7Days
   );
 
+  console.log(query)
+
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
       if (err) throw err;
