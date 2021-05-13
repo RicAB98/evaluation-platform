@@ -1,7 +1,8 @@
-const apiHost = "http://localhost:9000";
+const apiHost = "http://144.91.116.216:9000";
+const localHost = "http://localhost:9000";
 
 export function runEvaluation(startDate, endDate) {
-  return fetch(apiHost + "/runevaluation", {
+  return fetch(localHost + "/runevaluation", {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",

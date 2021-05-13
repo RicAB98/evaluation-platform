@@ -30,7 +30,7 @@ class QueryAnalysis extends Component {
   state = {
     startDate: new Date(),
     endDate: new Date(),
-    today: new Date("2021-01-23"),
+    today: new Date("2021-01-31"),
     calculatedStartDate: null,
     calculatedEndDate: null,
 
@@ -243,7 +243,7 @@ class QueryAnalysis extends Component {
       graphData: {
         string: "Loading..",
       },
-      pageSummary: [{
+      querySummary: [{
         avgRank: 'TBD',
         oneCount: 'TBD',
         totalClicks: 'TBD',

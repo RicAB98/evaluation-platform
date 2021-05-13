@@ -40,7 +40,7 @@ class PageAnalysis extends Component {
 
     startDate: new Date(),
     endDate: new Date(),
-    today: new Date("2021-01-23"),
+    today: new Date("2021-01-31"),
 
     dateRange: false,
 
@@ -136,7 +136,6 @@ class PageAnalysis extends Component {
 
   handleCheckbox = (event) => {
     this.setState({ dateRange: event.target.checked });
-    console.log( new Date (this.state.startDate + 60000))
   };
 
   changeValue = (event) => {
@@ -559,7 +558,7 @@ class PageAnalysis extends Component {
                   />
                 ) : null}
               </GridItem>
-              <GridItem xs={12} sm={12} md={2} style={{marginTop: 30}}>
+              <GridItem xs={12} sm={12} md={2} style={{marginTop: 35}}>
                 {this.state.showStringsPerRank === true ? (
                   <ExpandableTable
                     tableTitle={

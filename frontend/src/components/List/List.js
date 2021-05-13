@@ -34,15 +34,16 @@ export default function InteractiveList(props) {
       <h5 style = {{ marginTop: "auto", marginBottom: "auto", backgroundColor: "#F5F5F5", paddingBottom: 20}}> {title} </h5>
       <div className={classes.demo}>
         {
-            rangeInfo.GrowthLast7d = rangeInfo.average7days !== 0 ? Math.round((rangeInfo.totalLast24h-rangeInfo.average7days) * 100 * 100 / rangeInfo.average7days)/100 : 0,
-            rangeInfo.GrowthLast24h = rangeInfo.totalPrevious24h !== 0 ? Math.round((rangeInfo.totalLast24h-rangeInfo.totalPrevious24h) * 100 * 100/rangeInfo.totalPrevious24h)/100 : 0,
-            last24hInfo.GrowthLast7d = last24hInfo.average7days !== 0 ? Math.round((last24hInfo.totalLast24h-last24hInfo.average7days) * 100 * 100 / last24hInfo.average7days)/100 : 0,
-            last24hInfo.GrowthLast24h = last24hInfo.totalPrevious24h !== 0 ? Math.round((last24hInfo.totalLast24h-last24hInfo.totalPrevious24h) * 100 * 100/last24hInfo.totalPrevious24h)/100 : 0,
+            rangeInfo.GrowthLast7d = rangeInfo.average7days !== 0 ? Math.round((rangeInfo.totalLast24h-rangeInfo.average7days) * 100 * 100 / rangeInfo.average7days)/100 : Math.round(((rangeInfo.totalLast24h - 1) * 100 * 100) / 1) / 100,
+            rangeInfo.GrowthLast24h = rangeInfo.totalPrevious24h !== 0 ? Math.round((rangeInfo.totalLast24h-rangeInfo.totalPrevious24h) * 100 * 100/rangeInfo.totalPrevious24h)/100 : Math.round(((rangeInfo.totalLast24h - 1) * 100 * 100) / 1) / 100,
+            last24hInfo.GrowthLast7d = last24hInfo.average7days !== 0 ? Math.round((last24hInfo.totalLast24h-last24hInfo.average7days) * 100 * 100 / last24hInfo.average7days)/100 : Math.round(((last24hInfo.totalLast24h - 1) * 100 * 100) / 1) / 100,
+            last24hInfo.GrowthLast24h = last24hInfo.totalPrevious24h !== 0 ? Math.round((last24hInfo.totalLast24h-last24hInfo.totalPrevious24h) * 100 * 100/last24hInfo.totalPrevious24h)/100 : Math.round(((last24hInfo.totalLast24h - 1) * 100 * 100) / 1) / 100,
 
             ''
         }
         <List>
         <ListItem>
+
             <ListItemText style={{marginBottom: 30}}> 
               <span style={{position: "absolute",
                               right: 200 }}>
@@ -56,7 +57,20 @@ export default function InteractiveList(props) {
           </ListItem>
           <ListItem>
             <ListItemText> 
-                Total 7 days:
+                7 days ago:
+                <span style={{position: "absolute",
+                              right: 200 }}>
+                    <b> {rangeInfo.total7daysAgo} </b> 
+                </span>
+                <span style={{position: "absolute",
+                              right: 50 }}>
+                    <b> {last24hInfo.total7daysAgo} </b> 
+                </span>
+            </ListItemText>
+          </ListItem>
+          <ListItem>
+            <ListItemText> 
+                Total last 7 days:
                 <span style={{position: "absolute",
                               right: 200 }}>
                     <b> {rangeInfo.totalLast7days} </b> 
@@ -69,7 +83,7 @@ export default function InteractiveList(props) {
           </ListItem>
           <ListItem>
             <ListItemText>
-                Average 7 days: 
+                Average last 7 days: 
                 <span style={{position: "absolute",
                               right: 200 }}>
                     <b> {rangeInfo.average7days ==='TBD' ? 'TBD' : Math.round(100 * rangeInfo.average7days)/100} </b> 

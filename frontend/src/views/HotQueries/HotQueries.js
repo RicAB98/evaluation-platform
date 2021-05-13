@@ -36,7 +36,7 @@ class HotQueries extends Component {
     ],
 
     startDate: new Date(),
-    endDate: new Date("2021-1-23 23:59"),
+    endDate: new Date("2021-1-31 23:59"),
     queryDefaultMinimum: 10,
     pageDefaultMinimum: 10
   };

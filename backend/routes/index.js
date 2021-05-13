@@ -195,7 +195,7 @@ router.get("/querygraph", function (req, res, next) {
       59,
       59
     );
-    startDate = new Date(startDate - 60000 * 60 * 24 * 7);
+    startDate = new Date(startDate - 60000 * 60 * 24 * 6);
   }
 
   let query = queryUtil.getQuerySearchesPerDay(string, startDate, endDate);
@@ -301,7 +301,7 @@ router.get("/querysummary", function (req, res, next) {
   nextDay.setDate(startDate.getDate() + 1);
 
   let last24Hours = new Date(startDate - 60000 * 60 * 24);
-  let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
+  let last7Days = new Date(startDate - 60000 * 60 * 24 * 7);
 
   if (endDate != "Invalid Date") {
     endDate = new Date(
@@ -455,7 +455,7 @@ router.get("/pagegraph", function (req, res, next) {
       59,
       59
     );
-    startDate = new Date(startDate - 60000 * 60 * 24 * 7);
+    startDate = new Date(startDate - 60000 * 60 * 24 * 6);
   }
 
   let query = queryUtil.getPageSearchesPerDay(
@@ -514,7 +514,7 @@ router.get("/pagesummary", function (req, res, next) {
   nextDay.setDate(startDate.getDate() + 1);
 
   let last24Hours = new Date(startDate - 60000 * 60 * 24);
-  let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
+  let last7Days = new Date(startDate - 60000 * 60 * 24 * 7);
 
   if (endDate != "Invalid Date") {
     endDate = new Date(
@@ -543,6 +543,7 @@ router.get("/pagesummary", function (req, res, next) {
     last24Hours,
     last7Days
   );
+
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {
@@ -705,7 +706,7 @@ router.get("/hotqueries", function (req, res, next) {
   );
   nextDay.setDate(startDate.getDate() + 1);
   let last24Hours = new Date(startDate - 60000 * 60 * 24);
-  let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
+  let last7Days = new Date(startDate - 60000 * 60 * 24 * 7);
 
   let query = queryUtil.getHotQueries(
     minimum,
@@ -744,7 +745,7 @@ router.get("/hotpages", function (req, res, next) {
   );
   nextDay.setDate(startDate.getDate() + 1);
   let last24Hours = new Date(startDate - 60000 * 60 * 24);
-  let last7Days = new Date(startDate - 60000 * 60 * 24 * 8);
+  let last7Days = new Date(startDate - 60000 * 60 * 24 * 7);
 
   let query = queryUtil.getHotPages(
     minimum,

@@ -344,7 +344,7 @@ export default function EnhancedTable(props) {
                     ? Math.round(
                         (element.sumRank * 100) / element.totalClicks
                       ) / 100
-                    : 0;
+                    : "No clicks";
                 element.insuccessRate =
                   100 -
                   (100 * element.totalClicks) /
