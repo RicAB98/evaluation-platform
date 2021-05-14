@@ -122,7 +122,7 @@ export default function InteractiveList(props) {
           </ListItem>
           <ListItem>
             <ListItemText> 
-                 Growth 7 days:
+                Last 7 days growth:
                 <span style={{position: "absolute",
                               right: 200, 
                               color: rangeInfo.GrowthLast7d > 0 ? "#00cc00" :  "red" }}>
@@ -137,7 +137,7 @@ export default function InteractiveList(props) {
           </ListItem>
           <ListItem>
             <ListItemText> 
-                Growth 24 hours:
+                Last 24 hours growth:
                 <span style={{position: "absolute",
                               right: 200,
                               color: rangeInfo.GrowthLast24h > 0 ? "#00cc00" :  "red" }}>

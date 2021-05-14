@@ -107,6 +107,12 @@ const headCells = [
     label: "Last 7 days",
   },
   {
+    id: "total7daysAgo",
+    align: "right",
+    disablePadding: false,
+    label: "7 days ago",
+  },
+  {
     id: "GrowthLast24h",
     align: "right",
     disablePadding: false,
@@ -445,6 +451,9 @@ export default function EnhancedTable(props) {
                       </TableCell>
                       <TableCell align="right">
                         <b>{Math.round(100 * row.average7days) / 100}</b>
+                      </TableCell>
+                      <TableCell align="right">
+                        <b>{row.total7daysAgo}</b>
                       </TableCell>
                       <TableCell
                         align="right"
