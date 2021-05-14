@@ -244,6 +244,7 @@ class QueryAnalysis extends Component {
         string: "Loading..",
       },
       querySummary: [{
+        total7daysAgo: 'TBD',
         avgRank: 'TBD',
         oneCount: 'TBD',
         totalClicks: 'TBD',
@@ -254,6 +255,7 @@ class QueryAnalysis extends Component {
       }],
   
       last24HourSummary: [{
+        total7daysAgo: 'TBD',
         avgRank: 'TBD',
         oneCount: 'TBD',
         totalClicks: 'TBD',

@@ -10,8 +10,6 @@ router.post("/insertsearch", function (req, res, next) {
 
   let insertSearch = queryUtil.insertSearch(row);
 
-  console.log(insertSearch)
-
   db.getConnection((err, conn) => {
     conn.query(insertSearch, (err, results, fields) => {
       if (err) throw err;
@@ -345,8 +343,6 @@ router.get("/querysummary", function (req, res, next) {
     last24Hours,
     last7Days
   );
-
-  console.log(query)
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {

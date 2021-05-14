@@ -80,6 +80,7 @@ class PageAnalysis extends Component {
     ],
 
     pageSummary: [{
+      total7daysAgo: 'TBD',
       avgRank: 'TBD',
       oneCount: 'TBD',
       totalClicks: 'TBD',
@@ -90,6 +91,7 @@ class PageAnalysis extends Component {
     }],
 
     last24HourSummary: [{
+      total7daysAgo: 'TBD',
       avgRank: 'TBD',
       oneCount: 'TBD',
       totalClicks: 'TBD',
@@ -260,6 +262,7 @@ class PageAnalysis extends Component {
         },
       ],
       pageSummary: [{
+        total7daysAgo: 'TBD',
         avgRank: 'TBD',
         oneCount: 'TBD',
         totalClicks: 'TBD',
@@ -270,6 +273,7 @@ class PageAnalysis extends Component {
       }],
   
       last24HourSummary: [{
+        total7daysAgo: 'TBD',
         avgRank: 'TBD',
         oneCount: 'TBD',
         totalClicks: 'TBD',
