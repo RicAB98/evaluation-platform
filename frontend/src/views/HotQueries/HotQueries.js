@@ -39,8 +39,10 @@ class HotQueries extends Component {
 
     startDate: new Date(),
     endDate: new Date("2021-1-31 23:59"),
-    queryDefaultMinimum: 10,
-    pageDefaultMinimum: 10
+    queryMinimum: 10,
+    pageMinimum: 10,
+    calculatedQueryMinimum: 10,
+    calculatedPageMinimum: 10
   };
 
   componentDidMount() {
@@ -50,12 +52,25 @@ class HotQueries extends Component {
     this.setState({ startDate: sevenDaysEarlier  }, () => this.submitEvaluation() )
   }
 
-  changeQueryDefaultMinimum = (event) => {
-    this.setState({ queryDefaultMinimum: event.target.value }, () => this.getHotQueries());
+  changeQueryMinimum = (event) => {
+    if (event.target.value === "") return
+
+    this.setState({ queryMinimum: event.target.value }, 
+      () => 
+      {
+        if(event.target.value  < this.state.calculatedQueryMinimum) this.getHotQueries();
+      }) 
   };
 
-  changePageDefaultMinimum = (event) => {
-    this.setState({ pageDefaultMinimum: event.target.value }, () => this.getHotPages());
+  changePageMinimum = (event) => {
+
+    if (event.target.value === "") return
+
+    this.setState({ pageMinimum: event.target.value }, 
+      () => 
+      {
+        if(event.target.value  < this.state.calculatedPageMinimum) this.getHotPages();
+      }) 
   };
 
   submitEvaluation = () => {
@@ -66,7 +81,9 @@ class HotQueries extends Component {
 
   getHotQueries() {
 
-    this.setState({hotQueries: [
+    this.setState({
+      calculatedQueryMinimum: this.state.queryMinimum,
+      hotQueries: [
       {
         search_string: "Loading",
         avgRank: 0,
@@ -79,13 +96,15 @@ class HotQueries extends Component {
       },
     ]})
 
-    getHotQueries(this.state.endDate, this.state.queryDefaultMinimum)
+    getHotQueries(this.state.endDate, this.state.queryMinimum)
       .then((res) => res.json())
       .then((res) => this.setState({ hotQueries: res }));
   };
 
   getHotPages() {
-    this.setState({hotPages: [
+    this.setState({
+      calculatedPageMinimum: this.state.pageMinimum,
+      hotPages: [
       {
         search_string: "Loading",
         avgRank: 0,
@@ -98,7 +117,7 @@ class HotQueries extends Component {
       },
     ]})
 
-    getHotPages(this.state.endDate, this.state.pageDefaultMinimum)
+    getHotPages(this.state.endDate, this.state.pageMinimum)
       .then((res) => res.json())
       .then((res) => this.setState({ hotPages: res }));
   }
@@ -120,8 +139,8 @@ class HotQueries extends Component {
               "&startDate=" + toISOString(this.state.startDate) + "&endDate=" + toISOString(this.state.endDate)
             }
             iconButton={<TextRotationNoneIcon />}
-            defaultMinimum = {this.state.queryDefaultMinimum}
-            dropdownOnChange = {this.changeQueryDefaultMinimum}
+            minimum = {this.state.queryMinimum}
+            dropdownOnChange = {this.changeQueryMinimum}
           />
           <SortingTable
             tableTitle = "Hot Pages"
@@ -134,8 +153,8 @@ class HotQueries extends Component {
             }
             iconButton={<MenuBookIcon />}
             style = {{marginTop: 300}}
-            defaultMinimum = {this.state.pageDefaultMinimum}
-            dropdownOnChange = {this.changePageDefaultMinimum}
+            minimum = {this.state.pageMinimum}
+            dropdownOnChange = {this.changePageMinimum}
           />
         </div>
       </div>

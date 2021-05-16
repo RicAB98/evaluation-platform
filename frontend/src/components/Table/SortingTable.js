@@ -216,8 +216,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EnhancedTable(props) {
   const classes = useStyles();
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [order, setOrder] = React.useState("desc");
+  const [orderBy, setOrderBy] = React.useState("GrowthLast7d");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -231,7 +231,7 @@ export default function EnhancedTable(props) {
     localLinkPath,
     localLinkFields,
     localLinkAdditional,
-    defaultMinimum,
+    minimum,
     dropdownOnChange,
   } = props;
 
@@ -291,7 +291,7 @@ export default function EnhancedTable(props) {
         </h4>
         <Dropdown
           list={[
-            { id: 5, name: "5" },
+            { id: 5, name: 5 },
             { id: 10, name: 10 },
             { id: 20, name: 20 },
             { id: 50, name: 50 },
@@ -301,7 +301,7 @@ export default function EnhancedTable(props) {
             { id: 1000, name: 1000 },
           ]}
           name="Minimum 24h"
-          value={defaultMinimum}
+          value={minimum}
           onChange={dropdownOnChange}
         />
         {tableTitle === "Hot Pages" ? (
@@ -376,9 +376,15 @@ export default function EnhancedTable(props) {
                     : Math.round(((element.totalLast24h - 1) * 100 * 100) / 1) /
                       100;
               })}
-              {stableSort(rows, getComparator(order, orderBy))
+              {
+              stableSort(rows, getComparator(order, orderBy))
                 .filter((element) =>
-                  entityType != 0 ? element.tp_item == entityType : true
+                {
+                  if(element.totalLast24h >= minimum)
+                    return entityType != 0 ? element.tp_item == entityType : true
+
+                  return false
+                }
                 )
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {

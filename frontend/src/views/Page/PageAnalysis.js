@@ -493,7 +493,7 @@ class PageAnalysis extends Component {
                   <div style={{ backgroundColor: this.state.showGraph === true ? "#E8E8E8": "inherit" }}>
                     <Chart
                       title = "Clicks per day"
-                      string={this.state.showedGraphData["string"]}
+                      string={this.state.pageLink.replace("https://www.zerozero.pt/","")}
                       labels={this.state.showedGraphData["dates"]}
                       data={this.state.showedGraphData["clicks"]}
                       smaller = {false}
