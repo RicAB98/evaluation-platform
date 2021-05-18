@@ -78,12 +78,13 @@ class ExpandedAnalysis extends Component {
         </Helmet>
         <div style={{ marginLeft: 16 }}>
         <h3 style={{ marginBottom: 20 }}>
-          {this.state.endDate !== null ? 
+          {this.state.startDate !== null ? 
+          (this.state.endDate !== null ? 
             toISOString(this.state.startDate).replace("T"," ")
-            : toISOString(this.state.startDate).substring(0,10) }
-          {this.state.endDate !== null ?
+            : toISOString(this.state.startDate).substring(0,10), 
+          this.state.endDate !== null ?
             "   -   " + toISOString(this.state.endDate).replace("T"," ")
-          : null}
+          : null) : null}
         </h3>
           <div>
             {this.state.type == 1 ? (

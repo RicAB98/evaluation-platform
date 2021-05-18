@@ -17,14 +17,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function generate(element) {
-  return [0, 1, 2].map((value) =>
-    React.cloneElement(element, {
-      key: value,
-    })
-  );
-}
-
 export default function InteractiveList(props) {
   const classes = useStyles();
   const { title, rangeInfo, last24hInfo } = props;
@@ -34,10 +26,10 @@ export default function InteractiveList(props) {
       <h5 style = {{ marginTop: "auto", marginBottom: "auto", backgroundColor: "#F5F5F5", paddingBottom: 20}}> {title} </h5>
       <div className={classes.demo}>
         {
-            rangeInfo.GrowthLast7d = rangeInfo.average7days !== 0 ? Math.round((rangeInfo.totalLast24h-rangeInfo.average7days) * 100 * 100 / rangeInfo.average7days)/100 : Math.round(((rangeInfo.totalLast24h - 1) * 100 * 100) / 1) / 100,
-            rangeInfo.GrowthLast24h = rangeInfo.totalPrevious24h !== 0 ? Math.round((rangeInfo.totalLast24h-rangeInfo.totalPrevious24h) * 100 * 100/rangeInfo.totalPrevious24h)/100 : Math.round(((rangeInfo.totalLast24h - 1) * 100 * 100) / 1) / 100,
-            last24hInfo.GrowthLast7d = last24hInfo.average7days !== 0 ? Math.round((last24hInfo.totalLast24h-last24hInfo.average7days) * 100 * 100 / last24hInfo.average7days)/100 : Math.round(((last24hInfo.totalLast24h - 1) * 100 * 100) / 1) / 100,
-            last24hInfo.GrowthLast24h = last24hInfo.totalPrevious24h !== 0 ? Math.round((last24hInfo.totalLast24h-last24hInfo.totalPrevious24h) * 100 * 100/last24hInfo.totalPrevious24h)/100 : Math.round(((last24hInfo.totalLast24h - 1) * 100 * 100) / 1) / 100,
+          rangeInfo.GrowthLast7d = rangeInfo.average7days !== 0 ? Math.round((rangeInfo.totalLast24h-rangeInfo.average7days) * 100 * 100 / rangeInfo.average7days)/100 : Math.round(((rangeInfo.totalLast24h - 1) * 100 * 100) / 1) / 100,
+          rangeInfo.GrowthLast24h = rangeInfo.totalPrevious24h !== 0 ? Math.round((rangeInfo.totalLast24h-rangeInfo.totalPrevious24h) * 100 * 100/rangeInfo.totalPrevious24h)/100 : Math.round(((rangeInfo.totalLast24h - 1) * 100 * 100) / 1) / 100,
+          last24hInfo.GrowthLast7d = last24hInfo.average7days !== 0 ? Math.round((last24hInfo.totalLast24h-last24hInfo.average7days) * 100 * 100 / last24hInfo.average7days)/100 : Math.round(((last24hInfo.totalLast24h - 1) * 100 * 100) / 1) / 100,
+          last24hInfo.GrowthLast24h = last24hInfo.totalPrevious24h !== 0 ? Math.round((last24hInfo.totalLast24h-last24hInfo.totalPrevious24h) * 100 * 100/last24hInfo.totalPrevious24h)/100 : Math.round(((last24hInfo.totalLast24h - 1) * 100 * 100) / 1) / 100,
 
             ''
         }
