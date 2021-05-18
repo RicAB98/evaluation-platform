@@ -323,10 +323,6 @@ class PageAnalysis extends Component {
   };
 
   submitEvaluation = () => {
-
-    if(this.state.tp_item == "" || this.state.fk_item == "")
-      return
-
     let urlSearch =
       "?tp_item=" +
       this.state.tp_item +
@@ -372,16 +368,7 @@ class PageAnalysis extends Component {
     )
       .then((res) => res.json())
       .then(
-        (res) => this.setState({ pageSummary: res.length !== 0 ? res : [{
-          total7daysAgo: 0,
-          avgRank: 0,
-          oneCount: 0,
-          totalClicks: 0,
-          totalLast24h: 0,
-          totalPrevious24h: 0,
-          average7days: 0,
-          totalLast7days: 0,
-        }] }),
+        (res) => this.setState({ pageSummary: res}),
                  this.setState({ showSummaries: true })
       );
 
@@ -392,16 +379,7 @@ class PageAnalysis extends Component {
     )
       .then((res) => res.json())
       .then(
-        (res) => this.setState({ last24HourSummary: res.length !== 0 ? res : [{
-          total7daysAgo: 0,
-          avgRank: 0,
-          oneCount: 0,
-          totalClicks: 0,
-          totalLast24h: 0,
-          totalPrevious24h: 0,
-          average7days: 0,
-          totalLast7days: 0,
-        }] })
+        (res) => this.setState({ last24HourSummary: res})
       );
 
     getPagesRank(
