@@ -143,7 +143,7 @@ class Evaluation extends Component {
         : "";
 
     this.props.history.push({
-      pathname: "/admin/evaluation",
+      pathname: "/evaluation",
       search: urlSearch
     });
 

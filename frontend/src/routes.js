@@ -21,35 +21,35 @@ const dashboardRoutes = [
     name: "Trending",
     icon: TrendingUpIcon,
     component: HotQueriesPage,
-    layout: "/admin"
+    layout: ""
   },
   {
     path: "/evaluation",
     name: "Evaluation",
     icon: EqualizerIcon,
     component: ResultsPage,
-    layout: "/admin"
+    layout: ""
   },
   {
     path: "/query",
     name: "Query Analysis",
     icon: TextRotationNoneIcon,
     component: QueryPage,
-    layout: "/admin"
+    layout: ""
   },
   {
     path: "/page",
     name: "Page Analysis",
     icon: MenuBookIcon,
     component: PageAnalysisPage,
-    layout: "/admin"
+    layout: ""
   },
   {
     path: "/expanded",
     name: "Expanded Analysis",
     icon: OpenWithIcon,
     component: ExpandedAnalysisPage,
-    layout: "/admin"
+    layout: ""
   },
   /*{
     path: "/compare",

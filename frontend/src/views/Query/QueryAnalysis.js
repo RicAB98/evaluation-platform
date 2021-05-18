@@ -317,7 +317,7 @@ class QueryAnalysis extends Component {
         : "";
 
     this.props.history.push({
-      pathname: "/admin/query",
+      pathname: "/query",
       search: urlSearch,
     });
 

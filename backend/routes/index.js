@@ -96,39 +96,45 @@ router.post("/runevaluation", function (req, res, next) {
         return;
       }
 
-      conn.query(
-        `${popularQueriesQuery}; ${unsuccessfulQuery}; ${popularPagesQuery}`,
-        (err, results) => {
-          if (err) throw err;
+      conn.query(popularQueriesQuery, (err, results) => {
+        if (err) throw err;
 
-          let popularQueriesResponse = results[0];
-          let unsuccessfulResponse = results[1];
-          let popularPagesResponse = results[2];
+        let popularQueriesResponse = results
 
-          let temporaryArray = new Array();
+        conn.query(unsuccessfulQuery, (err, results) => {
 
-          for (let r of popularPagesResponse)
-            temporaryArray.push(buildPageInformation(r));
+          let unsuccessfulResponse = results;
 
-          popularPagesResponse = temporaryArray;
+          conn.query(popularPagesQuery, (err, results) => {
 
-          insertQuery = queryUtil.insertEvaluation(
-            popularQueriesResponse,
-            unsuccessfulResponse,
-            popularPagesResponse,
-            formatedStartDate,
-            formatedEndDate
-          );
+            let popularPagesResponse = results;
 
-          conn.query(insertQuery, (err, results) => {
-            if (err) throw err;
+            let temporaryArray = new Array();
 
-            res.send({
-              popularQueries: popularQueriesResponse,
-              unsuccessfulQueries: unsuccessfulResponse,
-              popularPages: popularPagesResponse,
+            for (let r of popularPagesResponse)
+              temporaryArray.push(buildPageInformation(r));
+
+            popularPagesResponse = temporaryArray;
+
+            insertQuery = queryUtil.insertEvaluation(
+              popularQueriesResponse,
+              unsuccessfulResponse,
+              popularPagesResponse,
+              formatedStartDate,
+              formatedEndDate
+            );
+
+            conn.query(insertQuery, (err, results) => {
+              if (err) throw err;
+
+              res.send({
+                popularQueries: popularQueriesResponse,
+                unsuccessfulQueries: unsuccessfulResponse,
+                popularPages: popularPagesResponse,
+              });
             });
           });
+          })
         }
       );
     });
@@ -691,7 +697,7 @@ router.get("/stringsperrank", function (req, res, next) {
         results[r] = {
           search_string: row.search_string,
           n: row.n,
-          localLink: "/admin/query?search_string=" + row.search_string,
+          localLink: "/query?search_string=" + row.search_string,
           link:
             "https://www.zerozero.pt/search.php?search_string=" +
             row.search_string,

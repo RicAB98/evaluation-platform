@@ -31,7 +31,7 @@ class App extends Component {
   return (
     <Router history={hist}>
       <Switch>
-        <Route path="/admin" render={() => 
+        <Route path="/" render={() => 
         { 
           if(localStorage.getItem('userType') === '') return <Redirect to="/dashboard"/>; 
           else return <Admin/>; 

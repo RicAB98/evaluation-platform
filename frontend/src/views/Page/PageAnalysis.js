@@ -341,7 +341,7 @@ class PageAnalysis extends Component {
         : "";
 
     this.props.history.push({
-      pathname: "/admin/page",
+      pathname: "/page",
       search: urlSearch,
     });
 

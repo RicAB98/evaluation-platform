@@ -188,7 +188,7 @@ const query = {
                           AND time < '${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()} 
                           ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`;
 
-    return `SELECT search_string, count(*) as n, concat('/admin/query?search_string=', search_string) as url FROM zzlog_search WHERE search_string <> '' AND 
+    return `SELECT search_string, count(*) as n, concat('/query?search_string=', search_string) as url FROM zzlog_search WHERE search_string <> '' AND 
               ${timeConditions} GROUP BY search_string ORDER BY count(*) DESC LIMIT ${limit}`;
   },
 
@@ -201,7 +201,7 @@ const query = {
                           AND time < '${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()} 
                           ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}'`;
 
-    return `SELECT search_string, count(*) as n, concat('/admin/query?search_string=', search_string) as url FROM zzlog_search WHERE search_string <> '' AND fk_item = 0 AND
+    return `SELECT search_string, count(*) as n, concat('/query?search_string=', search_string) as url FROM zzlog_search WHERE search_string <> '' AND fk_item = 0 AND
               ${timeConditions} GROUP BY search_string ORDER BY count(*) DESC LIMIT ${limit}`;
   },
 

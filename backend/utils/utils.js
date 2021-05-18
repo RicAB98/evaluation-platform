@@ -41,7 +41,7 @@ module.exports = {
         tp_item: row.tp_item,
         fk_item: row.fk_item,
         n: row.n,
-        localUrl: "/admin/page?tp_item=" +  row.tp_item + "&fk_item=" + row.fk_item,
+        localUrl: "/page?tp_item=" +  row.tp_item + "&fk_item=" + row.fk_item,
         partialUrl: url.replace('https://www.zerozero.pt/',''),
         fullUrl: url,
       }

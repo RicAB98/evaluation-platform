@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 
 import ReactDOM from 'react-dom';
 import './index.css';
-import Admin from "./layouts/Admin.js";
+import Admin from "./layouts/Home.js";
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createBrowserHistory } from "history";
@@ -18,8 +18,8 @@ ReactDOM.render(
   </Helmet>
   <Router history={hist}>
     <Switch>
-      <Route path="/admin" component={Admin} />
-      <Redirect from="/" to="/admin/trending" />
+      <Route path="/" component={Admin} />
+      <Redirect from="/" to="/trending" />
     </Switch>
   </Router>
   </div>,

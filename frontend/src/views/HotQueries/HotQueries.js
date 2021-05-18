@@ -133,7 +133,7 @@ class HotQueries extends Component {
             tableTitle = "Hot Queries"
             rows={this.state.hotQueries}
             includeInsuccess={true}
-            localLinkPath="/admin/query?"
+            localLinkPath="/query?"
             localLinkFields={["search_string"]}
             localLinkAdditional={
               "&startDate=" + toISOString(this.state.startDate) + "&endDate=" + toISOString(this.state.endDate)
@@ -146,7 +146,7 @@ class HotQueries extends Component {
             tableTitle = "Hot Pages"
             rows={this.state.hotPages}
             includeInsuccess={false}
-            localLinkPath="/admin/page?"
+            localLinkPath="/page?"
             localLinkFields={["tp_item", "fk_item"]}
             localLinkAdditional={
               "&startDate=" + toISOString(this.state.startDate) + "&endDate=" + toISOString(this.state.endDate)
