@@ -98,6 +98,7 @@ export default function Admin({ ...rest }) {
         image={image}
         handleDrawerToggle={handleDrawerToggle}
         color={color}
+        open={mobileOpen}
         {...rest}
       />
       <div className={classes.mainPanel} ref={mainPanel} style={{ backgroundColor: "#F5F5F5" }}>

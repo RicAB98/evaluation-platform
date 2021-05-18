@@ -5,6 +5,9 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Hidden from "@material-ui/core/Hidden";
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/icons/Menu";
 
 // core components
 import Button from "../../components/Button/Button.js";
@@ -38,6 +41,16 @@ export default function Header(props) {
             {makeBrand()}
           </Button>
         </div>
+
+        <Hidden mdUp implementation="css">
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={props.handleDrawerToggle}
+          >
+            <Menu />
+          </IconButton>
+        </Hidden>
       </Toolbar>
     </AppBar>
   );
@@ -49,16 +62,3 @@ Header.propTypes = {
   handleDrawerToggle: PropTypes.func,
   routes: PropTypes.arrayOf(PropTypes.object)
 };
-
-/*<Hidden smDown implementation="css">
-{props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks />}
-</Hidden>
-<Hidden mdUp implementation="css">
-<IconButton
-  color="inherit"
-  aria-label="open drawer"
-  onClick={props.handleDrawerToggle}
->
-  <Menu />
-</IconButton>
-</Hidden>*/
