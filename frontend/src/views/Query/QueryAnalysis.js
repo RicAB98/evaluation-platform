@@ -302,6 +302,9 @@ class QueryAnalysis extends Component {
 
   submitEvaluation = () => {
 
+    if(this.state.string == "")
+      return
+
     let urlSearch =
       "?search_string=" +
       this.state.string +
@@ -343,8 +346,18 @@ class QueryAnalysis extends Component {
     )
       .then((res) => res.json())
       .then(
-        (res) => this.setState({ querySummary: res }),
-                 this.setState({ showSummaries: true })
+        (res) => 
+        (this.setState({ querySummary: res.length !== 0 ? res : [{
+          total7daysAgo: 0,
+          avgRank: 0,
+          oneCount: 0,
+          totalClicks: 0,
+          totalLast24h: 0,
+          totalPrevious24h: 0,
+          average7days: 0,
+          totalLast7days: 0,
+        }] }),
+        this.setState({ showSummaries: true }))
       );
 
     getQuerySummary(
@@ -353,7 +366,16 @@ class QueryAnalysis extends Component {
     )
       .then((res) => res.json())
       .then(
-        (res) => this.setState({ last24HourSummary: res })
+        (res) => this.setState({ last24HourSummary: res.length !== 0 ? res : [{
+          total7daysAgo: 0,
+          avgRank: 0,
+          oneCount: 0,
+          totalClicks: 0,
+          totalLast24h: 0,
+          totalPrevious24h: 0,
+          average7days: 0,
+          totalLast7days: 0,
+        }] })
       );
 
     getClicksRanks(
