@@ -4,8 +4,8 @@ import { Helmet } from 'react-helmet';
 // core components
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ZzIcon from "../../assets/img/logo.png";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
@@ -35,7 +35,6 @@ class QueryAnalysis extends Component {
     calculatedEndDate: null,
 
     string: "",
-    dateRange: false,
 
     showGraph: false,
     graphStartDate: null,
@@ -94,6 +93,10 @@ class QueryAnalysis extends Component {
   };
 
   componentDidMount() {
+    let endToday = new Date();
+    endToday.setHours(23);
+    endToday.setMinutes(59);
+
     let search = window.location.search;
     let params = new URLSearchParams(search);
 
@@ -104,20 +107,15 @@ class QueryAnalysis extends Component {
     this.setState({
       string: string != null ? string : "",
       startDate: startDate != null ? new Date(startDate) : new Date(),
-      endDate: endDate != null ? new Date(endDate) : new Date(),
-      dateRange: endDate != null ? true : false,
+      endDate: endDate != null ? new Date(endDate) : endToday,
     },
-    () => {if(string != null && startDate != null)
-            this.submitEvaluation()
+    () => {if(string != null && startDate != null && endDate !== null)
+            this.submitEvaluation(this.state.startDate, this.state.endDate);
     });
   }
 
   changeValue = (event) => {
     this.setState({ string: event.target.value });
-  };
-
-  handleCheckbox = (event) => {
-    this.setState({ dateRange: event.target.checked });
   };
 
   changeStartDate = (event) => {
@@ -127,6 +125,27 @@ class QueryAnalysis extends Component {
   changeEndDate = (event) => {
     this.setState({ endDate: new Date(event.target.value) });
   };
+
+  last30min() {
+    let endDate = new Date();
+    let startDate = new Date(endDate - 60000 * 30)
+
+    this.submitEvaluation(startDate, endDate)
+  }
+
+  last60min() {
+    let endDate = new Date();
+    let startDate = new Date(endDate - 60000 * 60)
+
+    this.submitEvaluation(startDate, endDate)
+  }
+
+  last24hours() {
+    let endDate = new Date();
+    let startDate = new Date(endDate - 60000 * 60 * 24)
+
+    this.submitEvaluation(startDate, endDate)
+  }
   
   changeGraphStartDate = (newDate) => {
     let formatedDate =
@@ -224,12 +243,12 @@ class QueryAnalysis extends Component {
     }
   }
 
-  resetInformation()
+  resetInformation(startDate, endDate)
   {
     this.setState({
       calculatedString: this.state.string,
-      calculatedStartDate: this.state.startDate,
-      calculatedEndDate: this.state.dateRange == true ? this.state.endDate : null,
+      calculatedStartDate: startDate,
+      calculatedEndDate: endDate,
       showGraph: false,
       showPagesPerRank: false,
       unsuccessfulSessions: "",
@@ -300,7 +319,7 @@ class QueryAnalysis extends Component {
       );
   };
 
-  submitEvaluation = () => {
+  submitEvaluation(startDate, endDate) {
 
     if(this.state.string == "")
       return
@@ -309,24 +328,21 @@ class QueryAnalysis extends Component {
       "?search_string=" +
       this.state.string +
       "&startDate=" +
-      toISOString(this.state.startDate);
-
-    urlSearch +=
-      this.state.dateRange == true
-        ? "&endDate=" + toISOString(this.state.endDate)
-        : "";
+      toISOString(startDate) +
+      "&endDate=" + 
+      toISOString(endDate);
 
     this.props.history.push({
       pathname: "/query",
       search: urlSearch,
     });
 
-    this.resetInformation()
+    this.resetInformation(startDate, endDate)
 
     queryGraph(
       this.state.string, 
-      this.state.startDate, 
-      this.state.dateRange == true ? this.state.endDate : null)
+      startDate, 
+      endDate)
       .then((res) => res.json())
       .then(
         (res) =>
@@ -341,8 +357,8 @@ class QueryAnalysis extends Component {
 
     getQuerySummary(
       this.state.string,
-      this.state.startDate,
-      this.state.dateRange == true ? this.state.endDate : null
+      startDate,
+      endDate
     )
       .then((res) => res.json())
       .then(
@@ -380,8 +396,8 @@ class QueryAnalysis extends Component {
 
     getClicksRanks(
       this.state.string,
-      this.state.startDate,
-      this.state.dateRange == true ? this.state.endDate : null
+      startDate,
+      endDate
     )
       .then((res) => res.json())
       .then(
@@ -390,8 +406,8 @@ class QueryAnalysis extends Component {
       );
     getUnsuccessfulSessions(
       this.state.string,
-      this.state.startDate,
-      this.state.dateRange == true ? this.state.endDate : null
+      startDate,
+      endDate
     )
       .then((res) => res.json())
       .then((res) => this.setState({ unsuccessfulSessions: res["n"] }));
@@ -434,31 +450,54 @@ class QueryAnalysis extends Component {
               <TimePicker
                 selectedDate={this.state.startDate}
                 onChange={this.changeStartDate}
-                label={this.state.dateRange === true ? "Start date" : "Date"}
+                label={"Start date"}
                 style = {{}}
               />
-              {this.state.dateRange === true ? (
               <TimePicker
                 selectedDate={this.state.endDate}
                 onChange={this.changeEndDate}
                 label="End date"
                 margin="20px"
               />
-            ) : null}
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.state.dateRange}
-                    onChange={this.handleCheckbox}
-                    style={{ color: "#2c3e50", marginLeft: 20 }}
-                    name="checkbox"
-                  />
-                }
-                label="Time interval"
-                style={{ marginTop: "auto", marginBottom: "auto" }}
-              />
+              <ButtonGroup
+                aria-label="vertical outlined primary button group"
+              >
+                <Button
+                  onClick={() => this.last30min()}
+                  style={{
+                    color: "#2c3e50",
+                    backgroundColor: "white",
+                    border: "1px solid #2c3e50",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  Last 30 min
+                </Button>
+                <Button
+                  onClick={() => this.last60min()}
+                  style={{
+                    color: "#2c3e50",
+                    backgroundColor: "white",
+                    border: "1px solid #2c3e50",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  Last 60 min
+                </Button>
+                <Button
+                  onClick={() => this.last24hours()}
+                  style={{
+                    color: "#2c3e50",
+                    backgroundColor: "white",
+                    border: "1px solid #2c3e50",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  Last 24 hours
+                </Button>
+              </ButtonGroup>
             </div>
-            <Button color="custom" onClick={() => this.submitEvaluation()}>
+            <Button color="custom" onClick={() => this.submitEvaluation(this.state.startDate, this.state.endDate)}>
               Submit
             </Button>
           </div>

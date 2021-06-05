@@ -6,6 +6,7 @@ import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
 import ZzIcon from "../../assets/img/logo.png";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
@@ -41,8 +42,6 @@ class PageAnalysis extends Component {
     startDate: new Date(),
     endDate: new Date(),
     today: new Date(),
-
-    dateRange: false,
 
     showGraph: false,
     graphStartDate: null,
@@ -105,6 +104,10 @@ class PageAnalysis extends Component {
   };
 
   componentDidMount() {
+    let endToday = new Date();
+    endToday.setHours(23);
+    endToday.setMinutes(59);
+    
     let search = window.location.search;
     let params = new URLSearchParams(search);
 
@@ -118,12 +121,11 @@ class PageAnalysis extends Component {
         tp_item: tp_item != null ? tp_item : "",
         fk_item: fk_item != null ? fk_item : "",
         startDate: startDate != null ? new Date(startDate) : new Date(),
-        endDate: endDate != null ? new Date(endDate) : new Date(),
-        dateRange: endDate != null ? true : false,
+        endDate: endDate != null ? new Date(endDate) : endToday,
       },
       () => {
-        if (tp_item != null && fk_item != null && startDate != null)
-          this.submitEvaluation();
+        if (tp_item != null && fk_item != null && startDate != null && endDate != null)
+          this.submitEvaluation(this.state.startDate, this.state.endDate);
       }
     );
   }
@@ -134,10 +136,6 @@ class PageAnalysis extends Component {
 
   handleChangeRowsPerPage = (event) => {
     this.setState({ rowsPerPage: parseInt(event.target.value, 10), page: 0 });
-  };
-
-  handleCheckbox = (event) => {
-    this.setState({ dateRange: event.target.checked });
   };
 
   changeValue = (event) => {
@@ -155,6 +153,27 @@ class PageAnalysis extends Component {
   changeEndDate = (event) => {
     this.setState({ endDate: new Date(event.target.value) });
   };
+
+  last30min() {
+    let endDate = new Date();
+    let startDate = new Date(endDate - 60000 * 30)
+
+    this.submitEvaluation(startDate, endDate)
+  }
+
+  last60min() {
+    let endDate = new Date();
+    let startDate = new Date(endDate - 60000 * 60)
+
+    this.submitEvaluation(startDate, endDate)
+  }
+
+  last24hours() {
+    let endDate = new Date();
+    let startDate = new Date(endDate - 60000 * 60 * 24)
+
+    this.submitEvaluation(startDate, endDate)
+  }
 
   changeGraphStartDate = (newDate) => {
     let formatedDate =
@@ -252,7 +271,7 @@ class PageAnalysis extends Component {
     }
   }
 
-  resetInformation () {
+  resetInformation (startDate, endDate) {
     this.setState({
       tableData: [
         {
@@ -287,9 +306,8 @@ class PageAnalysis extends Component {
       showPagesRank: false,
       calculatedTp_Item: this.state.tp_item,
       calculatedFk_Item: this.state.fk_item,
-      calculatedStartDate: this.state.startDate,
-      calculatedEndDate:
-        this.state.dateRange == true ? this.state.endDate : null,
+      calculatedStartDate: startDate,
+      calculatedEndDate: endDate,
     });
   }
 
@@ -322,7 +340,7 @@ class PageAnalysis extends Component {
       );
   };
 
-  submitEvaluation = () => {
+  submitEvaluation(startDate, endDate) {
 
     if(this.state.tp_item == "" || this.state.fk_item == "")
       return
@@ -333,24 +351,21 @@ class PageAnalysis extends Component {
       "&fk_item=" +
       this.state.fk_item +
       "&startDate=" +
-      toISOString(this.state.startDate);
-
-    urlSearch +=
-      this.state.dateRange == true
-        ? "&endDate=" + toISOString(this.state.endDate)
-        : "";
+      toISOString(startDate) +
+      "&endDate=" + 
+      toISOString(endDate);
 
     this.props.history.push({
       pathname: "/page",
       search: urlSearch,
     });
 
-    this.resetInformation()
+    this.resetInformation(startDate, endDate)
 
     pageGraph(this.state.tp_item, 
               this.state.fk_item, 
-              this.state.startDate, 
-              this.state.dateRange == true ? this.state.endDate : null
+              startDate, 
+              endDate
               )
       .then((res) => res.json())
       .then(
@@ -367,8 +382,8 @@ class PageAnalysis extends Component {
     getPageSummary(
       this.state.tp_item,
       this.state.fk_item,
-      this.state.startDate,
-      this.state.dateRange == true ? this.state.endDate : null
+      startDate,
+      endDate
     )
       .then((res) => res.json())
       .then(
@@ -407,8 +422,8 @@ class PageAnalysis extends Component {
     getPagesRank(
       this.state.tp_item,
       this.state.fk_item,
-      this.state.startDate,
-      this.state.dateRange == true ? this.state.endDate : null
+      startDate,
+      endDate
     )
       .then((res) => res.json())
       .then(
@@ -469,33 +484,53 @@ class PageAnalysis extends Component {
                 onChange={this.changeStartDate}
                 label={this.state.dateRange === true ? "Start date" : "Date"}
               />
-              {this.state.dateRange === true ? (
               <TimePicker
                 selectedDate={this.state.endDate}
                 onChange={this.changeEndDate}
                 label="End date"
                 margin="20px"
               />
-            ) : null}
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.state.dateRange}
-                    onChange={this.handleCheckbox}
-                    style={{ color: "#2c3e50", marginLeft: 20 }}
-                    name="checkbox"
-                  />
-                }
-                label="Time interval"
-                style={{ marginTop: "auto", marginBottom: "auto" }}
-              />
+               <ButtonGroup
+                aria-label="vertical outlined primary button group"
+              >
+                <Button
+                  onClick={() => this.last30min()}
+                  style={{
+                    color: "#2c3e50",
+                    backgroundColor: "white",
+                    border: "1px solid #2c3e50",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  Last 30 min
+                </Button>
+                <Button
+                  onClick={() => this.last60min()}
+                  style={{
+                    color: "#2c3e50",
+                    backgroundColor: "white",
+                    border: "1px solid #2c3e50",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  Last 60 min
+                </Button>
+                <Button
+                  onClick={() => this.last24hours()}
+                  style={{
+                    color: "#2c3e50",
+                    backgroundColor: "white",
+                    border: "1px solid #2c3e50",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  Last 24 hours
+                </Button>
+              </ButtonGroup>
             </div>       
-            <Button
-              color="custom"
-              onClick={() =>
-                this.submitEvaluation(this.state.tp_item, this.state.fk_item)
-              }
-            >
+            <Button 
+              color="custom" 
+              onClick={() => this.submitEvaluation(this.state.startDate, this.state.endDate)}>
               Submit
             </Button>
           </div>

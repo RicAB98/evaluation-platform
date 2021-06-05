@@ -4,7 +4,6 @@ import { Helmet } from 'react-helmet';
 import { withStyles } from "@material-ui/core/styles";
 
 // core components
-import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
@@ -59,37 +58,34 @@ class Evaluation extends Component {
       },
     ],
     startDate: new Date(),
-    endDate: "",
+    endDate: new Date(),
     calculatedStartDate: null,
     calculatedEndDate: null,
-    dateRange: false,
     viewTables: false,
   };
 
   componentDidMount() {
-    let endDate = new Date();
-    endDate.setHours(23);
-    endDate.setMinutes(59);
-    this.setState({ endDate: endDate });
+    let endToday = new Date();
+    endToday.setHours(23);
+    endToday.setMinutes(59);
 
     let search = window.location.search;
     let params = new URLSearchParams(search);
 
     let startDate = params.get("startDate");
-    endDate = params.get("endDate");
+    let endDate = params.get("endDate");
 
-    if (startDate !== null && new Date(startDate) != "Invalid Date")
-      this.setState({ startDate: new Date(startDate) }, () => {
-        this.submitEvaluation();
-      });
-
-    if (endDate !== null && new Date(startDate) != "Invalid Date")
-      this.setState({ endDate: new Date(endDate), dateRange: true });
+    this.setState(
+      {
+        startDate: startDate !== null ? new Date(startDate) : new Date(),
+        endDate: endDate != null ? new Date(endDate) : endToday,
+      },
+      () => {
+        if (startDate !== null && endDate !== null)
+          this.submitEvaluation(this.state.startDate, this.state.endDate);
+      }
+    );
   }
-
-  handleCheckbox = (event) => {
-    this.setState({ dateRange: event.target.checked });
-  };
 
   handleChangeView = (event) => {
     this.setState({ viewTables: event.target.checked });
@@ -104,74 +100,77 @@ class Evaluation extends Component {
   };
 
   last30min() {
-    this.setState({
-      startDate: new Date(this.state.startDate - 60000 * 30),
-      endDate: this.state.startDate,
-      dateRange: true,
-    });
+    let endDate = new Date();
+    let startDate = new Date(endDate - 60000 * 30)
+
+    this.submitEvaluation(startDate, endDate)
   }
 
   last60min() {
-    this.setState({
-      startDate: new Date(this.state.startDate - 60000 * 60),
-      endDate: this.state.startDate,
-      dateRange: true,
-    });
+    let endDate = new Date();
+    let startDate = new Date(endDate - 60000 * 60)
+
+    this.submitEvaluation(startDate, endDate)
   }
 
   last24hours() {
-    this.setState({
-      startDate: new Date(this.state.startDate - 60000 * 60 * 24),
-      endDate: this.state.startDate,
-      dateRange: true,
-    });
+    let endDate = new Date();
+    let startDate = new Date(endDate - 60000 * 60 * 24)
+
+    this.submitEvaluation(startDate, endDate)
   }
 
   toRegularDateFormat(date) {
     return date != null ? date.replace("T", " ") : null;
   }
 
-  submitEvaluation() {
+  resetInformation(startDate, endDate)
+  {
+    this.setState({
+      popularQueries: [
+        {
+          search_string: "Loading...",
+          n: "Loading...",
+        },
+      ],
+      unsuccessfulQueries: [
+        {
+          search_string: "Loading...",
+          n: "Loading...",
+        },
+      ],
+      popularPages: [
+        {
+          tp_item: 0,
+          fk_item: 0,
+          n: "Loading...",
+        },
+      ], 
+      calculatedStartDate: startDate,
+      calculatedEndDate: endDate, 
+      showTables: true });
+  }
+
+  submitEvaluation(startDate, endDate) {
+
+    console.log(startDate)
+    console.log(endDate)
+
 
     let urlSearch =
       "?startDate=" +
-      toISOString(this.state.startDate);
-
-    urlSearch +=
-      this.state.dateRange == true
-        ? "&endDate=" + toISOString(this.state.endDate)
-        : "";
+      toISOString(startDate) + 
+      "&endDate=" + 
+      toISOString(endDate);
 
     this.props.history.push({
       pathname: "/evaluation",
       search: urlSearch
     });
 
-    this.setState({
-        popularQueries: [
-          {
-            search_string: "Loading...",
-            n: "Loading...",
-          },
-        ],
-        unsuccessfulQueries: [
-          {
-            search_string: "Loading...",
-            n: "Loading...",
-          },
-        ],
-        popularPages: [
-          {
-            tp_item: 0,
-            fk_item: 0,
-            n: "Loading...",
-          },
-        ], 
-        calculatedStartDate: this.state.startDate,
-        calculatedEndDate: this.state.dateRange == true ? this.state.endDate : null, 
-        showTables: true });
+    this.resetInformation(startDate, endDate)
 
-    runEvaluation(this.state.startDate, this.state.dateRange == true ? this.state.endDate : null)
+    runEvaluation(startDate, endDate )
       .then((res) => res.json())
       .then((res) =>
         this.setState({
@@ -207,30 +206,15 @@ class Evaluation extends Component {
               <Calendar
                 selectedDate={this.state.startDate}
                 onChange={this.changeStartDate}
-                label={this.state.dateRange === true ? "Start date" : "Date"}
+                label={"Start date"}
               />
-              {this.state.dateRange === true ?
-                <Calendar
-                  selectedDate={this.state.endDate}
-                  onChange={this.changeEndDate}
-                  label="End date"
-                  margin="20px"
-                /> : null}
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.state.dateRange}
-                    onChange={this.handleCheckbox}
-                    style={{ color: "#2c3e50", marginLeft: 20 }}
-                    name="checkbox"
-                  />
-                }
-                label="Time interval"
-                style={{ marginTop: "auto", marginBottom: "auto" }}
+              <Calendar
+                selectedDate={this.state.endDate}
+                onChange={this.changeEndDate}
+                label="End date"
+                margin="20px"
               /> 
             </div>
-            {this.state.dateRange !== true ? 
-            (
               <ButtonGroup
                 aria-label="vertical outlined primary button group"
               >
@@ -268,11 +252,10 @@ class Evaluation extends Component {
                   Last 24 hours
                 </Button>
               </ButtonGroup>
-            ) : null}
             <Button
               color="custom"
               onClick={() =>
-                this.submitEvaluation()
+                this.submitEvaluation(this.state.startDate, this.state.endDate)
               }
             >
               Submit
