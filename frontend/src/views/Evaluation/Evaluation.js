@@ -305,7 +305,9 @@ class Evaluation extends Component {
                     <Table
                       tableTitle="Popular queries"
                       tableHeaderColor="gray"
-                      tableHead={["#", "Query", "Searches", " "]}
+                      tableHead={["#", "Query", "Searches", ""]}
+                      columnWidth={["10%","40%","35%","10%"]}
+                      columnTextAlign={["start","start","end", "center"]}
                       headerLinkIcon={<FormatListNumberedIcon />}
                       headerLinkPath={
                         "fullresults?type=1&startDate=" +
@@ -351,7 +353,9 @@ class Evaluation extends Component {
                     <Table
                       tableTitle="Unsuccessful queries"
                       tableHeaderColor="gray"
-                      tableHead={["#", "Query", "Searches", " "]}
+                      tableHead={["#", "Query", "Searches", ""]}
+                      columnWidth={["10%","40%","35%","10%"]}
+                      columnTextAlign={["start","start","end", "center"]}
                       headerLinkIcon={<FormatListNumberedIcon />}
                       headerLinkPath={
                         "fullresults?type=2&startDate=" +
@@ -397,7 +401,9 @@ class Evaluation extends Component {
                     <Table
                       tableTitle="Popular pages"
                       tableHeaderColor="gray"
-                      tableHead={["#", "Id", "Clicks", " ", " "]}
+                      tableHead={["#", "Id", "Clicks", "", ""]}
+                      columnWidth={["10%","45%","30%","10%","5%"]}
+                      columnTextAlign={["start","start","end", "center","center"]}
                       headerLinkIcon={<FormatListNumberedIcon />}
                       headerLinkPath={
                         "fullresults?type=3&startDate=" +

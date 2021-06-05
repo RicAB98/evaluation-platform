@@ -28,10 +28,11 @@ export default function CustomTable(props) {
     secondColumn,
     localLinkPath,
     localLinkAditionalInfo,
-    localLinkIcon,
     externalLink,
     externalLinkPath,
     externalLinkIcon,
+    columnWidth,
+    columnTextAlign
   } = props;
 
   return (
@@ -65,8 +66,8 @@ export default function CustomTable(props) {
                     className={classes.tableCell + " " + classes.tableHeadCell}
                     style = 
                     {{
-                      width: key == 0 ? "5%" : (key == 2 || key == 3) && "20%",
-                      textAlign: (key == 2 || key == 3) ? "end" : "start"
+                      width: columnWidth[key],
+                      textAlign: columnTextAlign[key]
                     }}
                     key={key}
                   >
@@ -81,42 +82,37 @@ export default function CustomTable(props) {
           {tableData.map((prop, key) => {
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
-                <TableCell className={classes.tableCell} style={{textAlign: "start"}}>{key + 1}</TableCell>
-                <TableCell className={classes.tableCell} style={{textAlign: "start"}}>
-                  {firstColumn.map((field) => {
-                    return prop[field];
-                  })}
+                <TableCell className={classes.tableCell} style={{textAlign: columnTextAlign[0]}}>{key + 1}</TableCell>
+                <TableCell className={classes.tableCell} style={{textAlign: columnTextAlign[1]}}>
+                  <a
+                    href= {prop[localLinkPath] + localLinkAditionalInfo}
+                  >
+                    {firstColumn.map((field) => {
+                      return prop[field];
+                    })}
+                  </a>
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
-                  style={{textAlign: "end"}}
+                  style={{textAlign: columnTextAlign[2]}}
                 >
                   {secondColumn.map((field) => {
                     return prop[field];
                   })}
                 </TableCell>
                 { percentage ? 
-                <TableCell className={classes.tableCell} style={{textAlign: "end"}}>
+                <TableCell className={classes.tableCell} style={{textAlign: columnTextAlign[4]}}>
                   {Math.round(10000 * prop["n"]/tableData.reduce((a,b) => a + b["n"], 0))/100} %   
                 </TableCell> : null}
                 <TableCell
                   className={classes.tableCell}
-                  style={{ textAlign: "end" }}
+                  style={{textAlign: columnTextAlign[3]}}
                 >
-                  <IconButton
-                    color="primary"
-                    component="span"
-                    onClick={() =>
-                      window.open(prop[localLinkPath] + localLinkAditionalInfo)
-                    }
-                  >
-                    {localLinkIcon}
-                  </IconButton>
                 </TableCell>
                 {externalLink === true ? (
                   <TableCell
                     className={classes.tableCell}
-                    style={{ textAlign: "center" }}
+                    style={{ textAlign: columnTextAlign[5]}}
                   >
                     <IconButton
                       color="primary"

@@ -70,9 +70,13 @@ export default function ExpandableTable(props) {
                   {key  + 1 + page * rowsPerPage}
                   </TableCell>
                 <TableCell className={classes.tableCell} style={{textAlign: "start"}}>
+                  <a
+                    href={prop[localLinkPath]  + localLinkAditionalInfo}
+                  >
                   {firstColumn.map((field) => {
                     return prop[field];
                   })}
+                  </a>
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}
@@ -91,15 +95,7 @@ export default function ExpandableTable(props) {
                 <TableCell
                   className={classes.tableCell}
                 >
-                  <IconButton
-                    color="primary"
-                    component="span"
-                    onClick={() =>
-                      window.open(prop[localLinkPath]  + localLinkAditionalInfo)
-                    }
-                  >
-                    {localLinkIcon}
-                  </IconButton>
+
                 </TableCell>
                 {externalLink === true ? (
                   <TableCell

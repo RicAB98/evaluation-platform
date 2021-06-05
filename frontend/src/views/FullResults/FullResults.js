@@ -126,7 +126,7 @@ class FullResults extends Component {
             ) : null}
             {this.state.type == 2 ? (
               <GridContainer spacing={2}>
-                <GridItem xs={12}>
+                <GridItem xs={12} xl={3}>
                   <Table
                     tableTitle="Unsuccessful queries"
                     tableHeaderColor="gray"
@@ -150,7 +150,7 @@ class FullResults extends Component {
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                   />
                 </GridItem>
-                <GridItem xs={12} style={{ marginTop: 20, marginLeft: 10 }}>
+                <GridItem xs={12} xl={8} style={{ marginTop: 20, marginLeft: 10 }}>
                   <BarChart
                     title="Unsuccessful queries"
                     data={this.state.tableData}
@@ -165,7 +165,7 @@ class FullResults extends Component {
             ) : null}
             {this.state.type == 3 ? (
               <GridContainer spacing={2}>
-                <GridItem xs={12}>
+                <GridItem xs={12} xl={3}>
                   <Table
                     tableTitle="Popular pages"
                     tableHeaderColor="gray"
@@ -191,7 +191,7 @@ class FullResults extends Component {
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                   />
                 </GridItem>
-                <GridItem xs={12} style={{ marginTop: 20, marginLeft: 10 }}>
+                <GridItem xs={12} xl={8} style={{ marginTop: 20, marginLeft: 10 }}>
                   <BarChart
                     title="Unsuccessful queries"
                     data={this.state.tableData}

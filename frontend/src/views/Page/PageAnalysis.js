@@ -591,7 +591,7 @@ class PageAnalysis extends Component {
                       "Queries searched on position " + this.state.calculatedRank
                     }
                     tableHeaderColor="gray"
-                    tableHead={["#", "Query", "Searches", "",""]}
+                    tableHead={["#", "Query", "Searches", "%",""]}
                     tableData={this.state.stringsPerRank}
                     firstColumn={["search_string"]}
                     secondColumn={["n"]}

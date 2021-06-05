@@ -557,6 +557,8 @@ class QueryAnalysis extends Component {
                     }
                     tableHeaderColor="gray"
                     tableHead={["#", "Id", "Clicks", "%", "", ""]}
+                    columnWidth={["10%","40%","20%","25%","10%","5%"]}
+                    columnTextAlign={["start","start","end", "end","center","center"]}
                     tableData={this.state.pagesPerRank}
                     firstColumn={["partialUrl"]}
                     secondColumn={["n"]}
