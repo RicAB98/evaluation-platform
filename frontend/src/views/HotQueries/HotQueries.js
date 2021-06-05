@@ -5,12 +5,18 @@ import { Helmet } from 'react-helmet';
 import SortingTable from "../../components/Table/SortingTable";
 import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import StopIcon from '@material-ui/icons/Stop';
+import IconButton from "@material-ui/core/IconButton";
 
 import { getHotQueries, getHotPages } from "../../requests/requests.js";
 import { toISOString} from "../../utils/utils.js"
 
 class HotQueries extends Component {
   state = {
+    
+    lastUpdate: new Date(),
+    updateFunction: null,
+
     hotQueries: [
       {
         search_string: "Loading",
@@ -50,7 +56,9 @@ class HotQueries extends Component {
     let sevenDaysEarlier = new Date(this.state.endDate - 60000 * 60 * 24 * 7) 
     sevenDaysEarlier.setHours(0)
     sevenDaysEarlier.setMinutes(0)
-    this.setState({ startDate: sevenDaysEarlier  }, () => this.submitEvaluation() )
+    this.setState({ startDate: sevenDaysEarlier, 
+                    updateFunction: setInterval(this.submitEvaluation.bind(this), 60000 * 5)
+                  }, () => this.submitEvaluation())
   }
 
   changeQueryMinimum = (event) => {
@@ -74,11 +82,27 @@ class HotQueries extends Component {
       }) 
   };
 
+  getTime(date)
+  {
+    let hours = date.getHours() <= 9 ? "0" + date.getHours() : date.getHours();
+    let minutes = date.getMinutes() <= 9 ? "0" + date.getMinutes() : date.getMinutes();
+    let seconds = date.getSeconds() <= 9 ? "0" + date.getSeconds() : date.getSeconds();
+
+    return hours + ":" + minutes + ":" + seconds;
+  }
+
   submitEvaluation = () => {
     
+    this.setState({lastUpdate: new Date() })
+
     this.getHotQueries();
     this.getHotPages();
   };
+
+  stopAutoUpdate() {
+    clearInterval(this.state.updateFunction);
+    this.setState({updateFunction: null})
+  }
 
   getHotQueries() {
 
@@ -123,6 +147,7 @@ class HotQueries extends Component {
       .then((res) => this.setState({ hotPages: res }));
   }
 
+
   render() {
     return (
       <div>
@@ -130,7 +155,24 @@ class HotQueries extends Component {
           <title>{ "Trending" }</title>
         </Helmet>
         <div style={{ marginTop: 20, marginLeft: 16 }}>
-
+        <div
+            style={{
+              display: "flex",
+              flexDirection: "row"
+            }}
+          >
+          <h5 style = {{marginTop: "auto", marginBottom: "auto"}}>Last updated at  {this.getTime(this.state.lastUpdate)}</h5> 
+          {this.state.updateFunction !== null ?
+          <IconButton
+            color="secondary"
+            component="span"
+            onClick={() => this.stopAutoUpdate()}
+            style = {{fontSize: 15}}
+          >
+            <StopIcon />
+            Stop auto-update
+          </IconButton> : null}
+          </div>
           <SortingTable
             tableTitle = "Hot Queries"
             rows={this.state.hotQueries}

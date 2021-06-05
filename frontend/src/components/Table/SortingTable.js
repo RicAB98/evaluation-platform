@@ -242,7 +242,7 @@ const useStyles = makeStyles((theme) => ({
 export default function EnhancedTable(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("desc");
-  const [orderBy, setOrderBy] = React.useState("GrowthLast30min");
+  const [orderBy, setOrderBy] = React.useState("last30Min");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -252,7 +252,6 @@ export default function EnhancedTable(props) {
     tableTitle,
     rows,
     includeInsuccess,
-    iconButton,
     localLinkPath,
     localLinkFields,
     localLinkAdditional,
@@ -314,6 +313,13 @@ export default function EnhancedTable(props) {
           {" "}
           {tableTitle}{" "}
         </h4>
+        <div
+          style = {{
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+        <h6 style = {{marginTop: 30, marginBottom: 0}}>Minimum number of searches on the last 24 hours:</h6>  
         <Dropdown
           list={[
             { id: 5, name: 5 },
@@ -325,30 +331,38 @@ export default function EnhancedTable(props) {
             { id: 500, name: 500 },
             { id: 1000, name: 1000 },
           ]}
-          name="Minimum 24h"
           value={minimum}
           onChange={dropdownOnChange}
         />
+        </div>
         {tableTitle === "Hot Pages" ? (
-          <Dropdown
-            list={[
-              { id: 0, name: "All" },
-              { id: 2, name: "Competition" },
-              { id: 3, name: "Team" },
-              { id: 4, name: "Player" },
-              { id: 8, name: "Stadium" },
-              { id: 9, name: "Coach" },
-              { id: 10, name: "City" },
-              { id: 13, name: "Referee" },
-              { id: 16, name: "Director" },
-              { id: 17, name: "Agent" },
-              { id: 18, name: "Menu" },
-            ]}
-            name="Entities"
-            value={entityType}
-            onChange={handleChangeEntity}
-          />
+        <div
+          style = {{
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          <h6 style = {{marginTop: 30, marginBottom: 0, marginLeft: 10}}>Entity: </h6>
+            <Dropdown
+              list={[
+                { id: 0, name: "All" },
+                { id: 2, name: "Competition" },
+                { id: 3, name: "Team" },
+                { id: 4, name: "Player" },
+                { id: 8, name: "Stadium" },
+                { id: 9, name: "Coach" },
+                { id: 10, name: "City" },
+                { id: 13, name: "Referee" },
+                { id: 16, name: "Director" },
+                { id: 17, name: "Agent" },
+                { id: 18, name: "Menu" },
+              ]}
+              value={entityType}
+              onChange={handleChangeEntity}
+            />
+          </div>
         ) : null}
+
       </div>
       <Paper className={classes.paper}>
         <TableContainer>
