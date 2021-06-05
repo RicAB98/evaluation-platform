@@ -40,7 +40,7 @@ export default function CustomTable(props) {
           style={{
             display: "flex",
             flexDirection: "row",
-            width: 300,
+            width: 350,
             marginBottom:20
           }}
         >
@@ -49,9 +49,10 @@ export default function CustomTable(props) {
         color="primary"
         component="span"
         onClick={() => window.open(headerLinkPath)}
-        style={{marginLeft: 10}}
+        style={{marginLeft: 20}}
       >
         {headerLinkIcon}
+        <h6 style = {{ marginLeft: 5, marginTop: "auto", marginBottom: "auto", color: "#4054b4", fontWeight: "bold"}}>Full results </h6>
       </IconButton>
       </div>}
       <Table className={classes.table}>

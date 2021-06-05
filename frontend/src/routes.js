@@ -1,5 +1,4 @@
 // @material-ui/icons
-import CompareArrowsOutlinedIcon from '@material-ui/icons/CompareArrowsOutlined';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import TextRotationNoneIcon from '@material-ui/icons/TextRotationNone';
@@ -11,8 +10,7 @@ import ResultsPage from "./views/Evaluation/Evaluation";
 import HotQueriesPage from "./views/HotQueries/HotQueries";
 import QueryPage from "./views/Query/QueryAnalysis";
 import PageAnalysisPage from "./views/Page/PageAnalysis";
-import ExpandedAnalysisPage from "./views/Expanded/ExpandedAnalysis";
-import ComparePage from "./views/Compare/Compare.js";
+import FullResultsPage from "./views/FullResults/FullResults";
 
 const dashboardRoutes = [
 
@@ -21,35 +19,40 @@ const dashboardRoutes = [
     name: "Trending",
     icon: TrendingUpIcon,
     component: HotQueriesPage,
-    layout: ""
+    layout: "",
+    sidebar: true
   },
   {
     path: "/evaluation",
     name: "Evaluation",
     icon: EqualizerIcon,
     component: ResultsPage,
-    layout: ""
+    layout: "",
+    sidebar: true
   },
   {
     path: "/query",
     name: "Query Analysis",
     icon: TextRotationNoneIcon,
     component: QueryPage,
-    layout: ""
+    layout: "",
+    sidebar: true
   },
   {
     path: "/page",
     name: "Page Analysis",
     icon: MenuBookIcon,
     component: PageAnalysisPage,
-    layout: ""
+    layout: "",
+    sidebar: true
   },
   {
-    path: "/expanded",
-    name: "Expanded Analysis",
+    path: "/fullresults",
+    name: "Full Results", 
     icon: OpenWithIcon,
-    component: ExpandedAnalysisPage,
-    layout: ""
+    component: FullResultsPage,
+    layout: "",
+    sidebar: false
   },
   /*{
     path: "/compare",

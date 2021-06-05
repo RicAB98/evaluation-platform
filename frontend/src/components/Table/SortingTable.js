@@ -89,6 +89,30 @@ const headCells = [
     label: "Insuccess rate",
   },
   {
+    id: "last30Min",
+    align: "right",
+    disablePadding: false,
+    label: "Last 30min",
+  },
+  {
+    id: "GrowthLast30min",
+    align: "right",
+    disablePadding: false,
+    label: "Last 30min %",
+  },
+  {
+    id: "last60min",
+    align: "right",
+    disablePadding: false,
+    label: "Last 60min",
+  },
+  {
+    id: "GrowthLast60min",
+    align: "right",
+    disablePadding: false,
+    label: "Last 60min %",
+  },
+  {
     id: "totalLast24h",
     align: "right",
     disablePadding: false,
@@ -101,22 +125,16 @@ const headCells = [
     label: "Previous 24 hours",
   },
   {
-    id: "average7days",
-    align: "right",
-    disablePadding: false,
-    label: "Last 7 days",
-  },
-  {
-    id: "total7daysAgo",
-    align: "right",
-    disablePadding: false,
-    label: "7 days ago",
-  },
-  {
     id: "GrowthLast24h",
     align: "right",
     disablePadding: false,
     label: "Last 24 hours %",
+  },
+  {
+    id: "average7days",
+    align: "right",
+    disablePadding: false,
+    label: "Last 7 days",
   },
   {
     id: "GrowthLast7d",
@@ -125,12 +143,17 @@ const headCells = [
     label: "Last 7 days %",
   },
   {
+    id: "total7daysAgo",
+    align: "right",
+    disablePadding: false,
+    label: "7 days ago",
+  },
+  {
     id: "weekgraph",
     align: "center",
     disablePadding: false,
     label: "7 days graph",
   },
-  { id: "icon", numeric: false, disablePadding: false, label: "" },
 ];
 
 function EnhancedTableHead(props) {
@@ -217,7 +240,7 @@ const useStyles = makeStyles((theme) => ({
 export default function EnhancedTable(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("desc");
-  const [orderBy, setOrderBy] = React.useState("GrowthLast7d");
+  const [orderBy, setOrderBy] = React.useState("GrowthLast30min");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -351,10 +374,44 @@ export default function EnhancedTable(props) {
                         (element.sumRank * 100) / element.totalClicks
                       ) / 100
                     : "No clicks";
+
                 element.insuccessRate =
                   100 -
                   (100 * element.totalClicks) /
                     (element.totalLast7days + element.totalLast24h);
+
+                element.GrowthLast30min =
+                  element.previous30Min !== 0
+                    ? Math.round(
+                        ((element.last30Min - element.previous30Min) *
+                          100 *
+                          100) /
+                          element.previous30Min
+                      ) / 100
+                    : Math.round(((element.last30Min - 1) * 100 * 100) / 1) /
+                      100;
+
+
+                if(element.search_string == 'sport')
+                {
+                  console.log(element.last30Min)
+                  console.log(element.previous30Min)
+                  console.log((element.last30Min - element.previous30Min)/element.previous30Min)
+                }
+
+                element.last60min = element.last30Min + element.previous30Min;
+
+                element.GrowthLast60min =
+                  element.previousHour !== 0
+                    ? Math.round(
+                        ((element.last60min - element.previousHour) *
+                          100 *
+                          100) /
+                          element.previousHour
+                      ) / 100
+                    : Math.round(((element.last60min - 1) * 100 * 100) / 1) /
+                      100;
+
                 element.GrowthLast7d =
                   element.average7days !== 0
                     ? Math.round(
@@ -365,6 +422,7 @@ export default function EnhancedTable(props) {
                       ) / 100
                     : Math.round(((element.totalLast24h - 1) * 100 * 100) / 1) /
                       100;
+
                 element.GrowthLast24h =
                   element.totalPrevious24h !== 0
                     ? Math.round(
@@ -387,7 +445,7 @@ export default function EnhancedTable(props) {
                 }
                 )
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                .map((row, index) => {  
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -450,16 +508,32 @@ export default function EnhancedTable(props) {
                         </TableCell>
                       ) : null}
                       <TableCell align="right">
+                        <b>{row.last30Min}</b>
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        style={{
+                          color: row.GrowthLast30min > 0 ? "#00cc00" : "red",
+                        }}
+                      >
+                        <b>{row.GrowthLast30min}%</b>
+                      </TableCell>
+                      <TableCell align="right">
+                        <b>{row.last60min}</b>
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        style={{
+                          color: row.GrowthLast60min > 0 ? "#00cc00" : "red",
+                        }}
+                      >
+                        <b>{row.GrowthLast60min}%</b>
+                      </TableCell>
+                      <TableCell align="right">
                         <b>{row.totalLast24h}</b>
                       </TableCell>
                       <TableCell align="right">
                         <b>{row.totalPrevious24h}</b>
-                      </TableCell>
-                      <TableCell align="right">
-                        <b>{Math.round(100 * row.average7days) / 100}</b>
-                      </TableCell>
-                      <TableCell align="right">
-                        <b>{row.total7daysAgo}</b>
                       </TableCell>
                       <TableCell
                         align="right"
@@ -469,6 +543,9 @@ export default function EnhancedTable(props) {
                       >
                         <b>{row.GrowthLast24h}%</b>
                       </TableCell>
+                      <TableCell align="right">
+                        <b>{Math.round(100 * row.average7days) / 100}</b>
+                      </TableCell>                    
                       <TableCell
                         align="right"
                         style={{
@@ -476,6 +553,9 @@ export default function EnhancedTable(props) {
                         }}
                       >
                         <b>{row.GrowthLast7d}%</b>
+                      </TableCell>
+                      <TableCell align="right">
+                        <b>{row.total7daysAgo}</b>
                       </TableCell>
                       <TableCell align="right">
                         <Chart
@@ -499,7 +579,7 @@ export default function EnhancedTable(props) {
                           displayYLegend={false}
                         />
                       </TableCell>
-                      <TableCell align="right">
+                      {/*<TableCell align="right">
                         <IconButton
                           color="primary"
                           component="span"
@@ -517,7 +597,7 @@ export default function EnhancedTable(props) {
                         >
                           {iconButton}
                         </IconButton>
-                      </TableCell>
+                      </TableCell>*/}
                     </TableRow>
                   );
                 })}
@@ -533,9 +613,13 @@ export default function EnhancedTable(props) {
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={
-            entityType == 0
-              ? rows.length
-              : rows.filter((element) => element.tp_item == entityType).length
+              rows.filter((element) =>
+              {
+                if(element.totalLast24h >= minimum)
+                  return entityType != 0 ? element.tp_item == entityType : true
+
+                return false
+              }).length
           }
           rowsPerPage={rowsPerPage}
           page={page}

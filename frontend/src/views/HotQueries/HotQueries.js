@@ -38,7 +38,7 @@ class HotQueries extends Component {
     ],
 
     startDate: new Date(),
-    endDate: new Date("2021-1-31 23:59"),
+    endDate: new Date(),
     queryMinimum: 10,
     pageMinimum: 10,
     calculatedQueryMinimum: 10,
@@ -46,6 +46,7 @@ class HotQueries extends Component {
   };
 
   componentDidMount() {
+
     let sevenDaysEarlier = new Date(this.state.endDate - 60000 * 60 * 24 * 7) 
     sevenDaysEarlier.setHours(0)
     sevenDaysEarlier.setMinutes(0)
@@ -129,6 +130,7 @@ class HotQueries extends Component {
           <title>{ "Trending" }</title>
         </Helmet>
         <div style={{ marginTop: 20, marginLeft: 16 }}>
+
           <SortingTable
             tableTitle = "Hot Queries"
             rows={this.state.hotQueries}

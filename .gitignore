@@ -1507,3 +1507,5 @@ node_modules/verror/lib/verror.js
 node_modules/verror/LICENSE
 node_modules/verror/package.json
 node_modules/verror/README.md
+frontend/package.json
+frontend/package-lock.json

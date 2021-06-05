@@ -5,19 +5,20 @@ const queryUtil = require("../utils/query.js");
 const { buildPageInformation } = require("../utils/utils");
 const utils = require("../utils/utils");
 
-router.post("/insertsearch", function (req, res, next) {
+function insertSearch (req, res) {
   let row = req.body;
 
+  let loadSearch = queryUtil.loadSearchById(row.id);
   let insertSearch = queryUtil.insertSearch(row);
 
-  db.getConnection((err, conn) => {
+  pool.getConnection((err, conn) => {
     conn.query(insertSearch, (err, results, fields) => {
       if (err) throw err;
 
       res.send(results)
     });
   });
-});
+}  
 
 router.post("/runevaluation", function (req, res, next) {
   let startDate = new Date(req.body.startDate);
@@ -88,7 +89,6 @@ router.post("/runevaluation", function (req, res, next) {
 
       if (results.length != 0) {
         res.send({
-          id: results[0].id,
           popularQueries: JSON.parse(results[0].popularQueries),
           unsuccessfulQueries: JSON.parse(results[0].unsuccessfulQueries),
           popularPages: JSON.parse(results[0].popularPages),
@@ -711,25 +711,25 @@ router.get("/stringsperrank", function (req, res, next) {
 });
 
 router.get("/hotqueries", function (req, res, next) {
+
   let startDate = utils.getCorrectDate(req.query.startDate);
   let minimum = req.query.minimum;
 
-  startDate = new Date(
-    startDate.getFullYear(),
-    startDate.getMonth(),
-    startDate.getDate()
-  );
-  let nextDay = new Date(
-    startDate.getFullYear(),
-    startDate.getMonth(),
-    startDate.getDate()
-  );
+  let halfHourAgo = new Date(startDate - 60000 * 30);
+  let oneHourAgo = new Date(startDate - 60000 * 60);
+  let twoHoursAgo = new Date(startDate - 60000 * 120);
+  
+  let nextDay = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
   nextDay.setDate(startDate.getDate() + 1);
+
   let last24Hours = new Date(startDate - 60000 * 60 * 24);
   let last7Days = new Date(startDate - 60000 * 60 * 24 * 7);
 
   let query = queryUtil.getHotQueries(
     minimum,
+    halfHourAgo,
+    oneHourAgo,
+    twoHoursAgo,
     startDate,
     nextDay,
     last24Hours,
@@ -747,28 +747,25 @@ router.get("/hotqueries", function (req, res, next) {
 });
 
 router.get("/hotpages", function (req, res, next) {
+
   let startDate = utils.getCorrectDate(req.query.startDate);
   let minimum = req.query.minimum;
 
-  startDate = new Date(
-    startDate.getFullYear(),
-    startDate.getMonth(),
-    startDate.getDate(),
-    startDate.getHours(),
-    startDate.getMinutes(),
-    0
-  );
-  let nextDay = new Date(
-    startDate.getFullYear(),
-    startDate.getMonth() + 1,
-    startDate.getDate()
-  );
+  let halfHourAgo = new Date(startDate - 60000 * 30);
+  let oneHourAgo = new Date(startDate - 60000 * 60);
+  let twoHoursAgo = new Date(startDate - 60000 * 120);
+  
+  let nextDay = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
   nextDay.setDate(startDate.getDate() + 1);
+
   let last24Hours = new Date(startDate - 60000 * 60 * 24);
   let last7Days = new Date(startDate - 60000 * 60 * 24 * 7);
 
   let query = queryUtil.getHotPages(
     minimum,
+    halfHourAgo,
+    oneHourAgo,
+    twoHoursAgo,
     startDate,
     nextDay,
     last24Hours,

@@ -1,8 +1,7 @@
-const apiHost = "http://144.91.116.216:9000";
-const localHost = "http://localhost:9000";
+const apiHost = "https://search.zerozero.pt/api?function=";
 
 export function runEvaluation(startDate, endDate) {
-  return fetch(localHost + "/runevaluation", {
+  return fetch(apiHost + "runevaluation", {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
@@ -16,10 +15,9 @@ export function runEvaluation(startDate, endDate) {
 }
 
 export function loadEvaluation(type, startDate, endDate) {
+  let query = apiHost + "loadevaluation&type=" + type + "&startDate=" + startDate;
 
-  let query = apiHost + "/loadevaluation?type=" + type + "&startDate=" + startDate;
-
-  if (endDate != null) query += "&endDate=" + endDate;
+  if (endDate != null) query = query + "&endDate=" + endDate;
 
   return fetch(query, {
     method: "GET",
@@ -31,7 +29,7 @@ export function loadEvaluation(type, startDate, endDate) {
 }
 
 export function topQueries(startDate, endDate) {
-  let query = apiHost + "/topqueries?startDate=" + startDate;
+  let query = apiHost + "topqueries&startDate=" + startDate;
 
   if (endDate != null) query = query + "&endDate=" + endDate;
 
@@ -47,7 +45,7 @@ export function topQueries(startDate, endDate) {
 export function queryGraph(string, startDate, endDate) {
   let query =
     apiHost +
-    "/querygraph?string=" +
+    "querygraph&string=" +
     string +
     "&startDate=" +
     startDate +
@@ -65,7 +63,7 @@ export function queryGraph(string, startDate, endDate) {
 
 export function getQuerySummary(string, startDate, endDate) {
   let query =
-    apiHost + "/querysummary?string=" + string + "&startDate=" + startDate;
+    apiHost + "querysummary&string=" + string + "&startDate=" + startDate;
 
   if (endDate != null) query = query + "&endDate=" + endDate;
 
@@ -80,7 +78,7 @@ export function getQuerySummary(string, startDate, endDate) {
 
 export function getClicksRanks(string, startDate, endDate) {
   let query =
-    apiHost + "/clicksranks?string=" + string + "&startDate=" + startDate;
+    apiHost + "clicksranks&string=" + string + "&startDate=" + startDate;
 
   if (endDate != null) query = query + "&endDate=" + endDate;
 
@@ -96,7 +94,7 @@ export function getClicksRanks(string, startDate, endDate) {
 export function getPagesPerRank(page, mysql_id, string, startDate, endDate) {
   let query =
     apiHost +
-    "/pagesperrank?page=" +
+    "pagesperrank&page=" +
     page +
     "&mysql_id=" +
     mysql_id +
@@ -119,7 +117,7 @@ export function getPagesPerRank(page, mysql_id, string, startDate, endDate) {
 export function getUnsuccessfulSessions(string, startDate, endDate) {
   let query =
     apiHost +
-    "/unsuccessfulsessions?string=" +
+    "unsuccessfulsessions&string=" +
     string +
     "&startDate=" +
     startDate;
@@ -138,7 +136,7 @@ export function getUnsuccessfulSessions(string, startDate, endDate) {
 export function pageGraph(tp_item, fk_item, startDate, endDate) {
   let query =
     apiHost +
-    "/pagegraph?tp_item=" +
+    "pagegraph&tp_item=" +
     tp_item +
     "&fk_item=" +
     fk_item +
@@ -159,7 +157,7 @@ export function pageGraph(tp_item, fk_item, startDate, endDate) {
 export function getPagesRank(tp_item, fk_item, startDate, endDate) {
   let query =
     apiHost +
-    "/pagesrank?tp_item=" +
+    "pagesrank&tp_item=" +
     tp_item +
     "&fk_item=" +
     fk_item +
@@ -179,7 +177,7 @@ export function getPagesRank(tp_item, fk_item, startDate, endDate) {
 
 export function getPageSummary(tp_item, fk_item, startDate, endDate) {
   let query =
-    apiHost + "/pagesummary?tp_item=" + tp_item + "&fk_item=" + fk_item + "&startDate=" + startDate;
+    apiHost + "pagesummary&tp_item=" + tp_item + "&fk_item=" + fk_item + "&startDate=" + startDate;
 
   if (endDate != null) query = query + "&endDate=" + endDate;
 
@@ -195,7 +193,7 @@ export function getPageSummary(tp_item, fk_item, startDate, endDate) {
 export function getStringsPerRank(page, mysql_id, tp_item, fk_item, startDate, endDate) {
   let query =
     apiHost +
-    "/stringsperrank?tp_item=" +
+    "stringsperrank&tp_item=" +
     tp_item +
     "&fk_item=" +
     fk_item +
@@ -219,7 +217,7 @@ export function getStringsPerRank(page, mysql_id, tp_item, fk_item, startDate, e
 }
 
 export function getHotQueries(startDate, minimum) {
-  let query = apiHost + "/hotqueries?startDate=" +  startDate + "&minimum= " + minimum;
+  let query = apiHost + "hotqueries&startDate=" +  startDate + "&minimum= " + minimum;
 
   return fetch(query, {
     method: "GET",
@@ -231,8 +229,8 @@ export function getHotQueries(startDate, minimum) {
 }
 
 export function getHotPages(startDate, minimum) {
-  let query = apiHost + "/hotpages?startDate=" +  startDate + "&minimum= " + minimum;
-  
+  let query = apiHost + "hotpages&startDate=" +  startDate + "&minimum= " + minimum;
+
   return fetch(query, {
     method: "GET",
     headers: {

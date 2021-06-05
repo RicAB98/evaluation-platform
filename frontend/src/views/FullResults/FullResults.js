@@ -15,7 +15,7 @@ import ZzIcon from "../../assets/img/logo.png";
 import { loadEvaluation } from "../../requests/requests.js";
 import { toISOString } from "../../utils/utils.js"
 
-class ExpandedAnalysis extends Component {
+class FullResults extends Component {
   state = {
     type: -1,
 
@@ -74,17 +74,15 @@ class ExpandedAnalysis extends Component {
     return (
       <div>
         <Helmet>
-          <title>{ "Expanded" }</title>
+          <title>{ "Full Results" }</title>
         </Helmet>
         <div style={{ marginLeft: 16 }}>
         <h3 style={{ marginBottom: 20 }}>
           {this.state.startDate !== null ? 
           (this.state.endDate !== null ? 
-            toISOString(this.state.startDate).replace("T"," ")
-            : toISOString(this.state.startDate).substring(0,10), 
-          this.state.endDate !== null ?
-            "   -   " + toISOString(this.state.endDate).replace("T"," ")
-          : null) : null}
+            toISOString(this.state.startDate).replace("T"," ") + "   -   " + toISOString(this.state.endDate).replace("T"," ")
+            : toISOString(this.state.startDate).substring(0,10))
+          : null}
         </h3>
           <div>
             {this.state.type == 1 ? (
@@ -171,7 +169,7 @@ class ExpandedAnalysis extends Component {
                   <Table
                     tableTitle="Popular pages"
                     tableHeaderColor="gray"
-                    tableHead={["#", "IDs", "Count", " ", " "]}
+                    tableHead={["#", "IDs", "Count", "%", " ", " "]}
                     tableData={this.state.tableData}
                     firstColumn={["partialUrl"]}
                     secondColumn={["n"]}
@@ -213,4 +211,4 @@ class ExpandedAnalysis extends Component {
   }
 }
 
-export default ExpandedAnalysis;
+export default FullResults;

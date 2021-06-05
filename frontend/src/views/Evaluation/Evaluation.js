@@ -9,7 +9,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ZzIcon from "../../assets/img/logo.png";
-import OpenWithIcon from "@material-ui/icons/OpenWith";
+import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Switch from "@material-ui/core/Switch";
 
@@ -58,7 +58,7 @@ class Evaluation extends Component {
         n: "Loading...",
       },
     ],
-    startDate: new Date("2021-01-20 0:0"),
+    startDate: new Date(),
     endDate: "",
     calculatedStartDate: null,
     calculatedEndDate: null,
@@ -225,7 +225,7 @@ class Evaluation extends Component {
                     name="checkbox"
                   />
                 }
-                label="Date range"
+                label="Time interval"
                 style={{ marginTop: "auto", marginBottom: "auto" }}
               /> 
             </div>
@@ -306,9 +306,9 @@ class Evaluation extends Component {
                       tableTitle="Popular queries"
                       tableHeaderColor="gray"
                       tableHead={["#", "Query", "Searches", " "]}
-                      headerLinkIcon={<OpenWithIcon />}
+                      headerLinkIcon={<FormatListNumberedIcon />}
                       headerLinkPath={
-                        "expanded?type=1&startDate=" +
+                        "fullresults?type=1&startDate=" +
                         toISOString(this.state.calculatedStartDate) +
                         (this.state.calculatedEndDate !== null
                           ? "&endDate=" +
@@ -352,9 +352,9 @@ class Evaluation extends Component {
                       tableTitle="Unsuccessful queries"
                       tableHeaderColor="gray"
                       tableHead={["#", "Query", "Searches", " "]}
-                      headerLinkIcon={<OpenWithIcon />}
+                      headerLinkIcon={<FormatListNumberedIcon />}
                       headerLinkPath={
-                        "expanded?type=2&startDate=" +
+                        "fullresults?type=2&startDate=" +
                         toISOString(this.state.calculatedStartDate) +
                         (this.state.calculatedEndDate !== null
                           ? "&endDate=" +
@@ -398,9 +398,9 @@ class Evaluation extends Component {
                       tableTitle="Popular pages"
                       tableHeaderColor="gray"
                       tableHead={["#", "Id", "Clicks", " ", " "]}
-                      headerLinkIcon={<OpenWithIcon />}
+                      headerLinkIcon={<FormatListNumberedIcon />}
                       headerLinkPath={
-                        "expanded?type=3&startDate=" +
+                        "fullresults?type=3&startDate=" +
                         toISOString(this.state.calculatedStartDate) +
                         (this.state.calculatedEndDate !== null
                           ? "&endDate=" +

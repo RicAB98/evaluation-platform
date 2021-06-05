@@ -218,38 +218,53 @@ const query = {
             FROM zzlog_search f WHERE fk_item <> 0 AND ${timeConditions} GROUP BY tp_item, fk_item ORDER BY count(*) DESC LIMIT ${limit}`;
   },
 
-  getHotQueries(minimum, startDate, nextDay, last24Hours, last7Days) {
+  getHotQueries(minimum, halfHourAgo, oneHourAgo, twoHoursAgo, startDate, nextDay, last24Hours, last7Days) {
+
+    currentTime = `'${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()} ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'`;
     startDate = `'${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}'`;
     nextDay = `'${nextDay.getFullYear()}-${nextDay.getMonth() + 1}-${nextDay.getDate()}'`;
     last24Hours = `'${last24Hours.getFullYear()}-${last24Hours.getMonth() + 1}-${last24Hours.getDate()}'`;
     last7Days = `'${last7Days.getFullYear()}-${last7Days.getMonth() + 1}-${last7Days.getDate()}'`;
 
-    return `select day.search_string as search_string, coalesce(sumRank,0) as sumRank, coalesce(oneCount,0) as oneCount, coalesce(totalClicks,0) as totalClicks, coalesce(totalLast24h,0) as totalLast24h, coalesce(totalPrevious24h,0) as totalPrevious24h, coalesce(totalLast7days,0) as totalLast7days, coalesce(average7days,0) as average7days, coalesce(total7daysAgo,0) as total7daysAgo, dates, searches from  
+    halfHourAgo = `'${halfHourAgo.getFullYear()}-${halfHourAgo.getMonth() + 1}-${halfHourAgo.getDate()} ${halfHourAgo.getHours()}:${halfHourAgo.getMinutes()}:${halfHourAgo.getSeconds()}'`;
+    oneHourAgo = `'${oneHourAgo.getFullYear()}-${oneHourAgo.getMonth() + 1}-${oneHourAgo.getDate()} ${oneHourAgo.getHours()}:${oneHourAgo.getMinutes()}:${oneHourAgo.getSeconds()}'`;
+    twoHoursAgo = `'${twoHoursAgo.getFullYear()}-${twoHoursAgo.getMonth() + 1}-${twoHoursAgo.getDate()} ${twoHoursAgo.getHours()}:${twoHoursAgo.getMinutes()}:${twoHoursAgo.getSeconds()}'`;
+
+    return `select day.search_string as search_string, coalesce(sumRank,0) as sumRank, coalesce(oneCount,0) as oneCount, coalesce(totalClicks,0) as totalClicks, coalesce(last30Min,0) as last30Min, coalesce(previous30Min,0) as previous30Min,coalesce(previousHour,0) as previousHour, coalesce(totalLast24h,0) as totalLast24h, coalesce(totalPrevious24h,0) as totalPrevious24h, coalesce(totalLast7days,0) as totalLast7days, coalesce(average7days,0) as average7days, coalesce(total7daysAgo,0) as total7daysAgo, dates, searches from  
     (select search_string, count(*) as totalLast24h from zzlog_search where date = ${startDate} and search_string <> '' group by search_string having count(*) >= ${minimum}) as day left join
+    (select search_string, count(*) as last30Min from zzlog_search where time > ${halfHourAgo} and time < ${currentTime} group by search_string) as lastHalfHour on day.search_string = lastHalfHour.search_string left join 
+    (select search_string, count(*) as previous30Min from zzlog_search where time > ${oneHourAgo} and time < ${halfHourAgo} group by search_string) as previousHalfHour on day.search_string = previousHalfHour.search_string left join 
+    (select search_string, count(*) as previousHour from zzlog_search where time > ${twoHoursAgo} and time < ${oneHourAgo} group by search_string) as previousHour on day.search_string = previousHour.search_string left join 
     (select search_string, sum(case when page_number = 0 then mysql_id else page_number * mysql_id end) as sumRank, count(*) as totalClicks from zzlog_search where date > ${last7Days} and date < ${nextDay} and fk_item <> 0 group by search_string) as ranking on day.search_string = ranking.search_string left join 
     (select search_string, count(*) as total7daysAgo from zzlog_search where date = ${last7Days} group by search_string) as weekago on day.search_string = weekago.search_string left join
     (select search_string, count(*) as totalLast7days, count(*)/7 as average7days from zzlog_search where date > ${last7Days} and date < ${startDate} group by search_string) as 7days on day.search_string = 7days.search_string left join 
     (select search_string, count(*) as totalPrevious24h from zzlog_search where date = ${last24Hours} group by search_string) as 24hours on day.search_string = 24hours.search_string left join
     (select search_string, count(*) as oneCount from zzlog_search where date > ${last7Days} and date < ${nextDay} and mysql_id = 1 and (page_number = 1 or page_number = 0) and fk_item <> 0 group by search_string) as firstOption on day.search_string = firstOption.search_string left join
-    (select search_string, group_concat(date order by date) as dates, group_concat (count order by date) as searches from (select search_string, date, count(*) as count from zzlog_search where date > ${last7Days} and date < ${nextDay} group by search_string, date order by date) as aux group by search_string) as searchesPerDay on day.search_string = searchesPerDay.search_string
-    order by totalLast24h DESC;`;
+    (select search_string, group_concat(date order by date) as dates, group_concat (count order by date) as searches from (select search_string, date, count(*) as count from zzlog_search where date > ${last7Days} and date < ${nextDay} group by search_string, date order by date) as aux group by search_string) as searchesPerDay on day.search_string = searchesPerDay.search_string;`;
   },
 
-  getHotPages(minimum, startDate, nextDay, last24Hours, last7Days) {
+  getHotPages(minimum, halfHourAgo, oneHourAgo, twoHoursAgo, startDate, nextDay, last24Hours, last7Days) {
+    currentTime = `'${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()} ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}'`;
     startDate = `'${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}'`;
     nextDay = `'${nextDay.getFullYear()}-${nextDay.getMonth() + 1}-${nextDay.getDate()}'`;
     last24Hours = `'${last24Hours.getFullYear()}-${last24Hours.getMonth() + 1}-${last24Hours.getDate()}'`;
     last7Days = `'${last7Days.getFullYear()}-${last7Days.getMonth() + 1}-${last7Days.getDate()}'`;
 
-    return `select day.tp_item, day.fk_item, coalesce(sumRank,0) as sumRank, coalesce(oneCount,0) as oneCount, coalesce(totalClicks,0) as totalClicks, coalesce(totalLast24h,0) as totalLast24h, coalesce(totalPrevious24h,0) as totalPrevious24h, coalesce(totalLast7days,0) as totalLast7days, coalesce(average7days,0) as average7days, coalesce(total7daysAgo,0) as total7daysAgo, dates, searches from 
+    halfHourAgo = `'${halfHourAgo.getFullYear()}-${halfHourAgo.getMonth() + 1}-${halfHourAgo.getDate()} ${halfHourAgo.getHours()}:${halfHourAgo.getMinutes()}:${halfHourAgo.getSeconds()}'`;
+    oneHourAgo = `'${oneHourAgo.getFullYear()}-${oneHourAgo.getMonth() + 1}-${oneHourAgo.getDate()} ${oneHourAgo.getHours()}:${oneHourAgo.getMinutes()}:${oneHourAgo.getSeconds()}'`;
+    twoHoursAgo = `'${twoHoursAgo.getFullYear()}-${twoHoursAgo.getMonth() + 1}-${twoHoursAgo.getDate()} ${twoHoursAgo.getHours()}:${twoHoursAgo.getMinutes()}:${twoHoursAgo.getSeconds()}'`;
+
+    return `select day.tp_item, day.fk_item, coalesce(sumRank,0) as sumRank, coalesce(oneCount,0) as oneCount, coalesce(totalClicks,0) as totalClicks, coalesce(last30Min,0) as last30Min, coalesce(previous30Min,0) as previous30Min,coalesce(previousHour,0) as previousHour, coalesce(totalLast24h,0) as totalLast24h, coalesce(totalPrevious24h,0) as totalPrevious24h, coalesce(totalLast7days,0) as totalLast7days, coalesce(average7days,0) as average7days, coalesce(total7daysAgo,0) as total7daysAgo, dates, searches from 
     (select tp_item, fk_item, count(*) as totalLast24h from zzlog_search where date = ${startDate} and fk_item <> 0 group by tp_item, fk_item having count(*) >= ${minimum}) as day left join  
+    (select tp_item, fk_item, count(*) as last30Min from zzlog_search where time > ${halfHourAgo} and time < ${currentTime} group by tp_item, fk_item) as lastHalfHour on day.tp_item = lastHalfHour.tp_item and day.fk_item = lastHalfHour.fk_item left join 
+    (select tp_item, fk_item, count(*) as previous30Min from zzlog_search where time > ${oneHourAgo} and time < ${halfHourAgo} group by tp_item, fk_item) as previousHalfHour on day.tp_item = previousHalfHour.tp_item and day.fk_item = previousHalfHour.fk_item left join 
+    (select tp_item, fk_item, count(*) as previousHour from zzlog_search where time > ${twoHoursAgo} and time < ${oneHourAgo} group by tp_item, fk_item) as previousHour on day.tp_item = previousHour.tp_item and day.fk_item = previousHour.fk_item left join 
     (select tp_item, fk_item, count(*) as total7daysAgo from zzlog_search where date = ${last7Days} group by tp_item, fk_item) as weekago on day.tp_item = weekago.tp_item and day.fk_item = weekago.fk_item left join
     (select tp_item, fk_item, count(*) as totalLast7days, count(*)/7 as average7days from zzlog_search where date > ${last7Days} and date < ${startDate} and fk_item <> 0 and fk_item <> 0 group by tp_item, fk_item) as 7days on day.tp_item = 7days.tp_item and day.fk_item = 7days.fk_item left join 
     (select tp_item, fk_item, count(*) as totalPrevious24h from zzlog_search where date = ${last24Hours} and fk_item <> 0 group by tp_item, fk_item) as 24hours on day.tp_item = 24hours.tp_item and day.fk_item = 24hours.fk_item left join  
     (select tp_item, fk_item, sum(case when page_number = 0 then mysql_id else page_number * mysql_id end) as sumRank, count(*) as totalClicks from zzlog_search where date > ${last7Days} and date < ${nextDay} and fk_item <> 0 group by tp_item, fk_item) as ranking on day.tp_item = ranking.tp_item and day.fk_item = ranking.fk_item left join
     (select tp_item, fk_item, count(*) as oneCount from zzlog_search where date > ${last7Days} and date < ${nextDay} and mysql_id = 1 and page_number = 1 and fk_item <> 0 group by tp_item, fk_item) as firstOption on day.tp_item = firstOption.tp_item and day.fk_item = firstOption.fk_item left join
-    (select tp_item, fk_item, group_concat(date order by date) as dates, group_concat (count order by date) as searches from (select tp_item, fk_item, date, count(*) as count from zzlog_search where date > ${last7Days} and date < ${nextDay} group by tp_item, fk_item, date order by date) as aux group by tp_item, fk_item) as searchesPerDay on day.tp_item = searchesPerDay.tp_item and day.fk_item = searchesPerDay.fk_item 
-    order by totalLast24h DESC;`;
+    (select tp_item, fk_item, group_concat(date order by date) as dates, group_concat (count order by date) as searches from (select tp_item, fk_item, date, count(*) as count from zzlog_search where date > ${last7Days} and date < ${nextDay} group by tp_item, fk_item, date order by date) as aux group by tp_item, fk_item) as searchesPerDay on day.tp_item = searchesPerDay.tp_item and day.fk_item = searchesPerDay.fk_item ;`;
   },
 
   insertEvaluation(

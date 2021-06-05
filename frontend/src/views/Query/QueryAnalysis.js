@@ -30,7 +30,7 @@ class QueryAnalysis extends Component {
   state = {
     startDate: new Date(),
     endDate: new Date(),
-    today: new Date("2021-01-31"),
+    today: new Date(),
     calculatedStartDate: null,
     calculatedEndDate: null,
 
@@ -454,7 +454,7 @@ class QueryAnalysis extends Component {
                     name="checkbox"
                   />
                 }
-                label="Date range"
+                label="Time interval"
                 style={{ marginTop: "auto", marginBottom: "auto" }}
               />
             </div>

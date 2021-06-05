@@ -40,7 +40,7 @@ class PageAnalysis extends Component {
 
     startDate: new Date(),
     endDate: new Date(),
-    today: new Date("2021-01-31"),
+    today: new Date(),
 
     dateRange: false,
 
@@ -435,14 +435,14 @@ class PageAnalysis extends Component {
           >
             <Dropdown
               list={this.state.entityTypes}
-              name="Tp_item"
+              name="Entity type"
               value={this.state.tp_item}
               onChange={this.changeTpItem}
             />
             <label
               style={{ marginLeft: 20, marginTop: "auto", marginBottom: "auto" }}
             >
-              Fk_item:
+              Id:
               <input
                 value={this.state.fk_item}
                 onChange={this.changeValue}
@@ -486,7 +486,7 @@ class PageAnalysis extends Component {
                     name="checkbox"
                   />
                 }
-                label="Date range"
+                label="Time interval"
                 style={{ marginTop: "auto", marginBottom: "auto" }}
               />
             </div>       
@@ -514,7 +514,7 @@ class PageAnalysis extends Component {
               >  
                   <div style={{ backgroundColor: this.state.showGraph === true ? "#E8E8E8": "inherit" }}>
                     <Chart
-                      title = "Clicks per day"
+                      title = "Accesses per day"
                       string={this.state.pageLink.replace("https://www.zerozero.pt/","")}
                       labels={this.state.showedGraphData["dates"]}
                       data={this.state.showedGraphData["clicks"]}
