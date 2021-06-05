@@ -19,6 +19,8 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Chart from "../../components/Chart/Chart";
 import Dropdown from "../../components/Dropdown/Dropdown.js";
 
+import ZzIcon from "../../assets/img/logo.png";
+
 const tp_item_list = {
   2: "competition.php?id_comp=",
   3: "equipa.php?id=",
@@ -391,14 +393,6 @@ export default function EnhancedTable(props) {
                     : Math.round(((element.last30Min - 1) * 100 * 100) / 1) /
                       100;
 
-
-                if(element.search_string == 'sport')
-                {
-                  console.log(element.last30Min)
-                  console.log(element.previous30Min)
-                  console.log((element.last30Min - element.previous30Min)/element.previous30Min)
-                }
-
                 element.last60min = element.last30Min + element.previous30Min;
 
                 element.GrowthLast60min =
@@ -467,8 +461,41 @@ export default function EnhancedTable(props) {
                         padding="none"
                       >
                         {row.tp_item == null ? (
-                          <b> {row.search_string} </b>
+                          <a
+                            href={
+                              localLinkPath +
+                                  new String(
+                                    localLinkFields.map((field) => {
+                                      return field + "=" + row[field];
+                                    })
+                                  ).replace(",", "&") +
+                                  localLinkAdditional
+                            }
+                          >
+                            <b> {row.search_string} </b>
+                          </a>
                         ) : (
+                          <div
+                            style = {{
+                              display: "flex",
+                              flexDirection: "column",
+                            }}
+                          >
+                          <a
+                            href={
+                              localLinkPath +
+                                  new String(
+                                    localLinkFields.map((field) => {
+                                      return field + "=" + row[field];
+                                    })
+                                  ).replace(",", "&") +
+                                  localLinkAdditional
+                            }
+                          >
+                            <b>
+                              {tp_item_list[row.tp_item] + row.fk_item}
+                            </b>
+                          </a>
                           <a
                             href={
                               "https://www.zerozero.pt/" +
@@ -476,12 +503,11 @@ export default function EnhancedTable(props) {
                               row.fk_item
                             }
                           >
-                            {" "}
-                            <b>
-                              {tp_item_list[row.tp_item] + row.fk_item}
-                            </b>{" "}
+                          <img width="25" src={ZzIcon}/>
                           </a>
+                          </div>
                         )}
+                        
                       </TableCell>
                       <TableCell align="right">
                         <b>{row.avgRank}</b>
