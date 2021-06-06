@@ -42,10 +42,11 @@ export default function CustomTable(props) {
             display: "flex",
             flexDirection: "row",
             width: 350,
-            marginBottom:20
+            marginBottom: 20
           }}
         >
       <h5 style = {{ marginTop: "auto", marginBottom: "auto"}}> {tableTitle} </h5>
+      {headerLinkIcon !== undefined ? 
       <IconButton
         color="primary"
         component="span"
@@ -54,7 +55,7 @@ export default function CustomTable(props) {
       >
         {headerLinkIcon}
         <h6 style = {{ marginLeft: 5, marginTop: "auto", marginBottom: "auto", color: "#4054b4", fontWeight: "bold"}}>Full results </h6>
-      </IconButton>
+      </IconButton> : null}
       </div>}
       <Table className={classes.table}>
         {tableHead !== undefined ? (

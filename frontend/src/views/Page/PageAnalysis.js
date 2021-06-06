@@ -4,9 +4,8 @@ import { Helmet } from 'react-helmet';
 // core components
 import TextRotationNoneIcon from "@material-ui/icons/TextRotationNone";
 import ZzIcon from "../../assets/img/logo.png";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import IconButton from "@material-ui/core/IconButton";
 
 import GridItem from "../../components/Grid/GridItem.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
@@ -308,6 +307,7 @@ class PageAnalysis extends Component {
       calculatedFk_Item: this.state.fk_item,
       calculatedStartDate: startDate,
       calculatedEndDate: endDate,
+      showStringsPerRank: false
     });
   }
 
@@ -323,6 +323,7 @@ class PageAnalysis extends Component {
           n: "Loading...",
         },
       ],
+      showStringsPerRank: false
     });
 
     getStringsPerRank(
@@ -427,10 +428,12 @@ class PageAnalysis extends Component {
     )
       .then((res) => res.json())
       .then(
-        (res) =>
+        (res) =>(
+          res["rank"].length !== 0 && this.submitStringsPerRank(res["rank"][0]["page_number"], res["rank"][0]["mysql_id"]),
           this.setState({ tableData: res["rank"], pageLink: res["link"] }),
-          this.setState({ showPagesRank: true })
+          this.setState({ showPagesRank: true })),
       );
+
   };
 
   render() {
@@ -536,11 +539,24 @@ class PageAnalysis extends Component {
           </div>
 
           <div style={{ marginTop: 20 }}>
-            <h3 style={{ marginBottom: 20 }}>
-              {this.state.pageLink !== "" ? 
-              this.state.pageLink.replace("https://www.zerozero.pt/","") : 
-              null}
-            </h3>
+          {this.state.pageLink !== "" ?
+            <div style = {{
+              display: "flex",
+              flexDirection: "row",
+              marginBottom: 20
+              }}>
+              <h3 style={{ marginTop: "auto", marginBottom: "auto" }}>
+                {this.state.pageLink.replace("https://www.zerozero.pt/","")} 
+              </h3>
+              <IconButton
+                color="primary"
+                component="span"
+                onClick={() => window.open(this.state.pageLink)}
+                style={{marginLeft: 10}}
+              >
+                <img width="35" src={ZzIcon} />
+              </IconButton>
+            </div> : null}
             <GridContainer>
               {this.state.showGraph === true ? (
               <GridItem
@@ -606,20 +622,12 @@ class PageAnalysis extends Component {
                     tableTitle={"Clicked positions"}
                     tableHeaderColor="gray"
                     tableHead={["Rank", "Clicks", "%", ""]}
-                    headerLinkIcon={
-                      this.state.pageLink != "" ? (
-                        <img width="35" src={ZzIcon} />
-                      ) : (
-                        ""
-                      )
-                    }
-                    headerLinkPath={this.state.pageLink}
                     tableData={this.state.tableData}
                     onClick={this.submitStringsPerRank}
                   />
                 ) : null}
               </GridItem>
-              <GridItem xs={12} sm={12} md={2} style={{marginTop: 35}}>
+              <GridItem xs={12} sm={12} md={2} style={{marginTop: 20}}>
                 {this.state.showStringsPerRank === true ? (
                   <ExpandableTable
                     tableTitle={

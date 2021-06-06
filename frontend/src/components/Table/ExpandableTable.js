@@ -39,7 +39,7 @@ export default function ExpandableTable(props) {
 
   return (
     <div className={classes.tableResponsive}>
-      <h5 style={{ marginBottom: 30 }}> {tableTitle} </h5>
+      <h5 style={{ marginBottom: 20 }}> {tableTitle} </h5>
       <Table className={classes.table}>
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor + "TableHeader"]}>

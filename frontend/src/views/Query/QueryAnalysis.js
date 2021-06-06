@@ -401,9 +401,13 @@ class QueryAnalysis extends Component {
     )
       .then((res) => res.json())
       .then(
-        (res) => this.setState({ clickRank: res }),
-        this.setState({ showClickRank: true })
+        (res) => (
+          res.length !== 0 && this.submitPagesPerRank(res[0]["page_number"], res[0]["mysql_id"]),
+          this.setState({ clickRank: res }),
+          this.setState({ showClickRank: true })
+        ) 
       );
+
     getUnsuccessfulSessions(
       this.state.string,
       startDate,

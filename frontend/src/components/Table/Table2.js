@@ -32,7 +32,7 @@ export default function Table2(props) {
         display: "flex",
         flexDirection: "row",
         width: 300,
-        marginBottom:20
+        marginBottom: 20
         }}
        >
         <h5 style = {{ marginTop: "auto", marginBottom: "auto"}}> {tableTitle} </h5>
@@ -40,7 +40,7 @@ export default function Table2(props) {
           color="primary"
           component="span"
           onClick={() => window.open(headerLinkPath)}
-          style={{marginLeft: 10}}
+          style={{marginLeft: 30}}
         >
           {headerLinkIcon}
         </IconButton>
