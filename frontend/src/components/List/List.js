@@ -39,7 +39,7 @@ export default function InteractiveList(props) {
             <ListItemText style={{marginBottom: 30}}> 
               <span style={{position: "absolute",
                               right: 200 }}>
-                Within range
+                Selected period
               </span>
               <span style={{position: "absolute",
                               right: 50 }}>
@@ -62,7 +62,7 @@ export default function InteractiveList(props) {
           </ListItem>
           <ListItem>
             <ListItemText> 
-                Total last 7 days:
+                Total previous 7 days:
                 <span style={{position: "absolute",
                               right: 200 }}>
                     <b> {rangeInfo.totalLast7days} </b> 
@@ -75,7 +75,7 @@ export default function InteractiveList(props) {
           </ListItem>
           <ListItem>
             <ListItemText>
-                Average last 7 days: 
+                Average previous 7 days: 
                 <span style={{position: "absolute",
                               right: 200 }}>
                     <b> {rangeInfo.average7days ==='TBD' ? 'TBD' : Math.round(100 * rangeInfo.average7days)/100} </b> 
@@ -114,7 +114,7 @@ export default function InteractiveList(props) {
           </ListItem>
           <ListItem>
             <ListItemText> 
-                Last 7 days growth:
+                7 days growth:
                 <span style={{position: "absolute",
                               right: 200, 
                               color: rangeInfo.GrowthLast7d > 0 ? "#00cc00" :  "red" }}>
@@ -129,7 +129,7 @@ export default function InteractiveList(props) {
           </ListItem>
           <ListItem>
             <ListItemText> 
-                Last 24 hours growth:
+                24 hours growth:
                 <span style={{position: "absolute",
                               right: 200,
                               color: rangeInfo.GrowthLast24h > 0 ? "#00cc00" :  "red" }}>
@@ -168,6 +168,7 @@ export default function InteractiveList(props) {
                 </span>
             </ListItemText>
           </ListItem>
+          { title === 'Query summary' ?
           <ListItem>
             <ListItemText>
                 Insuccess rate: 
@@ -183,6 +184,7 @@ export default function InteractiveList(props) {
                 </span>
             </ListItemText>
           </ListItem>
+          : null}
         </List>
       </div>
     </div>

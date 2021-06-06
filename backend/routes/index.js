@@ -313,36 +313,26 @@ router.get("/querysummary", function (req, res, next) {
   let startDate = utils.getCorrectDate(req.query.startDate);
   let endDate = utils.getCorrectDate(req.query.endDate);
 
-  let nextDay = new Date(
-    startDate.getFullYear(),
-    startDate.getMonth(),
-    startDate.getDate()
-  );
-  nextDay.setDate(startDate.getDate() + 1);
+  let halfHourAgo = new Date(startDate - 60000 * 30);
+  let oneHourAgo = new Date(startDate - 60000 * 60);
+  let twoHoursAgo = new Date(startDate - 60000 * 120);
 
-  let last24Hours = new Date(startDate - 60000 * 60 * 24);
-  let last7Days = new Date(startDate - 60000 * 60 * 24 * 7);
-
-  if (endDate != "Invalid Date") {
-    endDate = new Date(
-      endDate.getFullYear(),
-      endDate.getMonth(),
-      endDate.getDate(),
-      endDate.getHours(),
-      endDate.getMinutes()
-    );
-
-    nextDay = new Date(
+  nextDay = new Date(
       endDate.getFullYear(),
       endDate.getMonth(),
       endDate.getDate()
     );
 
-    nextDay.setDate(endDate.getDate() + 1);
-  }
+  nextDay.setDate(endDate.getDate() + 1);
+
+  let last24Hours = new Date(startDate - 60000 * 60 * 24);
+  let last7Days = new Date(startDate - 60000 * 60 * 24 * 7);
 
   let query = queryUtil.getQuerySummary(
     string,
+    halfHourAgo,
+    oneHourAgo,
+    twoHoursAgo,
     startDate,
     endDate,
     nextDay,
@@ -517,53 +507,33 @@ router.get("/pagesummary", function (req, res, next) {
   let startDate = utils.getCorrectDate(req.query.startDate);
   let endDate = utils.getCorrectDate(req.query.endDate);
 
-  startDate = new Date(
-    startDate.getFullYear(),
-    startDate.getMonth(),
-    startDate.getDate(),
-    startDate.getHours(),
-    startDate.getMinutes()
-  );
+  let halfHourAgo = new Date(startDate - 60000 * 30);
+  let oneHourAgo = new Date(startDate - 60000 * 60);
+  let twoHoursAgo = new Date(startDate - 60000 * 120);
 
-  let nextDay = new Date(
-    startDate.getFullYear(),
-    startDate.getMonth(),
-    startDate.getDate()
-  );
-
-  nextDay.setDate(startDate.getDate() + 1);
-
-  let last24Hours = new Date(startDate - 60000 * 60 * 24);
-  let last7Days = new Date(startDate - 60000 * 60 * 24 * 7);
-
-  if (endDate != "Invalid Date") {
-    endDate = new Date(
-      endDate.getFullYear(),
-      endDate.getMonth(),
-      endDate.getDate(),
-      endDate.getHours(),
-      endDate.getMinutes()
-    );
-
-    nextDay = new Date(
+  nextDay = new Date(
       endDate.getFullYear(),
       endDate.getMonth(),
       endDate.getDate()
     );
 
-    nextDay.setDate(endDate.getDate() + 1);
-  }
+  nextDay.setDate(endDate.getDate() + 1);
+
+  let last24Hours = new Date(startDate - 60000 * 60 * 24);
+  let last7Days = new Date(startDate - 60000 * 60 * 24 * 7);
 
   let query = queryUtil.getPageSummary(
     tp_item,
     fk_item,
+    halfHourAgo,
+    oneHourAgo,
+    twoHoursAgo,
     startDate,
     endDate,
     nextDay,
     last24Hours,
     last7Days
   );
-
 
   db.getConnection((err, conn) => {
     conn.query(query, (err, results, fields) => {

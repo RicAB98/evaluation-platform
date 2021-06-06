@@ -154,20 +154,11 @@ class QueryAnalysis extends Component {
       addOne(newDate.getMonth()) +
       "-" +
       newDate.getDate();
-    let dateArray = this.state.graphData["dates"];
-    let closerDateInArray = newDate;
 
     if (newDate > this.state.graphEndDate) return;
 
-    if (dateArray.indexOf(formatedDate) === -1) {
-      let rangeStart = new Date(dateArray[0]);
-      let rangeEnd = new Date(dateArray[dateArray.length - 1]);
-
-      if (newDate < rangeStart || newDate > rangeEnd) return;
-    }
-
     this.setState({ graphStartDate: newDate });
-    this.changeGraphRange(closerDateInArray, this.state.graphEndDate);
+    this.changeGraphRange(newDate, this.state.graphEndDate);
   };
 
   changeGraphEndDate = (newDate) => {
@@ -177,20 +168,11 @@ class QueryAnalysis extends Component {
       addOne(newDate.getMonth()) +
       "-" +
       newDate.getDate();
-    let dateArray = this.state.graphData["dates"];
-    let closerDateInArray = newDate;
 
     if (newDate < this.state.graphStartDate) return;
 
-    if (dateArray.indexOf(formatedDate) === -1) {
-      let rangeStart = new Date(dateArray[0]);
-      let rangeEnd = new Date(dateArray[dateArray.length - 1]);
-
-      if (newDate < rangeStart || newDate > rangeEnd) return;
-    }
-
     this.setState({ graphEndDate: newDate });
-    this.changeGraphRange(this.state.graphStartDate, closerDateInArray);
+    this.changeGraphRange(this.state.graphStartDate, newDate);
   };
 
   changeGraphRange(startDate, endDate) {
@@ -207,12 +189,19 @@ class QueryAnalysis extends Component {
       addOne(closerStartDate.getMonth()) +
       "-" +
       closerStartDate.getDate();
+
     let formatedEndDate =
       closerEndDate.getFullYear() +
       "-" +
       addOne(closerEndDate.getMonth()) +
       "-" +
       closerEndDate.getDate();
+
+      console.log(formatedStartDate)
+      console.log(formatedEndDate)
+
+    console.log(dates.indexOf(formatedStartDate))
+    console.log(dates.indexOf(formatedEndDate))
 
     this.setState({
       showedGraphData: {
@@ -376,9 +365,20 @@ class QueryAnalysis extends Component {
         this.setState({ showSummaries: true }))
       );
 
+    let startToday = new Date()
+    startToday.setHours(0)
+    startToday.setMinutes(0)
+    startToday.setSeconds(0)    
+
+    let endToday = new Date()
+    endToday.setHours(23)
+    endToday.setMinutes(59)
+    endToday.setSeconds(59)
+
     getQuerySummary(
       this.state.string,
-      this.state.today,
+      startToday,
+      endToday     
     )
       .then((res) => res.json())
       .then(
