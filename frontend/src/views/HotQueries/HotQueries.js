@@ -92,8 +92,19 @@ class HotQueries extends Component {
   }
 
   submitEvaluation = () => {
-    
-    this.setState({lastUpdate: new Date() })
+
+    this.setState({
+      lastUpdate: new Date(),
+      endDate: new Date(),
+    })
+
+    let sevenDaysEarlier = new Date(this.state.endDate - 60000 * 60 * 24 * 7);
+    sevenDaysEarlier.setHours(0)
+    sevenDaysEarlier.setMinutes(0)
+
+    this.setState({
+      startDate: sevenDaysEarlier,
+    })
 
     this.getHotQueries();
     this.getHotPages();

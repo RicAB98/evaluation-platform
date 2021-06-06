@@ -35,7 +35,6 @@ export default function InteractiveList(props) {
         }
         <List>
         <ListItem>
-
             <ListItemText style={{marginBottom: 30}}> 
               <span style={{position: "absolute",
                               right: 200 }}>
@@ -47,18 +46,47 @@ export default function InteractiveList(props) {
               </span>
             </ListItemText>
           </ListItem>
+          
           <ListItem>
             <ListItemText> 
-                7 days ago:
+                Within range: 
                 <span style={{position: "absolute",
                               right: 200 }}>
-                    <b> {rangeInfo.total7daysAgo} </b> 
+                    <b> {rangeInfo.totalLast24h} </b>
                 </span>
                 <span style={{position: "absolute",
                               right: 50 }}>
-                    <b> {last24hInfo.total7daysAgo} </b> 
+                    <b> {last24hInfo.totalLast24h} </b>
                 </span>
             </ListItemText>
+          </ListItem>
+          <ListItem>
+            <ListItemText> 
+                Previous 24 hours: 
+                <span style={{position: "absolute",
+                              right: 200 }}>
+                    <b> {rangeInfo.totalPrevious24h} </b>
+                </span>
+                <span style={{position: "absolute",
+                              right: 50 }}>
+                    <b> {last24hInfo.totalPrevious24h} </b>
+                </span>
+            </ListItemText>
+          </ListItem>
+          <ListItem>
+            <ListItemText> 
+                24 hours growth:
+                <span style={{position: "absolute",
+                              right: 200,
+                              color: rangeInfo.GrowthLast24h > 0 ? "#00cc00" :  "red" }}>
+                    <b> {isNaN(rangeInfo.GrowthLast24h) ? 'TBD' : rangeInfo.GrowthLast24h}% </b>
+                </span>
+                <span style={{position: "absolute",
+                              right: 50,
+                              color: last24hInfo.GrowthLast24h > 0 ? "#00cc00" :  "red" }}>
+                    <b> {isNaN(last24hInfo.GrowthLast24h) ? 'TBD' : last24hInfo.GrowthLast24h}% </b>
+                </span>
+              </ListItemText>
           </ListItem>
           <ListItem>
             <ListItemText> 
@@ -88,32 +116,6 @@ export default function InteractiveList(props) {
           </ListItem>
           <ListItem>
             <ListItemText> 
-                Previous 24 hours: 
-                <span style={{position: "absolute",
-                              right: 200 }}>
-                    <b> {rangeInfo.totalPrevious24h} </b>
-                </span>
-                <span style={{position: "absolute",
-                              right: 50 }}>
-                    <b> {last24hInfo.totalPrevious24h} </b>
-                </span>
-            </ListItemText>
-          </ListItem>
-          <ListItem>
-            <ListItemText> 
-                Within range: 
-                <span style={{position: "absolute",
-                              right: 200 }}>
-                    <b> {rangeInfo.totalLast24h} </b>
-                </span>
-                <span style={{position: "absolute",
-                              right: 50 }}>
-                    <b> {last24hInfo.totalLast24h} </b>
-                </span>
-            </ListItemText>
-          </ListItem>
-          <ListItem>
-            <ListItemText> 
                 7 days growth:
                 <span style={{position: "absolute",
                               right: 200, 
@@ -129,18 +131,16 @@ export default function InteractiveList(props) {
           </ListItem>
           <ListItem>
             <ListItemText> 
-                24 hours growth:
+                7 days ago:
                 <span style={{position: "absolute",
-                              right: 200,
-                              color: rangeInfo.GrowthLast24h > 0 ? "#00cc00" :  "red" }}>
-                    <b> {isNaN(rangeInfo.GrowthLast24h) ? 'TBD' : rangeInfo.GrowthLast24h}% </b>
+                              right: 200 }}>
+                    <b> {rangeInfo.total7daysAgo} </b> 
                 </span>
                 <span style={{position: "absolute",
-                              right: 50,
-                              color: last24hInfo.GrowthLast24h > 0 ? "#00cc00" :  "red" }}>
-                    <b> {isNaN(last24hInfo.GrowthLast24h) ? 'TBD' : last24hInfo.GrowthLast24h}% </b>
+                              right: 50 }}>
+                    <b> {last24hInfo.total7daysAgo} </b> 
                 </span>
-              </ListItemText>
+            </ListItemText>
           </ListItem>
           <ListItem>
             <ListItemText> 

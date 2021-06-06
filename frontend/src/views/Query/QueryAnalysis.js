@@ -197,12 +197,6 @@ class QueryAnalysis extends Component {
       "-" +
       closerEndDate.getDate();
 
-      console.log(formatedStartDate)
-      console.log(formatedEndDate)
-
-    console.log(dates.indexOf(formatedStartDate))
-    console.log(dates.indexOf(formatedEndDate))
-
     this.setState({
       showedGraphData: {
         string: string,
