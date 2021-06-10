@@ -103,6 +103,11 @@ class PageAnalysis extends Component {
   };
 
   componentDidMount() {
+
+    let startToday = new Date();
+    startToday.setHours(0);
+    startToday.setMinutes(0);  
+
     let endToday = new Date();
     endToday.setHours(23);
     endToday.setMinutes(59);
@@ -119,7 +124,7 @@ class PageAnalysis extends Component {
       {
         tp_item: tp_item != null ? tp_item : "",
         fk_item: fk_item != null ? fk_item : "",
-        startDate: startDate != null ? new Date(startDate) : new Date(),
+        startDate: startDate != null ? new Date(startDate) : startToday,
         endDate: endDate != null ? new Date(endDate) : endToday,
       },
       () => {

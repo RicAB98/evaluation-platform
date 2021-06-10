@@ -23,8 +23,8 @@ const dashboardRoutes = [
     sidebar: true
   },
   {
-    path: "/evaluation",
-    name: "Evaluation",
+    path: "/global",
+    name: "Global Analysis",
     icon: EqualizerIcon,
     component: ResultsPage,
     layout: "",

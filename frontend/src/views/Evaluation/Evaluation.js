@@ -65,6 +65,11 @@ class Evaluation extends Component {
   };
 
   componentDidMount() {
+
+    let startToday = new Date();
+    startToday.setHours(0);
+    startToday.setMinutes(0);  
+
     let endToday = new Date();
     endToday.setHours(23);
     endToday.setMinutes(59);
@@ -77,12 +82,11 @@ class Evaluation extends Component {
 
     this.setState(
       {
-        startDate: startDate !== null ? new Date(startDate) : new Date(),
+        startDate: startDate !== null ? new Date(startDate) : startToday,
         endDate: endDate != null ? new Date(endDate) : endToday,
       },
       () => {
-        if (startDate !== null && endDate !== null)
-          this.submitEvaluation(this.state.startDate, this.state.endDate);
+        this.submitEvaluation(this.state.startDate, this.state.endDate);
       }
     );
   }
@@ -153,10 +157,6 @@ class Evaluation extends Component {
 
   submitEvaluation(startDate, endDate) {
 
-    console.log(startDate)
-    console.log(endDate)
-
-
     let urlSearch =
       "?startDate=" +
       toISOString(startDate) + 
@@ -164,7 +164,7 @@ class Evaluation extends Component {
       toISOString(endDate);
 
     this.props.history.push({
-      pathname: "/evaluation",
+      pathname: "/global",
       search: urlSearch
     });
 
@@ -178,14 +178,17 @@ class Evaluation extends Component {
           unsuccessfulQueries: res["unsuccessfulQueries"],
           popularPages: res["popularPages"],
         })
-      );
+      )
+      .catch((error) => {
+        this.submitEvaluation(startDate, endDate) 
+      }); 
   }
 
   render() {
     return (
       <div>
         <Helmet>
-          <title>{ "Evaluation" }</title>
+          <title>{ "Global" }</title>
         </Helmet>
         <div style={{ marginLeft: 16, marginRight: 16 }} >
           <div

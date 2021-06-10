@@ -93,6 +93,11 @@ class QueryAnalysis extends Component {
   };
 
   componentDidMount() {
+    
+    let startToday = new Date();
+    startToday.setHours(0);
+    startToday.setMinutes(0);  
+
     let endToday = new Date();
     endToday.setHours(23);
     endToday.setMinutes(59);
@@ -106,7 +111,7 @@ class QueryAnalysis extends Component {
 
     this.setState({
       string: string != null ? string : "",
-      startDate: startDate != null ? new Date(startDate) : new Date(),
+      startDate: startDate != null ? new Date(startDate) : startToday,
       endDate: endDate != null ? new Date(endDate) : endToday,
     },
     () => {if(string != null && startDate != null && endDate !== null)

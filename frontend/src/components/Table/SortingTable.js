@@ -94,37 +94,37 @@ const headCells = [
     id: "last30Min",
     align: "right",
     disablePadding: false,
-    label: "Last 30min",
+    label: "Last 30 min",
   },
   {
     id: "GrowthLast30min",
     align: "right",
     disablePadding: false,
-    label: "Last 30min %",
+    label: "Last 30 min %",
   },
   {
     id: "last60min",
     align: "right",
     disablePadding: false,
-    label: "Last 60min",
+    label: "Last 60 min",
   },
   {
     id: "GrowthLast60min",
     align: "right",
     disablePadding: false,
-    label: "Last 60min %",
+    label: "Last 60 min %",
   },
   {
     id: "totalLast24h",
     align: "right",
     disablePadding: false,
-    label: "Last 24 hours",
+    label: "Today",
   },
   {
     id: "totalPrevious24h",
     align: "right",
     disablePadding: false,
-    label: "Previous 24 hours",
+    label: "Yesterday",
   },
   {
     id: "GrowthLast24h",
@@ -319,7 +319,7 @@ export default function EnhancedTable(props) {
             flexDirection: "row",
           }}
         >
-        <h6 style = {{marginTop: 30, marginBottom: 0}}>Minimum number of searches on the last 24 hours:</h6>  
+        <h6 style = {{marginTop: 30, marginBottom: 0}}>Minimum number of searches on the current day:</h6>  
         <Dropdown
           list={[
             { id: 5, name: 5 },

@@ -134,7 +134,11 @@ class HotQueries extends Component {
 
     getHotQueries(this.state.endDate, this.state.queryMinimum)
       .then((res) => res.json())
-      .then((res) => this.setState({ hotQueries: res }));
+      .then((res) => this.setState({ hotQueries: res }))
+      .catch((error) => {
+        this.getHotQueries() 
+      }); 
+
   };
 
   getHotPages() {
@@ -155,7 +159,10 @@ class HotQueries extends Component {
 
     getHotPages(this.state.endDate, this.state.pageMinimum)
       .then((res) => res.json())
-      .then((res) => this.setState({ hotPages: res }));
+      .then((res) => this.setState({ hotPages: res }))
+      .catch((error) => {
+        this.getHotPages() 
+      });
   }
 
 
